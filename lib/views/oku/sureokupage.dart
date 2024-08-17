@@ -497,105 +497,105 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
               Expanded(
                 flex: 3,
                 child: SingleChildScrollView(
-                  child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 50),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            shadows: [
-                              BoxShadow(
-                                color: Color(0x26000000),
-                                blurRadius: 10,
-                                offset: Offset(4, 4),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                          child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                if (_verses.isNotEmpty)
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(
-                                        16.0), // Padding for better spacing
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Obx(
-                                          () => Visibility(
-                                            visible: homePageController.arapcametin.value,
-                                            child: Text(
-                                              moveSeparatorToFront(
-                                                  _verses[ayetno].metin!),
-                                              style: TextStyle(
-                                                fontSize: 27,
-                                                fontFamily: 'KuranFont',
-                                                fontWeight: FontWeight.w400,
-                                                color: Color(0xFF2A89A5),
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 30.h,
-                                        ),
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child: Obx(
-                                            () => homePageController.dipnotlar.value
-                                                ? RichText(
-                                                    text: TextSpan(
-                                                      style: TextStyle(
-                                                        fontFamily: 'Podkova',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize:
-                                                            homePageController
-                                                                .yazipuntosu
-                                                                .value,
-                                                      ),
-                                                      children: _parseText(
-                                                          _verses[ayetno]
-                                                              .meal!,homePageController.dipnotlar.value),
-                                                    ),
-                                                  )
-                                                : RichText(
-                                                    text: TextSpan(
-                                                      style: TextStyle(
-                                                        fontFamily: 'Podkova',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize:
-                                                            homePageController
-                                                                .yazipuntosu
-                                                                .value,
-                                                      ),
-                                                      children: _parseText(
-                                                          _verses[ayetno]
-                                                              .meal!,homePageController.dipnotlar.value),
-                                                    ),
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 50),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                shadows: [
+                                  BoxShadow(
+                                    color: Color(0x26000000),
+                                    blurRadius: 10,
+                                    offset: Offset(4, 4),
+                                    spreadRadius: 0,
+                                  )
+                                ],
+                              ),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (_verses.isNotEmpty)
+                                      Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.all(
+                                            16.0), // Padding for better spacing
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Obx(
+                                              () => Visibility(
+                                                visible: homePageController.arapcametin.value,
+                                                child: Text(
+                                                  moveSeparatorToFront(
+                                                      _verses[ayetno].metin!),
+                                                  style: TextStyle(
+                                                    fontSize: 27,
+                                                    fontFamily: 'KuranFont',
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xFF2A89A5),
                                                   ),
-                                          ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 30.h,
+                                            ),
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: Obx(
+                                                () => homePageController.dipnotlar.value
+                                                    ? RichText(
+                                                        text: TextSpan(
+                                                          style: TextStyle(
+                                                            fontFamily: 'Podkova',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize:
+                                                                homePageController
+                                                                    .yazipuntosu
+                                                                    .value,
+                                                          ),
+                                                          children: _parseText(
+                                                              _verses[ayetno]
+                                                                  .meal!,homePageController.dipnotlar.value),
+                                                        ),
+                                                      )
+                                                    : RichText(
+                                                        text: TextSpan(
+                                                          style: TextStyle(
+                                                            fontFamily: 'Podkova',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize:
+                                                                homePageController
+                                                                    .yazipuntosu
+                                                                    .value,
+                                                          ),
+                                                          children: _parseText(
+                                                              _verses[ayetno]
+                                                                  .meal!,homePageController.dipnotlar.value),
+                                                        ),
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                              ]))),
-                ),
-              ),
-              Visibility(
+                                      ),
+                                  ]))),
+                    Visibility(
                 visible: ayetno == 1,
                 child: GestureDetector(
                   onTap: () {
@@ -702,6 +702,11 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                   ),
                 ),
               ),
+                    ],
+                  ),
+                ),
+              ),
+              
             ],
           ),
           Obx(() => homePageController.isContainerVisible.value
