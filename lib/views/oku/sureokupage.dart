@@ -11,6 +11,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -322,6 +323,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton2<String>(
+                              
                               isExpanded: true,
                               hint: Row(
                                 children: [
@@ -347,7 +349,6 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                               // mainAxisAlignment:
                                               //     MainAxisAlignment.center,
                                               children: [
-                                                SizedBox(height: 3,),
                                                 Text(
                                                   SureAdi,
                                                   textAlign: TextAlign.center,
@@ -382,32 +383,32 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                               items: sureler.asMap().entries.map((entry) {
                                 int index = entry.key;
                                 String sure = entry.value;
-                                return DropdownMenuItem<String>(
-                                  value: sure,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            "${index + 1}. $sure  ",
-                                            style: TextStyle(
-                                              color:
-                                                  ColorConstants.primaryColor,
-                                              fontSize: 26,
-                                              fontFamily: 'Podkova',
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(
-                                          color:
-                                              Colors.white), // Divider ekledik
-                                    ],
-                                  ),
-                                );
+                                return  DropdownMenuItem<String>(
+  value: sure,
+  child: Column(
+    children: [
+      Padding(
+        padding: EdgeInsets.only(bottom:5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "${index + 1}. $sure",
+              style: TextStyle(
+                color: ColorConstants.primaryColor,
+                fontSize: 20,
+                fontFamily: 'Podkova',
+                fontWeight: FontWeight.w700,
+                height: 1.2, // Text arası boşluğu ayarladık
+              ),
+            ),
+          ],
+        ),
+      ),
+      Divider(color: ColorConstants.primaryColor3.withOpacity(0.4),height: 1,)
+    ],
+  ),
+);
                               }).toList(),
                               value: selectedValue,
                               onChanged: (String? value) {
@@ -432,11 +433,11 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                 iconDisabledColor: Colors.grey,
                               ),
                               dropdownStyleData: DropdownStyleData(
-                                maxHeight: 300,
+                                maxHeight: 600.h,
                                 width: 270.w,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
-                                  color: ColorConstants.primaryColor3,
+                                  color: Colors.white.withOpacity(0.9),
                                 ),
                                 offset: const Offset(-20, 0),
                                 scrollbarTheme: ScrollbarThemeData(
@@ -448,7 +449,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                 ),
                               ),
                               menuItemStyleData: const MenuItemStyleData(
-                                height: 60,
+                                height: 40,
                                 padding: EdgeInsets.only(left: 14, right: 14),
                               ),
                             ),
@@ -495,7 +496,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                           child: Container(
                               width: MediaQuery.of(context).size.width,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 50),
+                                  horizontal: 15, vertical: 30),
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
                                 color: Colors.white,
@@ -889,7 +890,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                           color: Colors.black,
                                           fontSize: 18,
                                           fontFamily: 'Axiforma',
-                                          fontWeight: FontWeight.w900,
+                                          fontWeight: FontWeight.w500,
                                           height: 0,
                                         ),
                                       ),
@@ -900,8 +901,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                                 onTap: () {
                                                   arapcametin.value = false;
                                                 },
-                                                child: Image.asset(
-                                                  "assets/icon/gizligoz.png",
+                                                child: SvgPicture.asset(
+                                                  "assets/icon/kapaligoz.svg",
                                                   color: arapcametin.value
                                                       ? Colors.grey
                                                       : Colors.black,
@@ -911,8 +912,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                                 onTap: () {
                                                   arapcametin.value = true;
                                                 },
-                                                child: Image.asset(
-                                                  "assets/icon/acikgoz.png",
+                                                child: SvgPicture.asset(
+                                                  "assets/icon/acikgozsiyah.svg",
                                                   color: arapcametin.value
                                                       ? Colors.black
                                                       : Colors.grey,
@@ -948,8 +949,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                                 onTap: () {
                                                   dipnotlar.value = false;
                                                 },
-                                                child: Image.asset(
-                                                  "assets/icon/gizligoz.png",
+                                                child: SvgPicture.asset(
+                                                  "assets/icon/kapaligoz.svg",
                                                   color: dipnotlar.value
                                                       ? Colors.grey
                                                       : Colors.black,
@@ -959,8 +960,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                                 onTap: () {
                                                   dipnotlar.value = true;
                                                 },
-                                                child: Image.asset(
-                                                  "assets/icon/acikgoz.png",
+                                                child: SvgPicture.asset(
+                                                  "assets/icon/acikgozsiyah.svg",
                                                   color: dipnotlar.value
                                                       ? Colors.black
                                                       : Colors.grey,

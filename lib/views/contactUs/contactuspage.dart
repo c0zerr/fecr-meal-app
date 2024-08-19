@@ -94,7 +94,7 @@ class ContactUsPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft, // Butonu sola hizalar
               child: Container(
-                width: 132, // Genişlik
+                // width: 132, // Genişlik
                 height: 60, // Yükseklik
                 child: ElevatedButton(
                   style: ButtonStyle(
