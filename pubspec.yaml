@@ -89,12 +89,22 @@ flutter:
     - family: Axiforma
       fonts:
         - asset: assets/font/Axiforma-Regular.ttf
+
+    - family: AxiformaBold
+      fonts:
+        - asset: assets/font/Axiforma-Black.ttf
     - family: Podkova
       fonts:
         - asset: assets/font/Podkova-Medium.ttf
     - family: Work Sans
       fonts:
         - asset: assets/font/WorkSans-Medium.ttf
+    - family: Bw Aleta No 10
+      fonts:
+        - asset: assets/font/BwAletaNo10-Regular.ttf
+    - family: Bw Aleta No 10 Bold
+      fonts:
+        - asset: assets/font/BwAletaNo10-ExtraBold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

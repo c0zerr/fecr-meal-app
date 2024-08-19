@@ -15,36 +15,44 @@ class DrawerCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(minWidth: 100.w, maxWidth: 300.w),
-      decoration: BoxDecoration(
-        color: const Color(0Xff2B89A5),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-      child: InkWell(
-        onTap: ontap,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // SizedBox(width: 10.w),
-              Image.asset(
-                imageUrl,
-                width: 50.w,
-                height: 50.h,
-              ),
-              // SizedBox(width: 2.w),
-              Text(
-                title,
-                style: const TextStyle(
-                    fontFamily: "Axiforma", fontSize: 18, color: Colors.white),
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(width: 10.w),
-            ],
+    return Padding(
+      padding:  EdgeInsets.only(left: 10.w,right: 10.w),
+      child: Container(
+        height: 60,
+        constraints: BoxConstraints(minWidth: 100.w, maxWidth: 300.w),
+        decoration: BoxDecoration(
+          color: const Color(0Xff2B89A5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+        child: InkWell(
+          onTap: ontap,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // SizedBox(width: 10.w),
+                Padding(
+                  padding:  EdgeInsets.only(left: 7.w,top: 5.h,bottom: 5.h,right: 10.w),
+                  child: Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    // width: 50.w,
+                    // height: 50.h,
+                  ),
+                ),
+                // SizedBox(width: 2.w),
+                Text(
+                  title,
+                  style:  TextStyle(
+                      fontFamily: "Axiforma", fontSize: 18, color: Colors.white,fontWeight: FontWeight.w400,),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(width: 10.w),
+              ],
+            ),
           ),
         ),
       ),

@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
                 _scaffoldKey.currentState?.openDrawer();
               },
               onTapSearch: null),
+              SizedBox(height: 15,),
           Expanded(
             child: Stack(
               children: [
@@ -71,63 +72,66 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         SizedBox(height: 5.h),
-                        Obx(() => Container(
-                              height: 55.h,
-                              width: 300.w,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 1,
-                                  color: homePageController.showdialog.value
-                                      ? Colors.white
-                                      : Color(0xff60A6BB),
+                        Obx(() => Padding(
+                          padding:  EdgeInsets.only(left: 30.w,right: 30.w),
+                          child: Container(
+                                height: 55.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: homePageController.showdialog.value
+                                        ? Colors.white
+                                        : Color(0xff60A6BB),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.h),
                                 ),
-                                borderRadius: BorderRadius.circular(10.h),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  homePageController.showdialog.value =
-                                      !homePageController.showdialog.value;
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 20,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    homePageController.showdialog.value =
+                                        !homePageController.showdialog.value;
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 20,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Ayete Git",
+                                        style: TextStyle(
+                                          color: Color(0xFF60A6BB),
+                                          fontSize: 18,
+                                          fontFamily: 'Axiforma',
+                                          fontWeight: FontWeight.w600,
+                                          height: 0,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Obx(
+                                        () => Icon(
+                                          homePageController.showdialog.value
+                                              ? Icons.keyboard_arrow_up_outlined
+                                              : Icons
+                                                  .keyboard_arrow_down_outlined,
+                                          color: Color(0xff60A6BB),
+                                          size: 30,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Ayete Git",
-                                      style: TextStyle(
-                                        color: Color(0xFF60A6BB),
-                                        fontSize: 20,
-                                        fontFamily: 'Axiforma',
-                                        fontWeight: FontWeight.w600,
-                                        height: 0,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    Obx(
-                                      () => Icon(
-                                        homePageController.showdialog.value
-                                            ? Icons.keyboard_arrow_up_outlined
-                                            : Icons
-                                                .keyboard_arrow_down_outlined,
-                                        color: Color(0xff60A6BB),
-                                        size: 30,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
-                            )),
+                        )),
                         SizedBox(height: 5.h),
                         Padding(
-                          padding: EdgeInsets.only(top: 20.h, left: 10.w),
+                          padding: EdgeInsets.only(top: 10.h, left: 25.w,right: 25.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -135,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                                 "Sure Listesi :",
                                 style: TextStyle(
                                   color: Color(0xFF60A6BB),
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontFamily: 'Axiforma',
                                   fontWeight: FontWeight.w600,
                                   height: 0,
@@ -194,7 +198,8 @@ class _HomePageState extends State<HomePage> {
                           () => ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(top: 30),
+                            padding: EdgeInsets.only(top: 30.h,left: 25.w,right: 25.w),
+                            
                             itemCount: homePageController.changeQueue.value
                                 ? mushafSirasi.length
                                 : nuzulSirasi.length,
@@ -258,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                                     chosenList[index]['name'],
                                                     style: TextStyle(
                                                       color: Color(0xFF464646),
-                                                      fontSize: 30,
+                                                      fontSize: 28,
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w700,
@@ -266,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 10),
+                                                const SizedBox(height: 5),
                                                 SizedBox(
                                                   width: 182.w,
                                                   child: Text(
@@ -288,18 +293,18 @@ class _HomePageState extends State<HomePage> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: 9.w),
+                                          SizedBox(width: 0.w),
                                           Container(
-                                            width: 58.w,
-                                            height: 58.h,
+                                            width: 60.w,
+                                            height: 60.h,
                                             child: Stack(
                                               children: [
                                                 Positioned(
                                                   left: 0,
                                                   top: 0,
                                                   child: Container(
-                                                    width: 58.w,
-                                                    height: 58.h,
+                                                    width: 60.w,
+                                                    height: 60.h,
                                                     decoration: ShapeDecoration(
                                                       color: Color(0x192A89A5),
                                                       shape: OvalBorder(),
@@ -312,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 40,
+                                                      fontSize: 38,
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w700,

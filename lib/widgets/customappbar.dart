@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -18,17 +19,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: 80,
       backgroundColor: ColorConstants.primaryColor,
-      leading: IconButton(
-          icon: Icon(
-            Icons.menu,
-            size: 35,
-            color: Colors.white,
-          ),
-          onPressed: onTapMenu),
+      leading: Padding(
+        padding:  EdgeInsets.only(left: 20.w),
+        child: IconButton(
+            icon: Icon(
+              Icons.menu,
+              size: 35,
+              color: Colors.white,
+            ),
+            onPressed: onTapMenu),
+      ),
       title: Center(
         child: Image.asset(
           'assets/icon/mainicon.png',
-          height: 50,
+          height: 55,
         ),
       ),
       actions: [

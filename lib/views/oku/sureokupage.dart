@@ -80,7 +80,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             print('Tapped on ${match.group(0)}');
-            _showBottomSheet(context, "${SureAdi} Suresi\nDipnotu",
+            _showBottomSheet(context, "DİPNOT ${transformedText}",
                 _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
           },
       ));
@@ -210,7 +210,6 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
@@ -242,8 +241,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
-                  fontFamily: 'Bw Aleta No 10',
-                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Bw Aleta No 10 Bold',
+                  fontWeight: FontWeight.bold,
                   height: 0,
                 ),
               ),
@@ -281,7 +280,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                     Row(
                       children: [
                         SizedBox(
-                          width: 15,
+                          width: 15.w,
                         ),
                         ayetno != 1
                             ? Container(
@@ -290,8 +289,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: ColorConstants.primaryColor3,
-                                      width: 3),
+                                      color: Color(0xff2B89A5),
+                                      width: 2),
                                 ),
                                 child: Center(
                                   child: IconButton(
@@ -348,6 +347,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                               // mainAxisAlignment:
                                               //     MainAxisAlignment.center,
                                               children: [
+                                                SizedBox(height: 3,),
                                                 Text(
                                                   SureAdi,
                                                   textAlign: TextAlign.center,
@@ -364,7 +364,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 17,
+                                                    fontSize: 18,
                                                     fontFamily: 'Podkova',
                                                     fontWeight: FontWeight.w400,
                                                     height: 0,
@@ -400,15 +400,6 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
-                                          // Text(
-                                          //   "($ayetno)",
-                                          //   style: TextStyle(
-                                          //     color: Color(0xFF60A6BB),
-                                          //     fontSize: 30,
-                                          //     fontFamily: 'Podkova',
-                                          //     fontWeight: FontWeight.w700,
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                       Divider(
@@ -472,11 +463,11 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                             height: 45,
                             width: 45,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: ColorConstants.primaryColor3,
-                                  width: 3),
-                            ),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Color(0xff2B89A5),
+                                      width: 2),
+                                ),
                             child: Center(
                               child: IconButton(
                                 onPressed: _nextVerse,
@@ -535,21 +526,25 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Obx(
-                                              () => Visibility(
-                                                visible: homePageController.arapcametin.value,
-                                                child: Text(
-                                                  moveSeparatorToFront(
-                                                      _verses[ayetno].metin!),
-                                                  style: TextStyle(
-                                                    fontSize: 27,
-                                                    fontFamily: 'KuranFont',
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color(0xFF2A89A5),
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
+                                      () => Visibility(
+    visible: homePageController.arapcametin.value,
+    child: RichText(
+      text: TextSpan(
+        text: _verses[ayetno].metin!,
+        
+        style: TextStyle(
+          
+          fontSize: 24,
+          fontFamily: 'Kuranfont',
+          fontWeight: FontWeight.w400,
+          color: Color(0xFF2A89A5),
+        ),
+        locale: Locale('ar', ''),
+      ),
+      textDirection: TextDirection.rtl,
+    ),
+  ),
+),
                                             SizedBox(
                                               height: 30.h,
                                             ),
@@ -558,6 +553,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                               child: Obx(
                                                 () => homePageController.dipnotlar.value
                                                     ? RichText(
+                                                      textAlign: TextAlign.center,
                                                         text: TextSpan(
                                                           style: TextStyle(
                                                             fontFamily: 'Podkova',
@@ -673,7 +669,6 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: 50,
                               height: 35,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(),
@@ -699,34 +694,33 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                         ),
                       ),
                     ),
-                  ),
+                  ), 
                 ),
               ),
                     ],
                   ),
                 ),
-              ),
-              
+              ), 
             ],
           ),
           Obx(() => homePageController.isContainerVisible.value
                 ? Padding(
                     padding:
-                        const EdgeInsets.only(bottom: 15, left: 40, right: 40),
+                        const EdgeInsets.only(bottom: 15, left: 15, right: 15),
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Fab(context, homePageController.yazipuntosu,
                             homePageController.arapcametin, homePageController.dipnotlar)),
                   )
                 : Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 20),
+                    padding: const EdgeInsets.only(left: 20, bottom: 15),
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: GestureDetector(
                         onTap: toggleContainerVisibility,
                         child: Container(
                           width: 50,
-                          height: 60,
+                          height: 97,
                           child: Icon(
                             Icons.keyboard_arrow_left,
                             size: 42,
@@ -752,7 +746,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
     return Padding(
         padding: EdgeInsets.only(left: 0),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.92,
+          width: MediaQuery.of(context).size.width * 0.95,
           height: 97,
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: ShapeDecoration(
@@ -895,7 +889,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                                           color: Colors.black,
                                           fontSize: 18,
                                           fontFamily: 'Axiforma',
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w900,
                                           height: 0,
                                         ),
                                       ),
@@ -990,7 +984,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                         bottomSheetWidget(asset: "settings", text: "Ayarlar"),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
@@ -1001,7 +995,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                       child: bottomSheetWidget(
                           asset: "favorites", text: "Favori")),
                   SizedBox(
-                    width: 5,
+                    width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
@@ -1012,7 +1006,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                       child:
                           bottomSheetWidget(asset: "saveicon", text: "Ayraç")),
                   SizedBox(
-                    width: 5,
+                    width: 15,
                   ),
                   GestureDetector(
                       onTap: () async {
@@ -1022,7 +1016,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                       },
                       child: bottomSheetWidget(asset: "share", text: "Paylaş")),
                   SizedBox(
-                    width: 5.w,
+                    width: 0.w,
                   ),
                 ],
               ),
@@ -1030,73 +1024,74 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                   onPressed: toggleContainerVisibility,
                   icon: Icon(
                     Icons.arrow_forward_ios_sharp,
-                    color: Colors.white,
-                    size: 25,
+                    color:  Color(0xFF88E3FF),
+                    size: 20,
                   )),
-              Expanded(
-                flex: 3,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(25.0),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 50),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        shadows: [
-                          BoxShadow(
-                            color: Color(0x26000000),
-                            blurRadius: 10,
-                            offset: Offset(4, 4),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (_verses.isNotEmpty)
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Obx(
-                                    () => Visibility(
-                                      visible: arapcametin.value,
-                                      child: Text(
-                                        _verses[ayetno].metin!,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontFamily: 'KuranFont',
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xFF2A89A5),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  ElevatedButton(
-                                    onPressed: _saveCurrentAyah,
-                                    child: Text('Save Current Ayah'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   flex: 3,
+              //   child: SingleChildScrollView(
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(25.0),
+              //       child: Container(
+              //         width: MediaQuery.of(context).size.width,
+              //         padding: const EdgeInsets.symmetric(
+              //             horizontal: 25, vertical: 50),
+              //         clipBehavior: Clip.antiAlias,
+              //         decoration: ShapeDecoration(
+              //           color: Colors.white,
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(30),
+              //           ),
+              //           shadows: [
+              //             BoxShadow(
+              //               color: Color(0x26000000),
+              //               blurRadius: 10,
+              //               offset: Offset(4, 4),
+              //               spreadRadius: 0,
+              //             ),
+              //           ],
+              //         ),
+              //         child: Column(
+              //           mainAxisSize: MainAxisSize.min,
+              //           mainAxisAlignment: MainAxisAlignment.start,
+              //           crossAxisAlignment: CrossAxisAlignment.center,
+              //           children: [
+              //             if (_verses.isNotEmpty)
+              //               Container(
+              //                 width: double.infinity,
+              //                 padding: EdgeInsets.all(16.0),
+              //                 child: Column(
+              //                   crossAxisAlignment: CrossAxisAlignment.center,
+              //                   children: [
+              //                     Obx(
+              //                       () => Visibility(
+              //                         visible: arapcametin.value,
+              //                         child: Text(
+              //                           _verses[ayetno].metin!,
+              //                           style: TextStyle(
+              //                             fontSize: 24,
+              //                             fontFamily: 'KuranFont',
+              //                             fontWeight: FontWeight.w400,
+              //                             color: Color(0xFF2A89A5),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                     SizedBox(height: 20),
+              //                     ElevatedButton(
+              //                       onPressed: _saveCurrentAyah,
+              //                       child: Text('Save Current Ayah'),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            
             ],
           ),
         ));
@@ -1110,7 +1105,8 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
       ),
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(left: 25,right: 25,bottom: 40,top: 25),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
@@ -1123,15 +1119,17 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
               Text(
                 text1,
                 style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+color: Colors.black,
+fontSize: 18,
+fontFamily: 'AxiformaBold',
+fontWeight: FontWeight.w900,
+height: 0,
+)
               ),
               SizedBox(height: 10),
               Container(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.3,
+                  maxHeight: MediaQuery.of(context).size.height * 0.40,
                 ),
                 child: ListView(
                   shrinkWrap: true,
@@ -1139,10 +1137,12 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                     Text(
                       text2,
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 17,
-                      ),
+color: Colors.black,
+fontSize: 26,
+fontFamily: 'Podkova',
+fontWeight: FontWeight.w400,
+height: 0,
+),
                     ),
                   ],
                 ),
@@ -1230,7 +1230,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                 Text(
                   text1,
                   style: TextStyle(
-                    color: Colors.black, // Text1 rengi
+                    color: Colors.black, 
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -1248,7 +1248,7 @@ List<TextSpan> _parseText(String text, bool showDipnotlar) {
                 Text(
                   text2,
                   style: TextStyle(
-                    color: Colors.black, // Text2 rengi
+                    color: Colors.black, 
                     fontWeight: FontWeight.normal,
                     fontSize: 17,
                   ),
@@ -1404,8 +1404,8 @@ class bottomSheetWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-              width: 40,
-              height: 40,
+              width: 50,
+              height: 50,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(),
               child: Image.asset("assets/icon/$asset.png")),
@@ -1414,7 +1414,7 @@ class bottomSheetWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF88E3FF),
-              fontSize: 15,
+              fontSize: 12,
               fontFamily: 'Work Sans',
               fontWeight: FontWeight.w500,
               height: 0,
