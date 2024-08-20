@@ -664,8 +664,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontFamily: 'Podkova',
+                                                  fontSize: 26,
+                                                  fontFamily:
+                                                      'Source Serif Pro',
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -1141,20 +1142,21 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   void _showBottomSheet(BuildContext context, String text1, String text2) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 10),
@@ -1169,7 +1171,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
               SizedBox(height: 10),
               Container(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.40,
+                  maxHeight: MediaQuery.of(context).size.height * 0.64,
                 ),
                 child: ListView(
                   shrinkWrap: true,
@@ -1179,7 +1181,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 26,
-                        fontFamily: 'Podkova',
+                        fontFamily: 'Source Serif Pro',
                         fontWeight: FontWeight.w400,
                         height: 0,
                       ),

@@ -134,7 +134,7 @@ class KuranAydinligiPage extends StatelessWidget {
                                         text: '09 Ekim 2015, Ankara\n',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 20,
+                                          fontSize: 22,
                                           fontStyle: FontStyle.italic,
                                           fontFamily: 'Source Serif Pro',
                                           fontWeight: FontWeight.w400,
