@@ -57,7 +57,9 @@ class _HomePageState extends State<HomePage> {
                 _scaffoldKey.currentState?.openDrawer();
               },
               onTapSearch: null),
-              SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           Expanded(
             child: Stack(
               children: [
@@ -73,8 +75,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         SizedBox(height: 5.h),
                         Obx(() => Padding(
-                          padding:  EdgeInsets.only(left: 30.w,right: 30.w),
-                          child: Container(
+                              padding: EdgeInsets.only(left: 30.w, right: 30.w),
+                              child: Container(
                                 height: 55.h,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -128,10 +130,11 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                        )),
+                            )),
                         SizedBox(height: 5.h),
                         Padding(
-                          padding: EdgeInsets.only(top: 10.h, left: 25.w,right: 25.w),
+                          padding: EdgeInsets.only(
+                              top: 10.h, left: 25.w, right: 25.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -198,8 +201,8 @@ class _HomePageState extends State<HomePage> {
                           () => ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(top: 30.h,left: 25.w,right: 25.w),
-                            
+                            padding: EdgeInsets.only(
+                                top: 30.h, left: 25.w, right: 25.w),
                             itemCount: homePageController.changeQueue.value
                                 ? mushafSirasi.length
                                 : nuzulSirasi.length,
@@ -461,7 +464,9 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            final surahName = sureadi.text;
+                                            // Kullanıcının girdiği surahName stringindeki baştaki ve sondaki boşlukları sil
+                                            final surahName =
+                                                sureadi.text.trim();
                                             final verseNumber =
                                                 int.tryParse(ayetno.text);
 
@@ -475,6 +480,10 @@ class _HomePageState extends State<HomePage> {
                                                   'Hata', validationError);
                                             } else {
                                               // Hata yok, ayete git
+                                              homePageController
+                                                      .showdialog.value =
+                                                  !homePageController
+                                                      .showdialog.value;
                                               Get.toNamed(
                                                   NavigationConstants
                                                       .sureOkuPage,

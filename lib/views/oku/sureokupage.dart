@@ -81,7 +81,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               print('Tapped on ${match.group(0)}');
-              _showBottomSheet(context, "DİPNOT ${transformedText}",
+              _showBottomSheet(
+                  context,
+                  "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}",
                   _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
             },
         ));
