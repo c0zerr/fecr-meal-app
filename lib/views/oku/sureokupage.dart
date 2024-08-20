@@ -630,54 +630,61 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           visible: ayetno == 1,
                           child: GestureDetector(
                             onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10)),
-                                ),
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 20, horizontal: 40),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          '${SureAdi} Suresi\nHakkında',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontFamily: 'Axiforma',
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                          textAlign: TextAlign
-                                              .start, // Başlığı sola yasla
-                                        ),
-                                        SizedBox(height: 20),
-                                        Expanded(
-                                          child: ListView(
-                                            children: [
-                                              Text(
-                                                _verses[0].meal.toString(),
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 26,
-                                                  fontFamily:
-                                                      'Source Serif Pro',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
+                              _showBottomSheet(
+                                  context,
+                                  '${SureAdi} Suresi\nHakkında',
+                                  _verses[0].meal.toString());
+                              //   showModalBottomSheet(
+                              //     isScrollControlled: true,
+                              //     context: context,
+                              //     shape: RoundedRectangleBorder(
+                              //       borderRadius: BorderRadius.vertical(
+                              //           top: Radius.circular(10)),
+                              //     ),
+                              //     builder: (BuildContext context) {
+                              //       return Container(
+                              //         height: MediaQuery.of(context).size.height *
+                              //             0.8,
+                              //         padding: EdgeInsets.symmetric(
+                              //             vertical: 20, horizontal: 40),
+                              //         child: Column(
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           children: <Widget>[
+                              //             Text(
+                              //               '${SureAdi} Suresi\nHakkında',
+                              //               style: TextStyle(
+                              //                 color: Colors.black,
+                              //                 fontSize: 18,
+                              //                 fontFamily: 'Axiforma',
+                              //                 fontWeight: FontWeight.w900,
+                              //               ),
+                              //               textAlign: TextAlign
+                              //                   .start, // Başlığı sola yasla
+                              //             ),
+                              //             SizedBox(height: 20),
+                              //             Expanded(
+                              //               child: ListView(
+                              //                 children: [
+                              //                   Text(
+                              //                     _verses[0].meal.toString(),
+                              //                     textAlign: TextAlign.start,
+                              //                     style: TextStyle(
+                              //                       color: Colors.black,
+                              //                       fontSize: 26,
+                              //                       fontFamily:
+                              //                           'Source Serif Pro',
+                              //                       fontWeight: FontWeight.w400,
+                              //                     ),
+                              //                   ),
+                              //                 ],
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       );
+                              //     },
+                              //   );
                             },
                             child: Center(
                               child: Padding(
