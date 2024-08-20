@@ -743,6 +743,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 75.h,
+                        ),
                       ],
                     ),
                   ),
@@ -1061,9 +1064,19 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   ),
                   GestureDetector(
                       onTap: () async {
-                        await Share.share("""$sureadi Suresi, ${ayetno ?? 0}
-                      ${_verses[ayetno].metin},
-                      ${_verses[ayetno].meal}""");
+                        String meal = _verses[ayetno].meal!;
+                        meal = meal.replaceAll(RegExp(r'\[.*?\]'), '');
+                        _verses[ayetno].meal = meal;
+
+                        String metin = _verses[ayetno].metin!;
+                        if (metin.isNotEmpty) {
+                          metin = metin[metin.length - 1] +
+                              metin.substring(0, metin.length - 1);
+                        }
+
+                        await Share.share(
+                          "$sureadi Suresi ${metin}  ${_verses[ayetno].meal}",
+                        );
                       },
                       child: bottomSheetWidget(asset: "share", text: "Paylaş")),
                   SizedBox(
