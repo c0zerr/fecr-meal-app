@@ -110,6 +110,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   TextEditingController _controller2 = TextEditingController();
   List<Verses> _verses = [];
   String SureAdi = "";
+  RxBool sonAyet = true.obs;
   void _makeRequest() async {
     Dio dio = Dio();
     try {
@@ -190,8 +191,13 @@ class _SureOkuPageState extends State<SureOkuPage> {
     print("basıldı");
     setState(() {
       if (ayetno < _verses.length - 1) {
-        ayetno = _verses[ayetno].sonrakiayet ?? 1;
-        print("ayetno: $ayetno");
+        if (_verses[ayetno].sonrakiayet == 1 ||
+            _verses[ayetno].sonrakiayet == 0) {
+          sonAyet.value = false;
+        } else {
+          ayetno = _verses[ayetno].sonrakiayet ?? 1;
+          print("ayetno: $ayetno");
+        }
       }
     });
   }
@@ -199,8 +205,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
   void _previousVerse() {
     print("basıldı");
     setState(() {
-      _verses[ayetno].sonrakiayet;
       if (ayetno > 1) {
+        sonAyet.value = true;
         ayetno = _verses[ayetno].oncekiayet ?? 1;
         print("ayetno: $ayetno");
       }
@@ -481,21 +487,26 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           ),
                           Visibility(
                             visible: ayetno != (_verses.length - 1),
-                            child: Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Color(0xff2B89A5), width: 2),
-                              ),
-                              child: Center(
-                                child: IconButton(
-                                  onPressed: _nextVerse,
-                                  icon: Icon(
-                                    Icons.arrow_forward_outlined,
-                                    color: ColorConstants.primaryColor3,
-                                    size: 25,
+                            child: Obx(
+                              () => Visibility(
+                                visible: sonAyet.value,
+                                child: Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: Color(0xff2B89A5), width: 2),
+                                  ),
+                                  child: Center(
+                                    child: IconButton(
+                                      onPressed: _nextVerse,
+                                      icon: Icon(
+                                        Icons.arrow_forward_outlined,
+                                        color: ColorConstants.primaryColor3,
+                                        size: 25,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

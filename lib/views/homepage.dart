@@ -150,47 +150,53 @@ class _HomePageState extends State<HomePage> {
                               ),
                               SizedBox(width: 20.w),
                               Obx(
-                                () => Container(
-                                  width: 174.w,
-                                  height: 46.h,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Color(0xff60a6bb),
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          homePageController.changeQueue.value =
-                                              !homePageController
-                                                  .changeQueue.value;
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              homePageController
-                                                      .changeQueue.value
-                                                  ? "Mushaf Sırası"
-                                                  : "Nüzul Sırası",
-                                              style: TextStyle(
-                                                color: Color(0xFF60A6BB),
-                                                fontSize: 16,
-                                                fontFamily: 'Axiforma',
-                                                fontWeight: FontWeight.w400,
-                                                height: 0,
-                                              ),
-                                            ),
-                                            SizedBox(width: 5.w),
-                                            Image.asset(
-                                                "assets/icon/updown.png"),
-                                          ],
-                                        ),
+                                () => Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 1.0, top: 1),
+                                  child: Container(
+                                    width: 174.w,
+                                    height: 46.h,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Color(0xff60a6bb),
                                       ),
-                                    ],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            homePageController
+                                                    .changeQueue.value =
+                                                !homePageController
+                                                    .changeQueue.value;
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                homePageController
+                                                        .changeQueue.value
+                                                    ? "Mushaf Sırası"
+                                                    : "Nüzul Sırası",
+                                                style: TextStyle(
+                                                  color: Color(0xFF60A6BB),
+                                                  fontSize: 16,
+                                                  fontFamily: 'Axiforma',
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 0,
+                                                ),
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Image.asset(
+                                                  "assets/icon/updown.png"),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -261,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                                               children: [
                                                 SizedBox(
                                                   width: 182.w,
-                                                  height: 30.h,
+                                                  // height: 30.h,
                                                   child: Text(
                                                     chosenList[index]['name'],
                                                     style: TextStyle(
