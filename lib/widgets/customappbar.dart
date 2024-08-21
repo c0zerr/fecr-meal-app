@@ -2,6 +2,7 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -20,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 80,
       backgroundColor: ColorConstants.primaryColor,
       leading: Padding(
-        padding:  EdgeInsets.only(left: 20.w),
+        padding: EdgeInsets.only(left: 20.w),
         child: IconButton(
             icon: Icon(
               Icons.menu,
@@ -30,9 +31,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onTapMenu),
       ),
       title: Center(
-        child: Image.asset(
-          'assets/icon/mainicon.png',
-          height: 55,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icon/fecr.svg',
+              height: 55,
+            ),
+            SizedBox(
+              width: 20.w,
+            ),
+            SvgPicture.asset(
+              'assets/icon/kuranaydinligi.svg',
+              height: 45,
+            ),
+          ],
         ),
       ),
       actions: [

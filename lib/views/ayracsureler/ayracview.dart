@@ -217,51 +217,59 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                         _deleteSavedAyah(index);
                                                         Navigator.pop(context);
                                                       },
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 25,
-                                                                vertical: 20),
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color:
-                                                              Color(0xFFE86014),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              'EVET',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 18,
-                                                                fontFamily:
-                                                                    'Axiforma',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                height: 0,
-                                                              ),
+                                                      child: ConstrainedBox(
+                                                        constraints: BoxConstraints(
+                                                            minWidth:
+                                                                100), // Minimum genişlik belirledik
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      25,
+                                                                  vertical: 20),
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0xFFE86014),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
                                                             ),
-                                                          ],
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                'EVET',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 18,
+                                                                  fontFamily:
+                                                                      'Axiforma',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  height: 0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -270,51 +278,59 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                       onTap: () {
                                                         Navigator.pop(context);
                                                       },
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 25,
-                                                                vertical: 20),
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color:
-                                                              Color(0xFFE86014),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              'HAYIR',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 18,
-                                                                fontFamily:
-                                                                    'Axiforma',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                height: 0,
-                                                              ),
+                                                      child: ConstrainedBox(
+                                                        constraints: BoxConstraints(
+                                                            minWidth:
+                                                                100), // Aynı minimum genişlik
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      25,
+                                                                  vertical: 20),
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0xFFE86014),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
                                                             ),
-                                                          ],
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                'HAYIR',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 18,
+                                                                  fontFamily:
+                                                                      'Axiforma',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  height: 0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

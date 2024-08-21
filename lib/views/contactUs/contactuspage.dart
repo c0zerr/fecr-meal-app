@@ -68,7 +68,7 @@ class ContactUsPage extends StatelessWidget {
               height: 43,
             ),
             Container(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.only(right: 15, top: 8),
               decoration: BoxDecoration(
                 color: Colors.white, // Arka plan rengi beyaz
                 borderRadius: BorderRadius.circular(15.0), // Yuvarlak kenarlık

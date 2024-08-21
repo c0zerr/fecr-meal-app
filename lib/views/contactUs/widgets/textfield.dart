@@ -17,19 +17,20 @@ class CustomTextfield extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: ColorConstants.textfieldBackground),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            contentPadding: EdgeInsetsDirectional.all(15.w),
-            hintText: text,
-            hintStyle: TextStyle(
-              color: Color(0xFF0E5770),
-              fontSize: 14,
-              fontFamily: 'Axiforma',
-              fontWeight: FontWeight.w400,
-              height: 0.10,
+        child: Center(
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: EdgeInsetsDirectional.only(start: 15),
+              hintText: text,
+              hintStyle: TextStyle(
+                color: Color(0xFF0E5770),
+                fontSize: 14,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ));
