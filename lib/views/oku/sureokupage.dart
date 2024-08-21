@@ -37,6 +37,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   HomePageController homePageController = Get.find();
   String sureadi = Get.arguments[0];
   int ayetno = Get.arguments[1] ?? 0;
+  String? dynamicText;
   @override
   void initState() {
     _makeRequest();
