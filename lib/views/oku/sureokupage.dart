@@ -189,7 +189,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
     print("basıldı");
     setState(() {
       if (ayetno < _verses.length - 1) {
-        ayetno++;
+        ayetno = _verses[ayetno].sonrakiayet ?? 1;
         print("ayetno: $ayetno");
       }
     });
@@ -198,8 +198,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
   void _previousVerse() {
     print("basıldı");
     setState(() {
+      _verses[ayetno].sonrakiayet;
       if (ayetno > 1) {
-        ayetno--;
+        ayetno = _verses[ayetno].oncekiayet ?? 1;
         print("ayetno: $ayetno");
       }
     });
@@ -506,247 +507,210 @@ class _SureOkuPageState extends State<SureOkuPage> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.all(25.0),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 30),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  shadows: [
-                                    BoxShadow(
-                                      color: Color(0x26000000),
-                                      blurRadius: 10,
-                                      offset: Offset(4, 4),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      if (_verses.isNotEmpty)
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(
-                                              16.0), // Padding for better spacing
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Obx(
-                                                () => Visibility(
-                                                  visible: homePageController
-                                                      .arapcametin.value,
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      text: _verses[ayetno]
-                                                          .metin!,
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontFamily: 'Kuranfont',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            Color(0xFF2A89A5),
-                                                      ),
-                                                      locale: Locale('ar', ''),
-                                                    ),
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 30.h,
-                                              ),
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: Obx(
-                                                  () => homePageController
-                                                          .dipnotlar.value
-                                                      ? RichText(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          text: TextSpan(
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Podkova',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              fontSize:
-                                                                  homePageController
-                                                                      .yazipuntosu
-                                                                      .value,
-                                                            ),
-                                                            children: _parseText(
-                                                                _verses[ayetno]
-                                                                    .meal!,
-                                                                homePageController
-                                                                    .dipnotlar
-                                                                    .value),
-                                                          ),
-                                                        )
-                                                      : RichText(
-                                                          text: TextSpan(
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Podkova',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              fontSize:
-                                                                  homePageController
-                                                                      .yazipuntosu
-                                                                      .value,
-                                                            ),
-                                                            children: _parseText(
-                                                                _verses[ayetno]
-                                                                    .meal!,
-                                                                homePageController
-                                                                    .dipnotlar
-                                                                    .value),
-                                                          ),
-                                                        ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                    ]))),
-                        Visibility(
-                          visible: ayetno == 1,
-                          child: GestureDetector(
-                            onTap: () {
-                              _showBottomSheet(
-                                  context,
-                                  '${SureAdi} Suresi\nHakkında',
-                                  _verses[0].meal.toString());
-                              //   showModalBottomSheet(
-                              //     isScrollControlled: true,
-                              //     context: context,
-                              //     shape: RoundedRectangleBorder(
-                              //       borderRadius: BorderRadius.vertical(
-                              //           top: Radius.circular(10)),
-                              //     ),
-                              //     builder: (BuildContext context) {
-                              //       return Container(
-                              //         height: MediaQuery.of(context).size.height *
-                              //             0.8,
-                              //         padding: EdgeInsets.symmetric(
-                              //             vertical: 20, horizontal: 40),
-                              //         child: Column(
-                              //           crossAxisAlignment:
-                              //               CrossAxisAlignment.start,
-                              //           children: <Widget>[
-                              //             Text(
-                              //               '${SureAdi} Suresi\nHakkında',
-                              //               style: TextStyle(
-                              //                 color: Colors.black,
-                              //                 fontSize: 18,
-                              //                 fontFamily: 'Axiforma',
-                              //                 fontWeight: FontWeight.w900,
-                              //               ),
-                              //               textAlign: TextAlign
-                              //                   .start, // Başlığı sola yasla
-                              //             ),
-                              //             SizedBox(height: 20),
-                              //             Expanded(
-                              //               child: ListView(
-                              //                 children: [
-                              //                   Text(
-                              //                     _verses[0].meal.toString(),
-                              //                     textAlign: TextAlign.start,
-                              //                     style: TextStyle(
-                              //                       color: Colors.black,
-                              //                       fontSize: 26,
-                              //                       fontFamily:
-                              //                           'Source Serif Pro',
-                              //                       fontWeight: FontWeight.w400,
-                              //                     ),
-                              //                   ),
-                              //                 ],
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       );
-                              //     },
-                              //   );
-                            },
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(bottom: 150.h),
-                                child: Container(
-                                  width: 250.w,
-                                  height: 70.h,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      if (details.primaryVelocity! < 0) {
+                        // Sağa kaydırma işlemi
+                        _nextVerse();
+                      } else if (details.primaryVelocity! > 0) {
+                        // Sola kaydırma işlemi
+                        _previousVerse();
+                      }
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 30),
+                                  clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFF2A89A5),
+                                    color: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(30),
                                     ),
                                     shadows: [
                                       BoxShadow(
-                                        color: Color(0x3F000000),
+                                        color: Color(0x26000000),
                                         blurRadius: 10,
-                                        offset: Offset(0, 8),
+                                        offset: Offset(4, 4),
                                         spreadRadius: 0,
                                       )
                                     ],
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 35,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(),
-                                        child: Icon(
-                                          Icons.info_outline_rounded,
-                                          size: 30,
-                                          color: Colors.white,
-                                        ),
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (_verses.isNotEmpty)
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(16.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Obx(
+                                                  () => Visibility(
+                                                    visible: homePageController
+                                                        .arapcametin.value,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        text: _verses[ayetno]
+                                                            .metin!,
+                                                        style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontFamily:
+                                                              'Kuranfont',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Color(0xFF2A89A5),
+                                                        ),
+                                                        locale:
+                                                            Locale('ar', ''),
+                                                      ),
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 30.h,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: Obx(
+                                                    () => homePageController
+                                                            .dipnotlar.value
+                                                        ? RichText(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            text: TextSpan(
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Podkova',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    homePageController
+                                                                        .yazipuntosu
+                                                                        .value,
+                                                              ),
+                                                              children: _parseText(
+                                                                  _verses[ayetno]
+                                                                      .meal!,
+                                                                  homePageController
+                                                                      .dipnotlar
+                                                                      .value),
+                                                            ),
+                                                          )
+                                                        : RichText(
+                                                            text: TextSpan(
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Podkova',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    homePageController
+                                                                        .yazipuntosu
+                                                                        .value,
+                                                              ),
+                                                              children: _parseText(
+                                                                  _verses[ayetno]
+                                                                      .meal!,
+                                                                  homePageController
+                                                                      .dipnotlar
+                                                                      .value),
+                                                            ),
+                                                          ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ]))),
+                          Visibility(
+                            visible: ayetno == 1,
+                            child: GestureDetector(
+                              onTap: () {
+                                _showBottomSheet(
+                                    context,
+                                    '${SureAdi} Suresi\nHakkında',
+                                    _verses[0].meal.toString());
+                              },
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 150.h),
+                                  child: Container(
+                                    width: 250.w,
+                                    height: 70.h,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    decoration: ShapeDecoration(
+                                      color: Color(0xFF2A89A5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
                                       ),
-                                      const SizedBox(width: 15),
-                                      Text(
-                                        'Sure Hakkında',
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24,
-                                          fontFamily: 'Podkova',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.09,
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Color(0x3F000000),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 8),
+                                          spreadRadius: 0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 35,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(),
+                                          child: Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 15),
+                                        Text(
+                                          'Sure Hakkında',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24,
+                                            fontFamily: 'Podkova',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0.09,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 75.h,
-                        ),
-                      ],
+                          SizedBox(
+                            height: 75.h,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

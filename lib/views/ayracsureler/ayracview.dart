@@ -176,41 +176,87 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              SizedBox(
+                                                height: 25,
+                                              ),
                                               Text(
                                                 'AYRAÇ',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 18,
+                                                  fontSize: 16,
                                                   fontFamily: 'Axiforma',
                                                   fontWeight: FontWeight.w700,
                                                   height: 0,
                                                 ),
                                               ),
                                               const SizedBox(height: 15),
-                                              Container(
-                                                width: 271,
-                                                decoration: ShapeDecoration(
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                      width: 1,
-                                                      strokeAlign: BorderSide
-                                                          .strokeAlignCenter,
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 25.w),
+                                                child: Container(
+                                                  width: 271,
+                                                  decoration: ShapeDecoration(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                        width: 1,
+                                                        strokeAlign: BorderSide
+                                                            .strokeAlignCenter,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                               const SizedBox(height: 25),
                                               SizedBox(
-                                                  width: 271,
-                                                  child: Text(
-                                                      "$sureadi Suresi, $ayetno. Ayet'den\nAyraç Kaldırılsın mı?")),
+                                                width: 271,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        text:
+                                                            "$sureadi Suresi, ",
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontFamily:
+                                                              'Axiforma',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                        children: [
+                                                          TextSpan(
+                                                            text:
+                                                                "$ayetno. Ayet",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Text(
+                                                      "Ayraç Kaldırılsın mı?",
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Axiforma',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                               const SizedBox(height: 25),
                                               Container(
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {

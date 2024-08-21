@@ -1,5 +1,6 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
@@ -166,41 +167,76 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            SizedBox(
+                                              height: 15,
+                                            ),
                                             Text(
-                                              'AYRAÇ',
+                                              'FAVORİ AYETLER',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 fontFamily: 'Axiforma',
                                                 fontWeight: FontWeight.w700,
                                                 height: 0,
                                               ),
                                             ),
                                             const SizedBox(height: 15),
-                                            Container(
-                                              width: 271,
-                                              decoration: ShapeDecoration(
-                                                shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                    width: 1,
-                                                    strokeAlign: BorderSide
-                                                        .strokeAlignCenter,
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 25.w),
+                                              child: Container(
+                                                width: 271,
+                                                decoration: ShapeDecoration(
+                                                  shape: RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                      width: 1,
+                                                      strokeAlign: BorderSide
+                                                          .strokeAlignCenter,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(height: 25),
                                             SizedBox(
-                                                width: 271,
-                                                child: Text(
-                                                    "$sureadi Suresi, $ayetno. Ayet\nFavorilerden Kaldırılsın mı?")),
+                                              width: 271,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      text:
+                                                          "$sureadi Suresi, $ayetno. Ayet",
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Axiforma',
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    "Favorilerden Kaldırılsın mı?",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Axiforma',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                             const SizedBox(height: 25),
                                             Container(
                                               child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
@@ -243,6 +279,9 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                           children: [
                                                             Text(
                                                               'EVET',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               style: TextStyle(
                                                                 color: Colors
                                                                     .white,
