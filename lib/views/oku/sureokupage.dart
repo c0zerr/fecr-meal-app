@@ -44,6 +44,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     super.initState();
   }
 
+  
+
   List<TextSpan> _parseText(String text, bool showDipnotlar) {
     List<TextSpan> spans = [];
     RegExp exp = RegExp(r"(\[?[da]:\d+(-\d+|,\s*\d+)*\]?)");
@@ -190,6 +192,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   void _nextVerse() {
     print("basıldı");
     setState(() {
+      print("saddfsa ${_verses[ayetno].metin.toString()}");
       if (ayetno < _verses.length - 1) {
         if (_verses[ayetno].sonrakiayet == 1 ||
             _verses[ayetno].sonrakiayet == 0) {
@@ -222,6 +225,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("sdalfksdf ${_verses[ayetno].meal}");
+    print("sfdsfds ${_verses[ayetno]}");
+    print("sfdsfds ${_verses[ayetno].ayetno}");
+    print("sfdsfds ${_verses[ayetno]}");
+
+
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
@@ -378,10 +387,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 18,
+                                                      //18
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       height: 0,
+
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -711,6 +722,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                             height: 0.09,
                                           ),
                                         ),
+                                        SizedBox(width: 5,)
                                       ],
                                     ),
                                   ),
@@ -719,7 +731,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             ),
                           ),
                           SizedBox(
-                            height: 75.h,
+                            height: 120.h,
                           ),
                         ],
                       ),

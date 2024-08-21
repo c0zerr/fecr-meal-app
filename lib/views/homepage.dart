@@ -304,16 +304,16 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           SizedBox(width: 0.w),
                                           Container(
-                                            width: 60.w,
-                                            height: 60.h,
+                                            width: 60,
+                                            height: 60,
                                             child: Stack(
                                               children: [
                                                 Positioned(
                                                   left: 0,
                                                   top: 0,
                                                   child: Container(
-                                                    width: 60.w,
-                                                    height: 60.h,
+                                                    width: 60,
+                                                    height: 60,
                                                     decoration: ShapeDecoration(
                                                       color: Color(0x192A89A5),
                                                       shape: OvalBorder(),
@@ -326,11 +326,11 @@ class _HomePageState extends State<HomePage> {
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 38,
+                                                      fontSize: 34,
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w700,
-                                                      height: 1.0,
+                                                      // height: 1.0,
                                                     ),
                                                   ),
                                                 ),
