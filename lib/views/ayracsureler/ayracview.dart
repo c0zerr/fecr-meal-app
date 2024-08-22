@@ -58,6 +58,61 @@ class _AyracSurePageState extends State<AyracSurePage> {
     }
   }
 
+  List<TextSpan> _parseText(String text, bool showDipnotlar) {
+    List<TextSpan> spans = [];
+    RegExp exp = RegExp(r"(\[?[da]:\d+(-\d+|,\s*\d+)*\]?)");
+
+    text.splitMapJoin(
+      exp,
+      onMatch: (match) {
+        String matchedText = match.group(0)!;
+        String transformedText;
+
+        // Eğer 'showDipnotlar' false ise ve matchedText 'd:' içeriyorsa, bu kısmı atla
+        if (!showDipnotlar && matchedText.contains('d:')) {
+          return '';
+        }
+
+        if (matchedText.contains('d:')) {
+          transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
+          transformedText = " [$transformedText";
+        } else if (matchedText.contains('a:')) {
+          transformedText = matchedText.substring(3, matchedText.length - 1) +
+              '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+        } else {
+          transformedText = matchedText;
+        }
+
+        spans.add(TextSpan(
+          text: transformedText,
+          style: TextStyle(
+            fontFamily: 'Podkova',
+            fontSize: 28,
+            fontWeight: FontWeight.w400,
+            color: !transformedText.contains('[')
+                ? Colors.black
+                : ColorConstants.primaryColor,
+          ),
+          // recognizer: TapGestureRecognizer()..onTap = () {},
+        ));
+        return '';
+      },
+      onNonMatch: (nonMatch) {
+        spans.add(TextSpan(
+          text: nonMatch,
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Podkova',
+            fontWeight: FontWeight.w400,
+          ),
+        ));
+        return '';
+      },
+    );
+
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -431,18 +486,20 @@ class _AyracSurePageState extends State<AyracSurePage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
-                              width: double.infinity,
-                              child: Text(
-                                meal,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 26,
-                                  fontFamily: 'Source Serif Pro',
-                                  fontWeight: FontWeight.w600,
-                                  height: 0,
-                                ),
-                              )),
+                            width: double.infinity,
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  children: _parseText(meal, true),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 26,
+                                    fontFamily: 'Source Serif Pro',
+                                    fontWeight: FontWeight.w600,
+                                    height: 0,
+                                  )),
+                            ),
+                          ),
                         ),
                       ],
                     ),

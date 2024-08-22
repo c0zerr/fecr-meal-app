@@ -1,4 +1,5 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,61 @@ class _SavedSurePageState extends State<SavedSurePage> {
     return [];
   }
 
+  List<TextSpan> _parseText(String text, bool showDipnotlar) {
+    List<TextSpan> spans = [];
+    RegExp exp = RegExp(r"(\[?[da]:\d+(-\d+|,\s*\d+)*\]?)");
+
+    text.splitMapJoin(
+      exp,
+      onMatch: (match) {
+        String matchedText = match.group(0)!;
+        String transformedText;
+
+        // Eğer 'showDipnotlar' false ise ve matchedText 'd:' içeriyorsa, bu kısmı atla
+        if (!showDipnotlar && matchedText.contains('d:')) {
+          return '';
+        }
+
+        if (matchedText.contains('d:')) {
+          transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
+          transformedText = " [$transformedText";
+        } else if (matchedText.contains('a:')) {
+          transformedText = matchedText.substring(3, matchedText.length - 1) +
+              '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+        } else {
+          transformedText = matchedText;
+        }
+
+        spans.add(TextSpan(
+          text: transformedText,
+          style: TextStyle(
+            fontFamily: 'Podkova',
+            fontSize: 28,
+            fontWeight: FontWeight.w400,
+            color: !transformedText.contains('[')
+                ? Colors.black
+                : ColorConstants.primaryColor,
+          ),
+          // recognizer: TapGestureRecognizer()..onTap = () {},
+        ));
+        return '';
+      },
+      onNonMatch: (nonMatch) {
+        spans.add(TextSpan(
+          text: nonMatch,
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Podkova',
+            fontWeight: FontWeight.w400,
+          ),
+        ));
+        return '';
+      },
+    );
+
+    return spans;
+  }
+
   Future<void> _deleteSavedAyah(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedAyahs = prefs.getStringList('savedAyahs');
@@ -53,6 +109,63 @@ class _SavedSurePageState extends State<SavedSurePage> {
       await prefs.setStringList('savedAyahs', savedAyahs);
       setState(() {}); // Refresh the state after deletion
     }
+  }
+
+  void _showBottomSheet(BuildContext context, String text1, String text2) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 10),
+              Text(text1,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontFamily: 'AxiformaBold',
+                    fontWeight: FontWeight.w900,
+                    height: 0,
+                  )),
+              SizedBox(height: 10),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.64,
+                ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text(
+                      text2,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 26,
+                        fontFamily: 'Source Serif Pro',
+                        fontWeight: FontWeight.w400,
+                        height: 0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -408,16 +521,17 @@ class _SavedSurePageState extends State<SavedSurePage> {
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
                           width: double.infinity,
-                          child: Text(
-                            meal,
+                          child: RichText(
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 26,
-                              fontFamily: 'Source Serif Pro',
-                              fontWeight: FontWeight.w600,
-                              height: 0,
-                            ),
+                            text: TextSpan(
+                                children: _parseText(meal, true),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 26,
+                                  fontFamily: 'Source Serif Pro',
+                                  fontWeight: FontWeight.w600,
+                                  height: 0,
+                                )),
                           ),
                         ),
                       ),

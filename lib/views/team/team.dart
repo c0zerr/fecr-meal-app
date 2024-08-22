@@ -53,48 +53,7 @@ class TeamInfoPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: 350.h,
-          ),
-          Center(
-            child: Text(
-              "UI / UX Tasarım",
-              style: TextStyle(
-                color: Color(0xFF60A6BB),
-                fontSize: 16,
-                fontFamily: 'Axiforma',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
-          ),
-          Center(
-            child: Text(
-              "Coşkun Işıkgül",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontFamily: 'Axiforma',
-                fontWeight: FontWeight.w500,
-                height: 0,
-                letterSpacing: 5,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/icon/icon1.png"),
-              SizedBox(
-                width: 5,
-              ),
-              Image.asset("assets/icon/icon2.png"),
-            ],
-          ),
-          SizedBox(
-            height: 50,
+            height: 150.h,
           ),
           Center(
             child: Text(
@@ -136,6 +95,121 @@ class TeamInfoPage extends StatelessWidget {
               GestureDetector(
                   onTap: _launchUrl2,
                   child: Image.asset("assets/icon/domain.png")),
+            ],
+          ),
+          SizedBox(
+            height: 30.h,
+          ),
+          Center(
+            child: Text(
+              "UI / UX Tasarım",
+              style: TextStyle(
+                color: Color(0xFF60A6BB),
+                fontSize: 16,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              "Coşkun Işıkgül",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w500,
+                height: 0,
+                letterSpacing: 5,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/icon/icon1.png"),
+              SizedBox(
+                width: 5,
+              ),
+              Image.asset("assets/icon/icon2.png"),
+            ],
+          ),
+          SizedBox(
+            height: 30.h,
+          ),
+          Center(
+            child: Text(
+              "Editör",
+              style: TextStyle(
+                color: Color(0xFF60A6BB),
+                fontSize: 16,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              "Muhammed Nazlıaydın",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w500,
+                height: 0,
+                letterSpacing: 5,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/icon/icon2.png"),
+            ],
+          ),
+          SizedBox(
+            height: 30.h,
+          ),
+          Center(
+            child: Text(
+              "Yönetmen",
+              style: TextStyle(
+                color: Color(0xFF60A6BB),
+                fontSize: 16,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w400,
+                height: 0,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              "Hüseyin Nazlıaydın",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.w500,
+                height: 0,
+                letterSpacing: 5,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset("assets/icon/icon2.png"),
             ],
           ),
         ],

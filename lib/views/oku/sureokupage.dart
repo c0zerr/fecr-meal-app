@@ -44,8 +44,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
     super.initState();
   }
 
-  
-
   List<TextSpan> _parseText(String text, bool showDipnotlar) {
     List<TextSpan> spans = [];
     RegExp exp = RegExp(r"(\[?[da]:\d+(-\d+|,\s*\d+)*\]?)");
@@ -223,14 +221,23 @@ class _SureOkuPageState extends State<SureOkuPage> {
         !homePageController.isContainerVisible.value;
   }
 
+  String extractATag(String text) {
+    // Boşlukları göz ardı eden bir regex oluşturuyoruz
+    RegExp exp = RegExp(r"\[a:(\d+(-\d+)?(,\s*\d+)*)\]");
+    Match? match = exp.firstMatch(text);
+
+    if (match != null) {
+      // Sayısal kısmı alıp, aradaki boşlukları temizliyoruz
+      return match.group(1)!.replaceAll(' ', '');
+    }
+
+    // Eğer 'a:' etiketi yoksa boş string döner
+    return '1';
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("sdalfksdf ${_verses[ayetno].meal}");
-    print("sfdsfds ${_verses[ayetno]}");
-    print("sfdsfds ${_verses[ayetno].ayetno}");
-    print("sfdsfds ${_verses[ayetno]}");
-
-
+    // print("asdasdas ${_verses[ayetno].meal.toString()}");
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
@@ -381,23 +388,24 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                       height: 0,
                                                     ),
                                                   ),
-                                                  Text(
-                                                    '$ayetno. Ayet',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 18,
-                                                      //18
-                                                      fontFamily: 'Podkova',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      height: 0,
-
+                                                  if (_verses.isNotEmpty)
+                                                    Text(
+                                                      '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        //18
+                                                        fontFamily: 'Podkova',
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        height: 0,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  )
+                                                  // SizedBox(
+                                                  //   height: 5,
+                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -722,7 +730,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                             height: 0.09,
                                           ),
                                         ),
-                                        SizedBox(width: 5,)
+                                        SizedBox(
+                                          width: 5,
+                                        )
                                       ],
                                     ),
                                   ),
