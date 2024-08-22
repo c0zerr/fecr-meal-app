@@ -6,6 +6,7 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fecrmeal/core/constants/customScrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -1191,20 +1192,23 @@ class _SureOkuPageState extends State<SureOkuPage> {
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * 0.64,
                 ),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Text(
-                      text2,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 26,
-                        fontFamily: 'Source Serif Pro',
-                        fontWeight: FontWeight.w400,
-                        height: 0,
+                child: CustomScrollbar(
+                  thickness: 6.0, // İstediğiniz kalınlık
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Text(
+                        text2,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 26,
+                          fontFamily: 'Source Serif Pro',
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 10),
