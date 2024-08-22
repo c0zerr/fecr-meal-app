@@ -395,7 +395,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15,
+                                                        fontSize: 18,
                                                         //18
                                                         fontFamily: 'Podkova',
                                                         fontWeight:
@@ -403,9 +403,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                         height: 0,
                                                       ),
                                                     ),
-                                                  // SizedBox(
-                                                  //   height: 5,
-                                                  // )
+                                                  SizedBox(
+                                                    height: 5,
+                                                  )
                                                 ],
                                               ),
                                             ),
