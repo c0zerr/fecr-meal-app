@@ -232,54 +232,19 @@ class _SureOkuPageState extends State<SureOkuPage> {
   }
 
   List<TextSpan> _buildTextSpans(String text) {
-    final regex = RegExp(r'\[([^\]]+)\]');
-    final matches = regex.allMatches(text);
+  final regex = RegExp(r'\[([^\]]+)\]');
+  final matches = regex.allMatches(text);
 
-    List<TextSpan> spans = [];
-    int lastMatchEnd = 0;
+  List<TextSpan> spans = [];
+  int lastMatchEnd = 0;
 
-    for (var match in matches) {
-      final citation = match.group(1)!;
-      final start = match.start;
-      final end = match.end;
-      if (start > lastMatchEnd) {
-        spans.add(TextSpan(
-          text: text.substring(lastMatchEnd, start),
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 26,
-            fontFamily: 'Source Serif Pro',
-            fontWeight: FontWeight.w400,
-            height: 0,
-          ),
-        ));
-      }
+  for (var match in matches) {
+    final citation = match.group(1)!;
+    final start = match.start;
+    final end = match.end;
+    if (start > lastMatchEnd) {
       spans.add(TextSpan(
-        text: '[$citation]',
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 26,
-          fontFamily: 'Source Serif Pro',
-          fontWeight: FontWeight.w700,
-          height: 0,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            final parts = citation.split(' ');
-            if (parts.length == 2) {
-              final text = parts[0];
-              final number = parts[1];
-              print('metin: $text');
-              print('sayı: $number');
-            }
-          },
-      ));
-
-      lastMatchEnd = end;
-    }
-    if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(
-        text: text.substring(lastMatchEnd),
+        text: " ${text.substring(lastMatchEnd, start)} ",
         style: TextStyle(
           color: Colors.black,
           fontSize: 26,
@@ -289,8 +254,49 @@ class _SureOkuPageState extends State<SureOkuPage> {
         ),
       ));
     }
-    return spans;
+    spans.add(TextSpan(
+      // Sadece citation metnini kullanıyoruz, köşeli parantezleri eklemiyoruz
+      text: citation,
+      style: TextStyle(
+        color: Colors.blue,
+        fontSize: 26,
+        fontFamily: 'Source Serif Pro',
+        fontWeight: FontWeight.w700,
+        height: 0,
+      ),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          final parts = citation.split(' ');
+          if (parts.length == 2) {
+            final text = parts[0];
+            final number = parts[1];
+            // print('metin: $text');
+            // print('sayı: $number');
+            print("Tıklamdır ${int.tryParse(number)} $text");
+            Get.offAllNamed(
+                                        NavigationConstants.sureOkuPage,
+                                        arguments: ["$text", int.tryParse(number)]);;
+          }
+        },
+    ));
+
+    lastMatchEnd = end;
   }
+  if (lastMatchEnd < text.length) {
+    spans.add(TextSpan(
+      text: text.substring(lastMatchEnd),
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 26,
+        fontFamily: 'Source Serif Pro',
+        fontWeight: FontWeight.w400,
+        height: 0,
+      ),
+    ));
+  }
+  return spans;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -1223,6 +1229,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       ),
       builder: (BuildContext context) {
         return Container(
+          width: MediaQuery.of(context).size.width ,
           height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
           decoration: BoxDecoration(
