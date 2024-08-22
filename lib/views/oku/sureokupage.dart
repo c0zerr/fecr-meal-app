@@ -191,7 +191,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   void _nextVerse() {
     print("basıldı");
     setState(() {
-      print("saddfsa ${_verses[ayetno].metin.toString()}");
+      print("saddfsa ${_verses[ayetno]..toString()}");
       if (ayetno < _verses.length - 1) {
         if (_verses[ayetno].sonrakiayet == 1 ||
             _verses[ayetno].sonrakiayet == 0) {
@@ -236,9 +236,79 @@ class _SureOkuPageState extends State<SureOkuPage> {
     return '1';
   }
 
+  List<TextSpan> _buildTextSpans(String text) {
+    // Updated regex to match text within square brackets []
+    final regex = RegExp(r'\[([^\]]+)\]');
+    final matches = regex.allMatches(text);
+
+    List<TextSpan> spans = [];
+    int lastMatchEnd = 0;
+
+    for (var match in matches) {
+      final citation = match.group(1)!;
+      final start = match.start;
+      final end = match.end;
+
+      // Add text before the match
+      if (start > lastMatchEnd) {
+        spans.add(TextSpan(
+          text: text.substring(lastMatchEnd, start),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 26,
+            fontFamily: 'Source Serif Pro',
+            fontWeight: FontWeight.w400,
+            height: 0,
+          ),
+        ));
+      }
+
+      // Add clickable citation
+      spans.add(TextSpan(
+        text: '[$citation]',
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 26,
+          fontFamily: 'Source Serif Pro',
+          fontWeight: FontWeight.w700,
+          height: 0,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            final parts = citation.split(' ');
+            if (parts.length == 2) {
+              final text = parts[0];
+              final number = parts[1];
+              print('metin: $text');
+              print('sayı: $number');
+            }
+          },
+      ));
+
+      lastMatchEnd = end;
+    }
+
+    // Add any remaining text after the last match
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastMatchEnd),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 26,
+          fontFamily: 'Source Serif Pro',
+          fontWeight: FontWeight.w400,
+          height: 0,
+        ),
+      ));
+    }
+
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // print("asdasdas ${_verses[ayetno].meal.toString()}");
+    // print(
+    //     "asdasdas ${_verses[ayetno].aciklamaPTags!.tags![0].content.toString()}");
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
@@ -1179,35 +1249,26 @@ class _SureOkuPageState extends State<SureOkuPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 10),
-              Text(text1,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontFamily: 'AxiformaBold',
-                    fontWeight: FontWeight.w900,
-                    height: 0,
-                  )),
-              SizedBox(height: 10),
-              Container(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.64,
+              Text(
+                text1,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontFamily: 'AxiformaBold',
+                  fontWeight: FontWeight.w900,
+                  height: 0,
                 ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
                 child: CustomScrollbar(
-                  thickness: 6.0, // İstediğiniz kalınlık
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Text(
-                        text2,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 26,
-                          fontFamily: 'Source Serif Pro',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+                  thickness: 6.0,
+                  child: SingleChildScrollView(
+                    child: RichText(
+                      text: TextSpan(
+                        children: _buildTextSpans(text2),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
