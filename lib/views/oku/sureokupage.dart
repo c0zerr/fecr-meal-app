@@ -223,21 +223,15 @@ class _SureOkuPageState extends State<SureOkuPage> {
   }
 
   String extractATag(String text) {
-    // Boşlukları göz ardı eden bir regex oluşturuyoruz
     RegExp exp = RegExp(r"\[a:(\d+(-\d+)?(,\s*\d+)*)\]");
     Match? match = exp.firstMatch(text);
-
     if (match != null) {
-      // Sayısal kısmı alıp, aradaki boşlukları temizliyoruz
       return match.group(1)!.replaceAll(' ', '');
     }
-
-    // Eğer 'a:' etiketi yoksa boş string döner
     return '1';
   }
 
   List<TextSpan> _buildTextSpans(String text) {
-    // Updated regex to match text within square brackets []
     final regex = RegExp(r'\[([^\]]+)\]');
     final matches = regex.allMatches(text);
 
@@ -248,8 +242,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
       final citation = match.group(1)!;
       final start = match.start;
       final end = match.end;
-
-      // Add text before the match
       if (start > lastMatchEnd) {
         spans.add(TextSpan(
           text: text.substring(lastMatchEnd, start),
@@ -262,8 +254,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
           ),
         ));
       }
-
-      // Add clickable citation
       spans.add(TextSpan(
         text: '[$citation]',
         style: TextStyle(
@@ -287,8 +277,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
       lastMatchEnd = end;
     }
-
-    // Add any remaining text after the last match
     if (lastMatchEnd < text.length) {
       spans.add(TextSpan(
         text: text.substring(lastMatchEnd),
@@ -301,14 +289,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
         ),
       ));
     }
-
     return spans;
   }
 
   @override
   Widget build(BuildContext context) {
-    // print(
-    //     "asdasdas ${_verses[ayetno].aciklamaPTags!.tags![0].content.toString()}");
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
