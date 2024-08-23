@@ -244,7 +244,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       final end = match.end;
       if (start > lastMatchEnd) {
         spans.add(TextSpan(
-          text: " ${text.substring(lastMatchEnd, start)} ",
+          text: text.substring(lastMatchEnd, start),
           style: TextStyle(
             color: Colors.black,
             fontSize: 26,
@@ -267,13 +267,23 @@ class _SureOkuPageState extends State<SureOkuPage> {
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             final parts = citation.split(' ');
-            if (parts.length == 2) {
-              final text = parts[0];
-              // Sayıdaki aralıkları ve virgülleri kontrol ederek sadece ilk sayıyı alıyoruz
-              final number = parts[1].split(RegExp(r'[-,]')).first;
-              print("Tıklamdır ${int.tryParse(number)} $text");
-              Get.offAndToNamed(NavigationConstants.sureOkuPage,
-                  arguments: ["$text", int.tryParse(number)]);
+            if (parts.length >= 2) {
+              final text = parts.sublist(0, parts.length - 1).join(' ');
+              final numberStr = parts.last;
+              final number = int.tryParse(numberStr);
+
+              // Print the separated text and number
+              print("Metin: $text");
+              print("Sayı: $numberStr");
+
+              if (number != null) {
+                Get.offAndToNamed(NavigationConstants.sureOkuPage,
+                    arguments: [text, number]);
+              } else {
+                print("Failed to parse number: $numberStr");
+              }
+            } else {
+              print("Unexpected format: $citation");
             }
           },
       ));
