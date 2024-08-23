@@ -254,8 +254,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
           ),
         ));
       }
+
       spans.add(TextSpan(
-        // Sadece citation metnini kullanıyoruz, köşeli parantezleri eklemiyoruz
         text: citation,
         style: TextStyle(
           color: Colors.blue,
@@ -269,17 +269,18 @@ class _SureOkuPageState extends State<SureOkuPage> {
             final parts = citation.split(' ');
             if (parts.length == 2) {
               final text = parts[0];
-              final number = parts[1];
+              // Sayıdaki aralıkları ve virgülleri kontrol ederek sadece ilk sayıyı alıyoruz
+              final number = parts[1].split(RegExp(r'[-,]')).first;
               print("Tıklamdır ${int.tryParse(number)} $text");
               Get.offAndToNamed(NavigationConstants.sureOkuPage,
                   arguments: ["$text", int.tryParse(number)]);
-              ;
             }
           },
       ));
 
       lastMatchEnd = end;
     }
+
     if (lastMatchEnd < text.length) {
       spans.add(TextSpan(
         text: text.substring(lastMatchEnd),
@@ -292,6 +293,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
         ),
       ));
     }
+
     return spans;
   }
 
