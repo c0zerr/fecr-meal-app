@@ -270,10 +270,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
             if (parts.length == 2) {
               final text = parts[0];
               final number = parts[1];
-              // print('metin: $text');
-              // print('sayı: $number');
               print("Tıklamdır ${int.tryParse(number)} $text");
-              Get.offAllNamed(NavigationConstants.sureOkuPage,
+              Get.offAndToNamed(NavigationConstants.sureOkuPage,
                   arguments: ["$text", int.tryParse(number)]);
               ;
             }
@@ -522,7 +520,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     String selectedValue2 =
                                         value!.split(' (')[0];
                                     print("aaabbcc $selectedValue2");
-                                    Get.offAllNamed(
+                                    Get.offAndToNamed(
                                         NavigationConstants.sureOkuPage,
                                         arguments: ["$selectedValue2", 1]);
                                   });
