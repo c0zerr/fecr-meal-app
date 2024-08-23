@@ -453,7 +453,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: Color(0xFF60A6BB),
-                                                      fontSize: 30,
+                                                      fontSize: SureAdi ==
+                                                              "Hurufu Mukattaa"
+                                                          ? 20
+                                                          : 30,
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w700,
