@@ -74,7 +74,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
           text: transformedText,
           style: TextStyle(
             fontFamily: 'Podkova',
-            fontSize: 28,
+            fontSize: homePageController.yazipuntosu.value,
             fontWeight: FontWeight.w400,
             color: !transformedText.contains('[')
                 ? Colors.black
@@ -97,6 +97,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
           style: TextStyle(
             color: Colors.black,
             fontFamily: 'Podkova',
+            fontSize: homePageController.yazipuntosu.value,
             fontWeight: FontWeight.w400,
           ),
         ));

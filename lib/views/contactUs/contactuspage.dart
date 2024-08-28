@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/views/contactUs/widgets/textfield.dart';
 import 'package:fecrmeal/widgets/whitetext.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});
@@ -14,6 +15,19 @@ class ContactUsPage extends StatelessWidget {
 
     TextEditingController email = TextEditingController();
     TextEditingController aciklamalar = TextEditingController();
+
+    Future<void> _launchEmail(String adsoyad, text) async {
+      final Uri emailUri = Uri(
+          scheme: 'mailto',
+          path: "fcr@fcr.com.tr",
+          query: 'subject=FecrMeal&body=$text \n $adsoyad' // optional
+          );
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+      } else {
+        throw 'Could not launch $emailUri';
+      }
+    }
 
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
@@ -128,6 +142,8 @@ class ContactUsPage extends StatelessWidget {
                           "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
                       email.clear();
                       isimsoyisim.clear();
+                      _launchEmail(
+                          "${isimsoyisim.text}", "${aciklamalar.text}");
                     }
                   },
                   child: Text(

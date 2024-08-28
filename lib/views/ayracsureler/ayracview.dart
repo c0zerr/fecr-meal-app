@@ -75,7 +75,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
 
         if (matchedText.contains('d:')) {
           transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
-          transformedText = " [$transformedText";
+          transformedText = "";
         } else if (matchedText.contains('a:')) {
           transformedText = matchedText.substring(3, matchedText.length - 1) +
               '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
