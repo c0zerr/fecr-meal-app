@@ -16,16 +16,29 @@ class ContactUsPage extends StatelessWidget {
     TextEditingController email = TextEditingController();
     TextEditingController aciklamalar = TextEditingController();
 
-    Future<void> _launchEmail(String adsoyad, text) async {
-      final Uri emailUri = Uri(
-          scheme: 'mailto',
-          path: "fcr@fcr.com.tr",
-          query: 'subject=FecrMeal&body=$text \n $adsoyad' // optional
-          );
-      if (await canLaunchUrl(emailUri)) {
-        await launchUrl(emailUri);
-      } else {
-        throw 'Could not launch $emailUri';
+    String? encodeQueryParameters(Map<String, String> params) {
+      return params.entries
+          .map((MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
+    }
+
+    Future<void> _launchEmail(String adsoyad, String text) async {
+      final Uri emailLaunchUri = Uri(
+        scheme: 'mailto',
+        path: 'fcr@fcr.com.tr',
+        queryParameters: {'subject': 'FecrMeal', 'body': '$adsoyad/n$text'},
+      );
+
+      try {
+        if (await canLaunchUrl(emailLaunchUri)) {
+          await launchUrl(emailLaunchUri);
+        } else {
+          _showAlertDialog(context, "Email Client Not Found",
+              "Please ensure you have an email app installed to send an email.");
+        }
+      } catch (e) {
+        _showAlertDialog(context, "Error", "Unable to launch email: $e");
       }
     }
 
@@ -138,12 +151,12 @@ class ContactUsPage extends StatelessWidget {
                           "LÜTFEN\nEKSİK YERLERİ DOLDURUN",
                           "Açıklamanızı girin.");
                     } else {
+                      _launchEmail(
+                          "${aciklamalar.text}", "${isimsoyisim.text}");
                       _showAlertDialog(context, "TEŞEKKÜR EDERİZ!",
                           "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
                       email.clear();
                       isimsoyisim.clear();
-                      _launchEmail(
-                          "${isimsoyisim.text}", "${aciklamalar.text}");
                     }
                   },
                   child: Text(
