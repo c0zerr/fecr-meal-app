@@ -243,7 +243,10 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       clipBehavior: Clip.antiAlias,
                                       decoration: ShapeDecoration(
-                                        color: Colors.white,
+                                        color: chosenList[index]['name'] ==
+                                                "Hurufu Mukattaa"
+                                            ? Colors.white.withOpacity(0.9)
+                                            : Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20),
@@ -284,7 +287,10 @@ class _HomePageState extends State<HomePage> {
                                                 SizedBox(
                                                   width: 182.w,
                                                   child: Text(
-                                                    "${chosenList[index]['verseCount'] - 1} Ayet",
+                                                    chosenList[index]['name'] ==
+                                                            "Hurufu Mukattaa"
+                                                        ? ""
+                                                        : "${chosenList[index]['verseCount'] - 1} Ayet",
                                                     style: TextStyle(
                                                       color: Color(0xFF2A89A5),
                                                       fontSize: 16,
@@ -303,45 +309,58 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           SizedBox(width: 0.w),
-                                          Container(
-                                            width: 60,
-                                            height: 60,
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  left: 0,
-                                                  top: 0,
-                                                  child: Container(
-                                                    width: 60,
-                                                    height: 60,
-                                                    decoration: ShapeDecoration(
-                                                      color: Color(0x192A89A5),
-                                                      shape: OvalBorder(),
-                                                    ),
+                                          chosenList[index]['name'] ==
+                                                  "Hurufu Mukattaa"
+                                              ? SizedBox()
+                                              : Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  child: Stack(
+                                                    children: [
+                                                      Positioned(
+                                                        left: 0,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 60,
+                                                          height: 60,
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0x192A89A5),
+                                                            shape: OvalBorder(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Center(
+                                                        child: Text(
+                                                          (index + 1)
+                                                              .toString(),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 30,
+                                                            fontFamily:
+                                                                'Podkova',
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            // height: 1.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                Center(
-                                                  child: Text(
-                                                    (index + 1).toString(),
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 34,
-                                                      fontFamily: 'Podkova',
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      // height: 1.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
                                           const SizedBox(width: 10),
-                                          Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: ColorConstants.primaryColor3,
-                                          )
+                                          chosenList[index]['name'] ==
+                                                  "Hurufu Mukattaa"
+                                              ? SizedBox()
+                                              : Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: ColorConstants
+                                                      .primaryColor3,
+                                                )
                                         ],
                                       ),
                                     ),

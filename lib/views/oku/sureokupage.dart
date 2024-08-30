@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fecrmeal/core/constants/customScrollbar.dart';
+import 'package:fecrmeal/views/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -334,30 +335,35 @@ class _SureOkuPageState extends State<SureOkuPage> {
         // ],
         centerTitle: true,
         backgroundColor: ColorConstants.primaryColor,
-        title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'KUR’AN ',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Bw Aleta No 10 Bold',
-                  fontWeight: FontWeight.bold,
-                  height: 0,
+        title: GestureDetector(
+          onTap: () {
+            Get.offAllNamed(NavigationConstants.home);
+          },
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'KUR’AN ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'Bw Aleta No 10 Bold',
+                    fontWeight: FontWeight.bold,
+                    height: 0,
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: 'AYDINLIĞI',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Bw Aleta No 10',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
+                TextSpan(
+                  text: 'AYDINLIĞI',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'Bw Aleta No 10',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -457,7 +463,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                       fontSize: SureAdi ==
                                                               "Hurufu Mukattaa"
                                                           ? 20
-                                                          : 30,
+                                                          : 28,
                                                       fontFamily: 'Podkova',
                                                       fontWeight:
                                                           FontWeight.w700,
@@ -471,7 +477,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 18,
+                                                        fontSize: 17,
                                                         //18
                                                         fontFamily: 'Podkova',
                                                         fontWeight:
@@ -784,6 +790,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
+                                        SizedBox(
+                                          width: 15,
+                                        ),
                                         Container(
                                           height: 35,
                                           clipBehavior: Clip.antiAlias,
@@ -807,7 +816,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 15,
                                         )
                                       ],
                                     ),
