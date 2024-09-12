@@ -22,17 +22,13 @@ class _HomePageState extends State<HomePage> {
 
   String validateSurahAndVerse(String surahName, int? verseNumber) {
     // Surenin adı büyük/küçük harf duyarlı olabilir
-    final surah = surelerr.firstWhere(
-        (surah) => surah['name'].toLowerCase() == surahName.toLowerCase(),
-        orElse: () => {'name': '', 'verseCount': 0});
+    final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == surahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 0});
 
     if (surah['name'] == '') {
       return 'Lütfen Sure Adını Kontrol Ediniz';
     }
 
-    if (verseNumber == null ||
-        verseNumber < 1 ||
-        verseNumber > surah['verseCount']) {
+    if (verseNumber == null || verseNumber < 1 || verseNumber > surah['verseCount']) {
       return 'Lütfen Ayet Numarasını Kontrol Ediniz';
     }
 
@@ -82,16 +78,13 @@ class _HomePageState extends State<HomePage> {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 1,
-                                    color: homePageController.showdialog.value
-                                        ? Colors.white
-                                        : Color(0xff60A6BB),
+                                    color: homePageController.showdialog.value ? Colors.white : Color(0xff60A6BB),
                                   ),
                                   borderRadius: BorderRadius.circular(10.h),
                                 ),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    homePageController.showdialog.value =
-                                        !homePageController.showdialog.value;
+                                    homePageController.showdialog.value = !homePageController.showdialog.value;
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,
@@ -118,10 +111,7 @@ class _HomePageState extends State<HomePage> {
                                       SizedBox(width: 10.w),
                                       Obx(
                                         () => Icon(
-                                          homePageController.showdialog.value
-                                              ? Icons.keyboard_arrow_up_outlined
-                                              : Icons
-                                                  .keyboard_arrow_down_outlined,
+                                          homePageController.showdialog.value ? Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down_outlined,
                                           color: Color(0xff60A6BB),
                                           size: 30,
                                         ),
@@ -133,8 +123,7 @@ class _HomePageState extends State<HomePage> {
                             )),
                         SizedBox(height: 5.h),
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.h, left: 25.w, right: 25.w),
+                          padding: EdgeInsets.only(top: 10.h, left: 25.w, right: 25.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -151,8 +140,7 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(width: 20.w),
                               Obx(
                                 () => Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 1.0, top: 1),
+                                  padding: const EdgeInsets.only(bottom: 1.0, top: 1),
                                   child: Container(
                                     width: 174.w,
                                     height: 46.h,
@@ -164,23 +152,16 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            homePageController
-                                                    .changeQueue.value =
-                                                !homePageController
-                                                    .changeQueue.value;
+                                            homePageController.changeQueue.value = !homePageController.changeQueue.value;
                                           },
                                           child: Row(
                                             children: [
                                               Text(
-                                                homePageController
-                                                        .changeQueue.value
-                                                    ? "Mushaf Sırası"
-                                                    : "Nüzul Sırası",
+                                                homePageController.changeQueue.value ? "Mushaf Sırası" : "Nüzul Sırası",
                                                 style: TextStyle(
                                                   color: Color(0xFF60A6BB),
                                                   fontSize: 16,
@@ -190,8 +171,7 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                               SizedBox(width: 5.w),
-                                              Image.asset(
-                                                  "assets/icon/updown.png"),
+                                              Image.asset("assets/icon/updown.png"),
                                             ],
                                           ),
                                         ),
@@ -207,31 +187,19 @@ class _HomePageState extends State<HomePage> {
                           () => ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(
-                                top: 30.h, left: 25.w, right: 25.w),
-                            itemCount: homePageController.changeQueue.value
-                                ? mushafSirasi.length
-                                : nuzulSirasi.length,
+                            padding: EdgeInsets.only(top: 30.h, left: 25.w, right: 25.w),
+                            itemCount: homePageController.changeQueue.value ? mushafSirasi.length : nuzulSirasi.length,
                             itemBuilder: (context, index) {
-                              var chosenList =
-                                  homePageController.changeQueue.value
-                                      ? mushafSirasi
-                                      : nuzulSirasi;
+                              var chosenList = homePageController.changeQueue.value ? mushafSirasi : nuzulSirasi;
 
                               return Column(
                                 children: [
                                   GestureDetector(
                                     onTap: () {
                                       print('Item $index tapped');
-                                      print(
-                                          'Item ${chosenList[index]['name']} tapped');
+                                      print('Item ${chosenList[index]['name']} tapped');
 
-                                      Get.toNamed(
-                                          NavigationConstants.sureOkuPage,
-                                          arguments: [
-                                            "${chosenList[index]['name']}",
-                                            1
-                                          ]);
+                                      Get.toNamed(NavigationConstants.sureOkuPage, arguments: ["${chosenList[index]['name']}", 1]);
                                       // SureOkuPage(ayetno: "1",sureadi: "${chosenList[index]['title2']}",);
                                     },
                                     child: Container(
@@ -243,30 +211,22 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       clipBehavior: Clip.antiAlias,
                                       decoration: ShapeDecoration(
-                                        color: chosenList[index]['name'] ==
-                                                "Hurufu Mukattaa"
-                                            ? Colors.white.withOpacity(0.9)
-                                            : Colors.white,
+                                        color: chosenList[index]['name'] == "Hurufu Mukattaa" ? Colors.white.withOpacity(0.9) : Colors.white,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                                          borderRadius: BorderRadius.circular(20),
                                         ),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Container(
                                             // width: 182.w,
                                             child: Column(
                                               // mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(
                                                   width: 182.w,
@@ -277,8 +237,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: Color(0xFF464646),
                                                       fontSize: 28,
                                                       fontFamily: 'Podkova',
-                                                      fontWeight:
-                                                          FontWeight.w700,
+                                                      fontWeight: FontWeight.w700,
                                                       height: 0,
                                                     ),
                                                   ),
@@ -287,16 +246,12 @@ class _HomePageState extends State<HomePage> {
                                                 SizedBox(
                                                   width: 182.w,
                                                   child: Text(
-                                                    chosenList[index]['name'] ==
-                                                            "Hurufu Mukattaa"
-                                                        ? ""
-                                                        : "${chosenList[index]['verseCount'] - 1} Ayet",
+                                                    chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount'] - 1} Ayet",
                                                     style: TextStyle(
                                                       color: Color(0xFF2A89A5),
                                                       fontSize: 16,
                                                       fontFamily: 'Podkova',
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                      fontWeight: FontWeight.w500,
                                                       height: 0,
                                                       letterSpacing: 8,
                                                     ),
@@ -309,8 +264,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           SizedBox(width: 0.w),
-                                          chosenList[index]['name'] ==
-                                                  "Hurufu Mukattaa"
+                                          chosenList[index]['name'] == "Hurufu Mukattaa"
                                               ? SizedBox()
                                               : Container(
                                                   width: 60,
@@ -323,27 +277,21 @@ class _HomePageState extends State<HomePage> {
                                                         child: Container(
                                                           width: 60,
                                                           height: 60,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: Color(
-                                                                0x192A89A5),
+                                                          decoration: ShapeDecoration(
+                                                            color: Color(0x192A89A5),
                                                             shape: OvalBorder(),
                                                           ),
                                                         ),
                                                       ),
                                                       Center(
                                                         child: Text(
-                                                          (index + 1)
-                                                              .toString(),
-                                                          textAlign:
-                                                              TextAlign.center,
+                                                          (index + 1).toString(),
+                                                          textAlign: TextAlign.center,
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 30,
-                                                            fontFamily:
-                                                                'Podkova',
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                                            fontFamily: 'Podkova',
+                                                            fontWeight: FontWeight.w700,
                                                             // height: 1.0,
                                                           ),
                                                         ),
@@ -352,14 +300,11 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                 ),
                                           const SizedBox(width: 10),
-                                          chosenList[index]['name'] ==
-                                                  "Hurufu Mukattaa"
+                                          chosenList[index]['name'] == "Hurufu Mukattaa"
                                               ? SizedBox()
                                               : Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: ColorConstants
-                                                      .primaryColor3,
+                                                  Icons.arrow_forward_ios_rounded,
+                                                  color: ColorConstants.primaryColor3,
                                                 )
                                         ],
                                       ),
@@ -384,16 +329,14 @@ class _HomePageState extends State<HomePage> {
                       right: 10.w,
                       top: 60.h,
                       child: AnimatedOpacity(
-                        opacity:
-                            homePageController.showdialog.value ? 1.0 : 0.0,
+                        opacity: homePageController.showdialog.value ? 1.0 : 0.0,
                         duration: Duration(milliseconds: 500),
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 500),
                           margin: EdgeInsets.only(top: 20.h),
                           decoration: BoxDecoration(
                             color: ColorConstants.primaryColor,
-                            border:
-                                Border.all(color: Color(0xFF60A6BB), width: 2),
+                            border: Border.all(color: Color(0xFF60A6BB), width: 2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: GestureDetector(
@@ -401,8 +344,7 @@ class _HomePageState extends State<HomePage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: BackdropFilter(
-                                filter:
-                                    ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                                 child: Column(
                                   children: [
                                     SizedBox(height: 15.h),
@@ -424,15 +366,12 @@ class _HomePageState extends State<HomePage> {
                                             child: TextField(
                                               controller: sureadi,
                                               decoration: InputDecoration(
-                                                hintText:
-                                                    'Surenin adını giriniz',
-                                                hintStyle:
-                                                    TextStyle(fontSize: 17),
+                                                hintText: 'Surenin adını giriniz',
+                                                hintStyle: TextStyle(fontSize: 17),
                                                 filled: true,
                                                 fillColor: Colors.white,
                                                 border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                                  borderRadius: BorderRadius.circular(15),
                                                   borderSide: BorderSide.none,
                                                 ),
                                               ),
@@ -466,8 +405,7 @@ class _HomePageState extends State<HomePage> {
                                                 filled: true,
                                                 fillColor: Colors.white,
                                                 border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                                  borderRadius: BorderRadius.circular(15),
                                                   borderSide: BorderSide.none,
                                                 ),
                                               ),
@@ -478,44 +416,28 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     SizedBox(height: 20.h),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15, right: 15),
+                                      padding: const EdgeInsets.only(left: 15, right: 15),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                           color: Colors.deepOrange,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: ElevatedButton(
                                           onPressed: () {
                                             // Kullanıcının girdiği surahName stringindeki baştaki ve sondaki boşlukları sil
-                                            final surahName =
-                                                sureadi.text.trim();
-                                            final verseNumber =
-                                                int.tryParse(ayetno.text);
+                                            final surahName = sureadi.text.trim();
+                                            final verseNumber = int.tryParse(ayetno.text);
 
-                                            final validationError =
-                                                validateSurahAndVerse(
-                                                    surahName, verseNumber);
+                                            final validationError = validateSurahAndVerse(surahName, verseNumber);
 
                                             if (validationError.isNotEmpty) {
                                               // Hata mesajını göster
-                                              Get.snackbar(
-                                                  'Hata', validationError);
+                                              Get.snackbar('Hata', validationError);
                                             } else {
                                               // Hata yok, ayete git
-                                              homePageController
-                                                      .showdialog.value =
-                                                  !homePageController
-                                                      .showdialog.value;
-                                              Get.toNamed(
-                                                  NavigationConstants
-                                                      .sureOkuPage,
-                                                  arguments: [
-                                                    surahName,
-                                                    verseNumber
-                                                  ]);
+                                              homePageController.showdialog.value = !homePageController.showdialog.value;
+                                              Get.toNamed(NavigationConstants.sureOkuPage, arguments: [surahName, verseNumber]);
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(

@@ -34,7 +34,11 @@ class CustomDrawer extends StatelessWidget {
                     "assets/icon/mainicon.png", // Adjust image path
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close,color: Color(0xff60A6BB),size: 30,),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Color(0xff60A6BB),
+                      size: 30,
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -64,6 +68,14 @@ class CustomDrawer extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
+            DrawerCards(
+                title: "Önsöz  ",
+                imageUrl: "assets/icon/info.png",
+                ontap: () {
+                  Get.toNamed(
+                    NavigationConstants.kuranAydinliginaDair,
+                  );
+                }),
             DrawerCards(
                 title: "Kur’an Aydınlığına Dair",
                 imageUrl: "assets/icon/info.png",
