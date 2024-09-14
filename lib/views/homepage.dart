@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   String validateSurahAndVerse(String surahName, int? verseNumber) {
     // Surenin adı büyük/küçük harf duyarlı olabilir
-    final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == surahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 0});
+    final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == surahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
 
     if (surah['name'] == '') {
       return 'Lütfen Sure Adını Kontrol Ediniz';
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                                                 SizedBox(
                                                   width: 182.w,
                                                   child: Text(
-                                                    chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount'] - 1} Ayet",
+                                                    chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount']} Ayet",
                                                     style: TextStyle(
                                                       color: Color(0xFF2A89A5),
                                                       fontSize: 16,
@@ -427,7 +427,8 @@ class _HomePageState extends State<HomePage> {
                                           onPressed: () {
                                             // Kullanıcının girdiği surahName stringindeki baştaki ve sondaki boşlukları sil
                                             final surahName = sureadi.text.trim();
-                                            final verseNumber = int.tryParse(ayetno.text);
+                                            int? verseNumber = int.tryParse(ayetno.text);
+                                            if (verseNumber == null) verseNumber = 1;
 
                                             final validationError = validateSurahAndVerse(surahName, verseNumber);
 

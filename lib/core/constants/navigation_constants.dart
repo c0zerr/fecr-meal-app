@@ -4,7 +4,8 @@ class NavigationConstants {
   static const kuranAydinliginaDair = "/kuranAydinliginaDair";
   static const teamPage = "/teamPage";
   static const contactUsPage = "/contactUsPage";
-  static const sureOkuPage ="/sureOkuPage";
-  static const sureSavedPage ="/sureSavedPage";
-  static const ayracSurePage ="/ayracSurePage";
+  static const sureOkuPage = "/sureOkuPage";
+  static const sureSavedPage = "/sureSavedPage";
+  static const ayracSurePage = "/ayracSurePage";
+  static const pdf = "/pdf";
 }
