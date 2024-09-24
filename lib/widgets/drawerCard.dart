@@ -16,7 +16,7 @@ class DrawerCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(left: 10.w,right: 10.w),
+      padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: Container(
         height: 60,
         constraints: BoxConstraints(minWidth: 100.w, maxWidth: 300.w),
@@ -35,7 +35,7 @@ class DrawerCards extends StatelessWidget {
               children: [
                 // SizedBox(width: 10.w),
                 Padding(
-                  padding:  EdgeInsets.only(left: 7.w,top: 5.h,bottom: 5.h,right: 10.w),
+                  padding: EdgeInsets.only(left: 7.w, top: 5.h, bottom: 5.h, right: 10.w),
                   child: Image.asset(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -46,8 +46,12 @@ class DrawerCards extends StatelessWidget {
                 // SizedBox(width: 2.w),
                 Text(
                   title,
-                  style:  TextStyle(
-                      fontFamily: "Axiforma", fontSize: 18, color: Colors.white,fontWeight: FontWeight.w400,),
+                  style: TextStyle(
+                    fontFamily: "Axiforma",
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(width: 10.w),
