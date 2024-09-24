@@ -28,7 +28,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   String corruptedPathPDF = "";
   @override
   void initState() {
-    fromAsset('assets/my_pdf.pdf', 'my_pdf.pdf').then((f) {
+    fromAsset('assets/Kahakkinda.pdf', 'Kahakkinda.pdf').then((f) {
       setState(() {
         corruptedPathPDF = f.path;
       });

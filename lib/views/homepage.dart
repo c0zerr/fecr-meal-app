@@ -1,14 +1,25 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:fecrmeal/core/controller/homepageController.dart';
+import 'package:fecrmeal/core/data/sureList.dart';
+import 'package:fecrmeal/core/data/surelist2.dart';
+import 'package:fecrmeal/views/pdfviewer/pdfviewer.dart';
 import 'package:fecrmeal/widgets/customappbar.dart';
 import 'package:fecrmeal/widgets/customdrawer.dart';
-import 'package:fecrmeal/core/data/sureList.dart';
-import 'package:fecrmeal/core/data/sureList2.dart';
+import 'package:fecrmeal/widgets/drawerCard.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,6 +44,61 @@ class _HomePageState extends State<HomePage> {
     }
 
     return '';
+  }
+
+  String pathPDF = "";
+  String corruptedPathPDF = "";
+  @override
+  void initState() {
+    fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
+      setState(() {
+        corruptedPathPDF = f.path;
+      });
+    });
+    super.initState();
+  }
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      print("Download files");
+      print("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
   }
 
   @override
@@ -196,10 +262,15 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      print('Item $index tapped');
-                                      print('Item ${chosenList[index]['name']} tapped');
-
-                                      Get.toNamed(NavigationConstants.sureOkuPage, arguments: ["${chosenList[index]['name']}", 1]);
+                                      if (chosenList[index]['name'] == "Hurufu Mukattaa") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PDFScreen(path: corruptedPathPDF),
+                                          ),
+                                        );
+                                      } else
+                                        Get.toNamed(NavigationConstants.sureOkuPage, arguments: ["${chosenList[index]['name']}", 1]);
                                       // SureOkuPage(ayetno: "1",sureadi: "${chosenList[index]['title2']}",);
                                     },
                                     child: Container(
@@ -246,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                                                 SizedBox(
                                                   width: 182.w,
                                                   child: Text(
-                                                    chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount']} Ayet",
+                                                    chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount'] - 1} Ayet",
                                                     style: TextStyle(
                                                       color: Color(0xFF2A89A5),
                                                       fontSize: 16,
@@ -285,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                       Center(
                                                         child: Text(
-                                                          (index + 1).toString(),
+                                                          (index).toString(),
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
                                                             color: Colors.white,

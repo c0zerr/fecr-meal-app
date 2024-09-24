@@ -601,8 +601,78 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          Visibility(
+                            visible: ayetno == 1,
+                            child: GestureDetector(
+                              onTap: () {
+                                _showBottomSheet(context, '${SureAdi} Suresi\nHakkında', _verses[0].meal.toString());
+                              },
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 35.h, top: 25),
+                                  child: Container(
+                                    width: 260.w,
+                                    height: 70.h,
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    decoration: ShapeDecoration(
+                                      color: Color(0xFF2A89A5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Color(0x3F000000),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 8),
+                                          spreadRadius: 0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Container(
+                                          height: 35,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(),
+                                          child: Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Text(
+                                          'Sure Hakkında',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24,
+                                            fontFamily: 'Podkova',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0.09,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                           Padding(
-                              padding: const EdgeInsets.all(25.0),
+                              padding: const EdgeInsets.only(
+                                left: 25.0,
+                                right: 25,
+                              ),
                               child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
@@ -682,73 +752,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         ),
                                       ),
                                   ]))),
-                          Visibility(
-                            visible: ayetno == 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                _showBottomSheet(context, '${SureAdi} Suresi\nHakkında', _verses[0].meal.toString());
-                              },
-                              child: Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 150.h),
-                                  child: Container(
-                                    width: 260.w,
-                                    height: 70.h,
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    decoration: ShapeDecoration(
-                                      color: Color(0xFF2A89A5),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      shadows: [
-                                        BoxShadow(
-                                          color: Color(0x3F000000),
-                                          blurRadius: 10,
-                                          offset: Offset(0, 8),
-                                          spreadRadius: 0,
-                                        )
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Container(
-                                          height: 35,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(),
-                                          child: Icon(
-                                            Icons.info_outline_rounded,
-                                            size: 30,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        Text(
-                                          'Sure Hakkında',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 24,
-                                            fontFamily: 'Podkova',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0.09,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 15,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                           SizedBox(
                             height: 120.h,
                           ),
