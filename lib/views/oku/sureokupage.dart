@@ -1,28 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:fecrmeal/core/constants/customScrollbar.dart';
-import 'package:fecrmeal/views/homepage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/route_manager.dart';
-
 import 'package:fecrmeal/core/constants/color_constants.dart';
+import 'package:fecrmeal/core/constants/customScrollbar.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:fecrmeal/core/controller/homepageController.dart';
 import 'package:fecrmeal/core/model/suremodel.dart';
+import 'package:fecrmeal/views/pdfviewer/pdfviewer.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,6 +40,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
   @override
   void initState() {
     _makeRequest();
+    fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
+      setState(() {
+        corruptedPathPDF = f.path;
+      });
+    });
     super.initState();
   }
 
@@ -106,12 +108,59 @@ class _SureOkuPageState extends State<SureOkuPage> {
   TextEditingController _controller1 = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
   List<Verses> _verses = [];
+
+  String pathPDF = "";
+  String corruptedPathPDF = "";
+  @override
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      print("Download files");
+      print("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
   String SureAdi = "";
   RxBool sonAyet = true.obs;
   void _makeRequest() async {
     Dio dio = Dio();
     try {
-      Response response = await dio.post(
+      var response = await dio.post(
         'http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=',
         data: {
           'sure': sureadi,
@@ -270,7 +319,16 @@ class _SureOkuPageState extends State<SureOkuPage> {
               print("Sayı: $numberStr");
 
               if (number != null) {
-                Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
+                if (text == "Hurufu Mukattaa") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PDFScreen(path: corruptedPathPDF),
+                    ),
+                  );
+                } else {
+                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
+                }
               } else {
                 print("Failed to parse number: $numberStr");
               }

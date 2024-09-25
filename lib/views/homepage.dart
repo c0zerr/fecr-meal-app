@@ -356,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                       Center(
                                                         child: Text(
-                                                          (index).toString(),
+                                                          (index + 1).toString(),
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
                                                             color: Colors.white,
