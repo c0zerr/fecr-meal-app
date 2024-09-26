@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/views/contactUs/widgets/textfield.dart';
 import 'package:fecrmeal/widgets/whitetext.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});
@@ -14,6 +15,32 @@ class ContactUsPage extends StatelessWidget {
 
     TextEditingController email = TextEditingController();
     TextEditingController aciklamalar = TextEditingController();
+
+    String? encodeQueryParameters(Map<String, String> params) {
+      return params.entries
+          .map((MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
+    }
+
+    Future<void> _launchEmail(String adsoyad, String text) async {
+      final Uri emailLaunchUri = Uri(
+        scheme: 'mailto',
+        path: 'fcr@fcr.com.tr',
+        queryParameters: {'subject': 'FecrMeal', 'body': '$adsoyad/n$text'},
+      );
+
+      try {
+        if (await canLaunchUrl(emailLaunchUri)) {
+          await launchUrl(emailLaunchUri);
+        } else {
+          _showAlertDialog(context, "Email Client Not Found",
+              "Please ensure you have an email app installed to send an email.");
+        }
+      } catch (e) {
+        _showAlertDialog(context, "Error", "Unable to launch email: $e");
+      }
+    }
 
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
@@ -124,6 +151,8 @@ class ContactUsPage extends StatelessWidget {
                           "LÜTFEN\nEKSİK YERLERİ DOLDURUN",
                           "Açıklamanızı girin.");
                     } else {
+                      _launchEmail(
+                          "${aciklamalar.text}", "${isimsoyisim.text}");
                       _showAlertDialog(context, "TEŞEKKÜR EDERİZ!",
                           "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
                       email.clear();

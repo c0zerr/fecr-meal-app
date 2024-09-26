@@ -23,8 +23,7 @@ class TuncerNamliPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-            onPressed: () => Get.back(), icon: Icon(Icons.arrow_back)),
+        leading: IconButton(onPressed: () => Get.back(), icon: Icon(Icons.arrow_back)),
       ),
       backgroundColor: ColorConstants.primaryColor,
       body: SingleChildScrollView(
@@ -112,7 +111,7 @@ class TuncerNamliPage extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    '1959 yılında Yozgat’ın Akdağmadeni ilçesinin Kirsinkavağı köyünde doğdu. İlkokulu köyünde okudu ve üç yıl medrese eğitimi aldı. Zile İmam Hatip Lisesi’nde başladığı orta öğrenimini Tokat İmam Hatip Lisesi’nde tamamladı. Erciyes Üniversitesi İlahiyat Fakültesi’nden 1985 yılında mezun oldu. Aynı fakültede İslam Hukuku alanında Yüksek Lisans eğitimi alan Namlı, Prof Dr. Ali Bardakoğlu’nun gözetiminde ',
+                                    '1959 yılında Yozgat’ın Akdağmadeni ilçesinin Kirsinkavağı köyünde doğdu. İlkokulu köyünde okudu ve üç yıl medrese eğitimi aldı. Zile İmam Hatip Lisesi’nde başladığı orta öğrenimini Tokat İmam Hatip Lisesi’nde tamamladı. Erciyes Üniversitesi İlahiyat Fakültesi’nden 1985 yılında mezun oldu. Aynı fakültede İslam Hukuku alanında Yüksek Lisans eğitimi alan Namlı, Prof Dr. Ali Bardakoğlu’nun gözetiminde Tanzimat ve Sonrası Dönem Kanunlaştırma Tartışmaları başlıklı teziyle ilk çalışmasını yaptı (Kayseri, 1988). Çeşitli nedenlerle akademik camiadan uzak düşse de araştırmacı kimliği yakasını bırakmadı. 1986 yılında Alanya’da başlayan çok sevdiği öğretmenlik hayatını on yıl sonra istifa ederek 1995 yılında Yozgat Çayıralan’da noktaladı. Aynı yıl Fecr Yayınevi’nin kültürel araştırmalar biriminde çalışmaya başladı ve uzun süre yayın editörlüğü yaptı. Fecre Doğru dergisinde yazı hayatına başlayan Namlı,  2001 yılında Ahlakî KavramlardaAnlam Arayışı I adlı ilk kitabını yayınladı. Arkadaşlarının talebi üzerine sekiz yıl süren bu meal çalışmasına başlayınca bazı çalışmalarına ara verdi. 14 Temmuz 2011’de Fecr Yayınevi’ndeki görevinden ayrılarak Anadolu İlahiyat Akademisi’nin kurucu Müdürü olarak görev aldı. Halen bu görevine ek olarak araştırmalarını sürdürmektedir.',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -122,30 +121,7 @@ class TuncerNamliPage extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text:
-                                    'Tanzimat ve Sonrası Dönem Kanunlaştırma Tartışmaları',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontStyle: FontStyle.italic,
-                                  fontFamily: 'Source Serif Pro',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    ' başlıklı teziyle ilk çalışmasını yaptı (Kayseri, 1988). Çeşitli nedenlerle akademik camiadan uzak düşse de araştırmacı kimliği yakasını bırakmadı. 1986 yılında Alanya’da başlayan çok sevdiği öğretmenlik hayatını on yıl sonra istifa ederek 1995 yılında Yozgat Çayıralan’da noktaladı. Aynı yıl Fecr Yayınevi’nin kültürel araştırmalar biriminde çalışmaya başladı ve uzun süre yayın editörlüğü yaptı. Fecre Doğru dergisinde yazı hayatına başlayan Namlı,  2001 yılında ',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontFamily: 'Source Serif Pro',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Ahlakî Kavramlarda Anlam Arayışı I',
+                                text: '',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -156,8 +132,28 @@ class TuncerNamliPage extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text:
-                                    ' adlı ilk kitabını yayınladı. Arkadaşlarının talebi üzerine sekiz yıl süren bu meal çalışmasına başlayınca bazı çalışmalarına ara verdi. 14 Temmuz 2011’de Fecr Yayınevi’ndeki görevinden ayrılarak Anadolu İlahiyat Akademisi’nin kurucu Müdürü olarak görev aldı. Halen bu görevine ek olarak araştırmalarını sürdürmektedir.',
+                                text: ' ',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'Source Serif Pro',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                  fontFamily: 'Source Serif Pro',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,

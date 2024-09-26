@@ -1,14 +1,83 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
+import 'package:fecrmeal/views/pdfviewer/pdfviewer.dart';
 import 'package:fecrmeal/widgets/drawerCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:io';
 
-class CustomDrawer extends StatelessWidget {
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
     super.key,
   });
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  String pathPDF = "";
+  String corruptedPathPDF = "";
+  @override
+  void initState() {
+    fromAsset('assets/Kahakkinda.pdf', 'Kahakkinda.pdf').then((f) {
+      setState(() {
+        corruptedPathPDF = f.path;
+      });
+    });
+    super.initState();
+  }
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      print("Download files");
+      print("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +103,11 @@ class CustomDrawer extends StatelessWidget {
                     "assets/icon/mainicon.png", // Adjust image path
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close,color: Color(0xff60A6BB),size: 30,),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Color(0xff60A6BB),
+                      size: 30,
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -65,13 +138,25 @@ class CustomDrawer extends StatelessWidget {
               height: 15,
             ),
             DrawerCards(
-                title: "Kur’an Aydınlığına Dair",
+                title: "Önsöz  ",
                 imageUrl: "assets/icon/info.png",
                 ontap: () {
                   Get.toNamed(
                     NavigationConstants.kuranAydinliginaDair,
                   );
                 }),
+            DrawerCards(
+              title: "Kur’an Aydınlığına Dair",
+              imageUrl: "assets/icon/info.png",
+              ontap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PDFScreen(path: corruptedPathPDF),
+                  ),
+                );
+              },
+            ),
             DrawerCards(
                 title: "Tuncer Namlı",
                 imageUrl: "assets/icon/user.png",

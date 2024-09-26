@@ -1,3 +1,4 @@
+import 'package:fecrmeal/views/pdfviewer/pdfviewer.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:fecrmeal/views/ayracsureler/ayracview.dart';
@@ -15,6 +16,10 @@ class NavigationService {
       name: NavigationConstants.home,
       page: () => HomePage(),
     ),
+    /* GetPage(
+      name: NavigationConstants.pdf,
+      page: () => MyPdfViewer(),
+    ), */
     GetPage(
       name: NavigationConstants.teamPage,
       page: () => TeamInfoPage(),

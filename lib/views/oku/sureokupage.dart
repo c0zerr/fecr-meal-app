@@ -1,27 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:fecrmeal/core/constants/customScrollbar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/route_manager.dart';
-
 import 'package:fecrmeal/core/constants/color_constants.dart';
+import 'package:fecrmeal/core/constants/customScrollbar.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:fecrmeal/core/controller/homepageController.dart';
 import 'package:fecrmeal/core/model/suremodel.dart';
+import 'package:fecrmeal/views/pdfviewer/pdfviewer.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,6 +40,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
   @override
   void initState() {
     _makeRequest();
+    fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
+      setState(() {
+        corruptedPathPDF = f.path;
+      });
+    });
     super.initState();
   }
 
@@ -64,8 +67,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
           transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
           transformedText = " [$transformedText";
         } else if (matchedText.contains('a:')) {
-          transformedText = matchedText.substring(3, matchedText.length - 1) +
-              '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+          transformedText = matchedText.substring(3, matchedText.length - 1) + '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
         } else {
           transformedText = matchedText;
         }
@@ -74,11 +76,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
           text: transformedText,
           style: TextStyle(
             fontFamily: 'Podkova',
-            fontSize: 28,
+            fontSize: homePageController.yazipuntosu.value,
             fontWeight: FontWeight.w400,
-            color: !transformedText.contains('[')
-                ? Colors.black
-                : ColorConstants.primaryColor,
+            color: !transformedText.contains('[') ? Colors.black : ColorConstants.primaryColor,
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
@@ -108,6 +108,7 @@ int index = (int.tryParse(x)! - 1) % 2;
           style: TextStyle(
             color: Colors.black,
             fontFamily: 'Podkova',
+            fontSize: homePageController.yazipuntosu.value,
             fontWeight: FontWeight.w400,
           ),
         ));
@@ -121,12 +122,59 @@ int index = (int.tryParse(x)! - 1) % 2;
   TextEditingController _controller1 = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
   List<Verses> _verses = [];
+
+  String pathPDF = "";
+  String corruptedPathPDF = "";
+  @override
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    Completer<File> completer = Completer();
+    print("Start download file from internet!");
+    try {
+      // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
+      // final url = "https://pdfkit.org/docs/guide.pdf";
+      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      final filename = url.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      print("Download files");
+      print("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
   String SureAdi = "";
   RxBool sonAyet = true.obs;
   void _makeRequest() async {
     Dio dio = Dio();
     try {
-      Response response = await dio.post(
+      var response = await dio.post(
         'http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=',
         data: {
           'sure': sureadi,
@@ -134,8 +182,7 @@ int index = (int.tryParse(x)! - 1) % 2;
         },
       );
       List<dynamic> dataList = response.data;
-      List<SureModel> sureModelList =
-          dataList.map((data) => SureModel.fromJson(data)).toList();
+      List<SureModel> sureModelList = dataList.map((data) => SureModel.fromJson(data)).toList();
       print("assdasdsad ${dataList[0]['sureadi']}");
       sureadi = dataList[0]['sureadi'];
       if (sureModelList.isNotEmpty) {
@@ -204,8 +251,7 @@ int index = (int.tryParse(x)! - 1) % 2;
     setState(() {
       print("saddfsa ${_verses[ayetno]..toString()}");
       if (ayetno < _verses.length - 1) {
-        if (_verses[ayetno].sonrakiayet == 1 ||
-            _verses[ayetno].sonrakiayet == 0) {
+        if (_verses[ayetno].sonrakiayet == 1 || _verses[ayetno].sonrakiayet == 0) {
           sonAyet.value = false;
         } else {
           ayetno = _verses[ayetno].sonrakiayet ?? 1;
@@ -229,8 +275,7 @@ int index = (int.tryParse(x)! - 1) % 2;
   bool isContainerVisible = false;
 
   void toggleContainerVisibility() {
-    homePageController.isContainerVisible.value =
-        !homePageController.isContainerVisible.value;
+    homePageController.isContainerVisible.value = !homePageController.isContainerVisible.value;
   }
 
   String extractATag(String text) {
@@ -243,19 +288,76 @@ int index = (int.tryParse(x)! - 1) % 2;
   }
 
   List<TextSpan> _buildTextSpans(String text) {
-  final regex = RegExp(r'\[([^\]]+)\]');
-  final matches = regex.allMatches(text);
+    final regex = RegExp(r'\[([^\]]+)\]');
+    final matches = regex.allMatches(text);
 
-  List<TextSpan> spans = [];
-  int lastMatchEnd = 0;
+    List<TextSpan> spans = [];
+    int lastMatchEnd = 0;
 
-  for (var match in matches) {
-    final citation = match.group(1)!;
-    final start = match.start;
-    final end = match.end;
-    if (start > lastMatchEnd) {
+    for (var match in matches) {
+      final citation = match.group(1)!;
+      final start = match.start;
+      final end = match.end;
+      if (start > lastMatchEnd) {
+        spans.add(TextSpan(
+          text: text.substring(lastMatchEnd, start),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 26,
+            fontFamily: 'Source Serif Pro',
+            fontWeight: FontWeight.w400,
+            height: 0,
+          ),
+        ));
+      }
+
       spans.add(TextSpan(
-        text: " ${text.substring(lastMatchEnd, start)} ",
+        text: citation,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 26,
+          fontFamily: 'Source Serif Pro',
+          fontWeight: FontWeight.w700,
+          height: 0,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            final parts = citation.split(' ');
+            if (parts.length >= 2) {
+              final text = parts.sublist(0, parts.length - 1).join(' ');
+              final numberStr = parts.last;
+              final number = int.tryParse(numberStr);
+
+              // Print the separated text and number
+              print("Metin: $text");
+              print("Sayı: $numberStr");
+
+              if (number != null) {
+                if (text == "Hurufu Mukattaa") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PDFScreen(path: corruptedPathPDF),
+                    ),
+                  );
+                } else {
+                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
+                }
+              } else {
+                print("Failed to parse number: $numberStr");
+              }
+            } else {
+              print("Unexpected format: $citation");
+            }
+          },
+      ));
+
+      lastMatchEnd = end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastMatchEnd),
         style: TextStyle(
           color: Colors.black,
           fontSize: 26,
@@ -265,49 +367,9 @@ int index = (int.tryParse(x)! - 1) % 2;
         ),
       ));
     }
-    spans.add(TextSpan(
-      // Sadece citation metnini kullanıyoruz, köşeli parantezleri eklemiyoruz
-      text: citation,
-      style: TextStyle(
-        color: Colors.blue,
-        fontSize: 26,
-        fontFamily: 'Source Serif Pro',
-        fontWeight: FontWeight.w700,
-        height: 0,
-      ),
-      recognizer: TapGestureRecognizer()
-        ..onTap = () {
-          final parts = citation.split(' ');
-          if (parts.length == 2) {
-            final text = parts[0];
-            final number = parts[1];
-            // print('metin: $text');
-            // print('sayı: $number');
-            print("Tıklamdır ${int.tryParse(number)} $text");
-            Get.offAllNamed(
-                                        NavigationConstants.sureOkuPage,
-                                        arguments: ["$text", int.tryParse(number)]);;
-          }
-        },
-    ));
 
-    lastMatchEnd = end;
+    return spans;
   }
-  if (lastMatchEnd < text.length) {
-    spans.add(TextSpan(
-      text: text.substring(lastMatchEnd),
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 26,
-        fontFamily: 'Source Serif Pro',
-        fontWeight: FontWeight.w400,
-        height: 0,
-      ),
-    ));
-  }
-  return spans;
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +380,8 @@ int index = (int.tryParse(x)! - 1) % 2;
         leading: Padding(
           padding: EdgeInsets.only(left: 10),
           child: IconButton(
-            onPressed: () => Get.offAllNamed(NavigationConstants.home),
+            // onPressed: () => Get.offAllNamed(NavigationConstants.home),
+            onPressed: () => Get.back(),
             icon: Icon(
               Icons.arrow_back,
               color: Colors.white,
@@ -334,30 +397,35 @@ int index = (int.tryParse(x)! - 1) % 2;
         // ],
         centerTitle: true,
         backgroundColor: ColorConstants.primaryColor,
-        title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'KUR’AN ',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Bw Aleta No 10 Bold',
-                  fontWeight: FontWeight.bold,
-                  height: 0,
+        title: GestureDetector(
+          onTap: () {
+            Get.offAllNamed(NavigationConstants.home);
+          },
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'KUR’AN ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'Bw Aleta No 10 Bold',
+                    fontWeight: FontWeight.bold,
+                    height: 0,
+                  ),
                 ),
-              ),
-              TextSpan(
-                text: 'AYDINLIĞI',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Bw Aleta No 10',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
+                TextSpan(
+                  text: 'AYDINLIĞI',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'Bw Aleta No 10',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -390,8 +458,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                   width: 45,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: Color(0xff2B89A5), width: 2),
+                                    border: Border.all(color: Color(0xff2B89A5), width: 2),
                                   ),
                                   child: Center(
                                     child: IconButton(
@@ -441,12 +508,10 @@ int index = (int.tryParse(x)! - 1) % 2;
                                             // ),
                                             ),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 25.w),
+                                              padding: EdgeInsets.only(left: 25.w),
                                               child: Column(
                                                 children: [
                                                   Text(
@@ -454,25 +519,22 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       color: Color(0xFF60A6BB),
-                                                      fontSize: 30,
+                                                      fontSize: SureAdi == "Hurufu Mukattaa" ? 20 : 28,
                                                       fontFamily: 'Podkova',
-                                                      fontWeight:
-                                                          FontWeight.w700,
+                                                      fontWeight: FontWeight.w700,
                                                       height: 0,
                                                     ),
                                                   ),
                                                   if (_verses.isNotEmpty)
                                                     Text(
                                                       '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 18,
+                                                        fontSize: 17,
                                                         //18
                                                         fontFamily: 'Podkova',
-                                                        fontWeight:
-                                                            FontWeight.w400,
+                                                        fontWeight: FontWeight.w400,
                                                         height: 0,
                                                       ),
                                                     ),
@@ -496,21 +558,17 @@ int index = (int.tryParse(x)! - 1) % 2;
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               "${index + 1}. $sure",
                                               style: TextStyle(
-                                                color:
-                                                    ColorConstants.primaryColor,
+                                                color: ColorConstants.primaryColor,
                                                 fontSize: 20,
                                                 fontFamily: 'Podkova',
                                                 fontWeight: FontWeight.w700,
-                                                height:
-                                                    1.2, // Text arası boşluğu ayarladık
+                                                height: 1.2, // Text arası boşluğu ayarladık
                                               ),
                                             ),
                                           ],
@@ -519,8 +577,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                           height: 10,
                                         ),
                                         Divider(
-                                          color: ColorConstants.primaryColor3
-                                              .withOpacity(0.4),
+                                          color: ColorConstants.primaryColor3.withOpacity(0.4),
                                           height: 1,
                                         )
                                       ],
@@ -530,25 +587,20 @@ int index = (int.tryParse(x)! - 1) % 2;
                                 value: selectedValue,
                                 onChanged: (String? value) {
                                   setState(() {
-                                    String selectedValue2 =
-                                        value!.split(' (')[0];
+                                    String selectedValue2 = value!.split(' (')[0];
                                     print("aaabbcc $selectedValue2");
-                                    Get.offAllNamed(
-                                        NavigationConstants.sureOkuPage,
-                                        arguments: ["$selectedValue2", 1]);
+                                    Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: ["$selectedValue2", 1]);
                                   });
                                 },
                                 buttonStyleData: ButtonStyleData(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 4),
+                                  padding: const EdgeInsets.only(left: 0, right: 4),
                                 ),
                                 iconStyleData: const IconStyleData(
                                   icon: Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                   ),
                                   iconSize: 25,
-                                  iconEnabledColor:
-                                      ColorConstants.primaryColor3,
+                                  iconEnabledColor: ColorConstants.primaryColor3,
                                   iconDisabledColor: Colors.grey,
                                 ),
                                 dropdownStyleData: DropdownStyleData(
@@ -561,10 +613,8 @@ int index = (int.tryParse(x)! - 1) % 2;
                                   offset: const Offset(-20, 0),
                                   scrollbarTheme: ScrollbarThemeData(
                                     radius: const Radius.circular(40),
-                                    thickness:
-                                        MaterialStateProperty.all<double>(6),
-                                    thumbVisibility:
-                                        MaterialStateProperty.all<bool>(true),
+                                    thickness: MaterialStateProperty.all<double>(6),
+                                    thumbVisibility: MaterialStateProperty.all<bool>(true),
                                   ),
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(
@@ -587,8 +637,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                   width: 45,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: Color(0xff2B89A5), width: 2),
+                                    border: Border.all(color: Color(0xff2B89A5), width: 2),
                                   ),
                                   child: Center(
                                     child: IconButton(
@@ -624,142 +673,19 @@ int index = (int.tryParse(x)! - 1) % 2;
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Padding(
-                              padding: const EdgeInsets.all(25.0),
-                              child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 30),
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: ShapeDecoration(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    shadows: [
-                                      BoxShadow(
-                                        color: Color(0x26000000),
-                                        blurRadius: 10,
-                                        offset: Offset(4, 4),
-                                        spreadRadius: 0,
-                                      )
-                                    ],
-                                  ),
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        if (_verses.isNotEmpty)
-                                          Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.all(16.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Obx(
-                                                  () => Visibility(
-                                                    visible: homePageController
-                                                        .arapcametin.value,
-                                                    child: RichText(
-                                                      text: TextSpan(
-                                                        text: _verses[ayetno]
-                                                            .metin!,
-                                                        style: TextStyle(
-                                                          fontSize: 24,
-                                                          fontFamily:
-                                                              'Kuranfont',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color:
-                                                              Color(0xFF2A89A5),
-                                                        ),
-                                                        locale:
-                                                            Locale('ar', ''),
-                                                      ),
-                                                      textDirection:
-                                                          TextDirection.rtl,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 30.h,
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Obx(
-                                                    () => homePageController
-                                                            .dipnotlar.value
-                                                        ? RichText(
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            text: TextSpan(
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Podkova',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize:
-                                                                    homePageController
-                                                                        .yazipuntosu
-                                                                        .value,
-                                                              ),
-                                                              children: _parseText(
-                                                                  _verses[ayetno]
-                                                                      .meal!,
-                                                                  homePageController
-                                                                      .dipnotlar
-                                                                      .value),
-                                                            ),
-                                                          )
-                                                        : RichText(
-                                                            text: TextSpan(
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Podkova',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize:
-                                                                    homePageController
-                                                                        .yazipuntosu
-                                                                        .value,
-                                                              ),
-                                                              children: _parseText(
-                                                                  _verses[ayetno]
-                                                                      .meal!,
-                                                                  homePageController
-                                                                      .dipnotlar
-                                                                      .value),
-                                                            ),
-                                                          ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                      ]))),
                           Visibility(
                             visible: ayetno == 1,
                             child: GestureDetector(
                               onTap: () {
-                                _showBottomSheet(
-                                    context,
-                                    '${SureAdi} Suresi\nHakkında',
-                                    _verses[0].meal.toString());
+                                _showBottomSheet(context, '${SureAdi} Suresi\nHakkında', _verses[0].meal.toString());
                               },
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.only(bottom: 150.h),
+                                  padding: EdgeInsets.only(bottom: 35.h, top: 25),
                                   child: Container(
-                                    width: 250.w,
+                                    width: 260.w,
                                     height: 70.h,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
                                     decoration: ShapeDecoration(
                                       color: Color(0xFF2A89A5),
                                       shape: RoundedRectangleBorder(
@@ -776,11 +702,12 @@ int index = (int.tryParse(x)! - 1) % 2;
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
+                                        SizedBox(
+                                          width: 15,
+                                        ),
                                         Container(
                                           height: 35,
                                           clipBehavior: Clip.antiAlias,
@@ -804,7 +731,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 15,
                                         )
                                       ],
                                     ),
@@ -813,6 +740,90 @@ int index = (int.tryParse(x)! - 1) % 2;
                               ),
                             ),
                           ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                left: 25.0,
+                                right: 25,
+                              ),
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    shadows: [
+                                      BoxShadow(
+                                        color: Color(0x26000000),
+                                        blurRadius: 10,
+                                        offset: Offset(4, 4),
+                                        spreadRadius: 0,
+                                      )
+                                    ],
+                                  ),
+                                  child:
+                                      Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                    if (_verses.isNotEmpty)
+                                      Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Obx(
+                                              () => Visibility(
+                                                visible: homePageController.arapcametin.value,
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    text: _verses[ayetno].metin!,
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                      fontFamily: 'Kuranfont',
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color(0xFF2A89A5),
+                                                    ),
+                                                    locale: Locale('ar', ''),
+                                                  ),
+                                                  textDirection: TextDirection.rtl,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 30.h,
+                                            ),
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: Obx(
+                                                () => homePageController.dipnotlar.value
+                                                    ? RichText(
+                                                        textAlign: TextAlign.center,
+                                                        text: TextSpan(
+                                                          style: TextStyle(
+                                                            fontFamily: 'Podkova',
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: homePageController.yazipuntosu.value,
+                                                          ),
+                                                          children: _parseText(_verses[ayetno].meal!, homePageController.dipnotlar.value),
+                                                        ),
+                                                      )
+                                                    : RichText(
+                                                        text: TextSpan(
+                                                          style: TextStyle(
+                                                            fontFamily: 'Podkova',
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: homePageController.yazipuntosu.value,
+                                                          ),
+                                                          children: _parseText(_verses[ayetno].meal!, homePageController.dipnotlar.value),
+                                                        ),
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ]))),
                           SizedBox(
                             height: 120.h,
                           ),
@@ -826,15 +837,9 @@ int index = (int.tryParse(x)! - 1) % 2;
             Obx(
               () => homePageController.isContainerVisible.value
                   ? Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 15, left: 15, right: 15),
+                      padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
                       child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Fab(
-                              context,
-                              homePageController.yazipuntosu,
-                              homePageController.arapcametin,
-                              homePageController.dipnotlar)),
+                          alignment: Alignment.bottomCenter, child: Fab(context, homePageController.yazipuntosu, homePageController.arapcametin, homePageController.dipnotlar)),
                     )
                   : Padding(
                       padding: const EdgeInsets.only(left: 20, bottom: 15),
@@ -850,11 +855,8 @@ int index = (int.tryParse(x)! - 1) % 2;
                               size: 42,
                               color: Colors.white,
                             ),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(50),
-                                    bottomLeft: Radius.circular(50)),
-                                color: ColorConstants.primaryColor3),
+                            decoration:
+                                BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)), color: ColorConstants.primaryColor3),
                           ),
                         ),
                       ),
@@ -866,8 +868,7 @@ int index = (int.tryParse(x)! - 1) % 2;
     );
   }
 
-  Padding Fab(BuildContext context, RxDouble yazipuntosu, RxBool arapcametin,
-      RxBool dipnotlar) {
+  Padding Fab(BuildContext context, RxDouble yazipuntosu, RxBool arapcametin, RxBool dipnotlar) {
     return Padding(
         padding: EdgeInsets.only(left: 0),
         child: Container(
@@ -903,8 +904,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                         context: context,
                         builder: (BuildContext context) {
                           return Container(
-                            width: MediaQuery.of(context).size.width *
-                                0.9, // Boyutu arttır
+                            width: MediaQuery.of(context).size.width * 0.9, // Boyutu arttır
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
@@ -933,8 +933,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                     height: 10,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       // Metin Büyüklüğü ve Artı Eksi iconları
                                       Container(
@@ -963,8 +962,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                 () => Text(
                                                   '${(yazipuntosu.value).toInt()} Punto',
                                                   style: TextStyle(
-                                                    color: Colors.black
-                                                        .withOpacity(0.7),
+                                                    color: Colors.black.withOpacity(0.7),
                                                     fontSize: 12,
                                                     fontFamily: 'Axiforma',
                                                     fontWeight: FontWeight.w500,
@@ -980,21 +978,17 @@ int index = (int.tryParse(x)! - 1) % 2;
                                         children: [
                                           GestureDetector(
                                               onTap: () {
-                                                yazipuntosu.value =
-                                                    yazipuntosu.value - 1;
+                                                yazipuntosu.value = yazipuntosu.value - 1;
                                                 print(yazipuntosu.value);
                                               },
-                                              child: Image.asset(
-                                                  "assets/icon/eksi.png")),
+                                              child: Image.asset("assets/icon/eksi.png")),
                                           SizedBox(width: 20),
                                           GestureDetector(
                                               onTap: () {
-                                                yazipuntosu.value =
-                                                    yazipuntosu.value + 1;
+                                                yazipuntosu.value = yazipuntosu.value + 1;
                                                 print(yazipuntosu.value);
                                               },
-                                              child: Image.asset(
-                                                  "assets/icon/arti.png")),
+                                              child: Image.asset("assets/icon/arti.png")),
                                         ],
                                       ),
                                     ],
@@ -1003,8 +997,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                     height: 15,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       // Metin Büyüklüğü ve Artı Eksi iconları
                                       Text(
@@ -1027,9 +1020,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/kapaligoz.svg",
-                                                  color: arapcametin.value
-                                                      ? Colors.grey
-                                                      : Colors.black,
+                                                  color: arapcametin.value ? Colors.grey : Colors.black,
                                                 )),
                                             SizedBox(width: 20),
                                             GestureDetector(
@@ -1038,9 +1029,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/acikgozsiyah.svg",
-                                                  color: arapcametin.value
-                                                      ? Colors.black
-                                                      : Colors.grey,
+                                                  color: arapcametin.value ? Colors.black : Colors.grey,
                                                 )),
                                           ],
                                         ),
@@ -1051,8 +1040,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                     height: 15,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Dipnotlar',
@@ -1075,9 +1063,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/kapaligoz.svg",
-                                                  color: dipnotlar.value
-                                                      ? Colors.grey
-                                                      : Colors.black,
+                                                  color: dipnotlar.value ? Colors.grey : Colors.black,
                                                 )),
                                             SizedBox(width: 20),
                                             GestureDetector(
@@ -1086,9 +1072,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/acikgozsiyah.svg",
-                                                  color: dipnotlar.value
-                                                      ? Colors.black
-                                                      : Colors.grey,
+                                                  color: dipnotlar.value ? Colors.black : Colors.grey,
                                                 )),
                                           ],
                                         ),
@@ -1105,31 +1089,26 @@ int index = (int.tryParse(x)! - 1) % 2;
                         },
                       );
                     },
-                    child:
-                        bottomSheetWidget(asset: "settings", text: "Ayarlar"),
+                    child: bottomSheetWidget(asset: "settings", text: "Ayarlar"),
                   ),
                   SizedBox(
                     width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
-                        _showAlertDialog2(context, "FAVORİ AYETLER",
-                            "${sureadi} Suresi, ${ayetno}. Ayet \nFavori Ayetlere Eklendi.");
+                        _showAlertDialog2(context, "FAVORİ AYETLER", "${sureadi} Suresi, ${ayetno}. Ayet \nFavori Ayetlere Eklendi.");
                         _saveCurrentAyah();
                       },
-                      child: bottomSheetWidget(
-                          asset: "favorites", text: "Favori")),
+                      child: bottomSheetWidget(asset: "favorites", text: "Favori")),
                   SizedBox(
                     width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
                         _ayracCurrentAyah();
-                        _showAlertDialog2(context, "AYRAÇ",
-                            "${sureadi} Suresi, ${ayetno}. Ayet \nAyraç eklendi. Okumaya  buradan  devam edebilirsiniz.");
+                        _showAlertDialog2(context, "AYRAÇ", "${sureadi} Suresi, ${ayetno}. Ayet \nAyraç eklendi. Okumaya  buradan  devam edebilirsiniz.");
                       },
-                      child:
-                          bottomSheetWidget(asset: "saveicon", text: "Ayraç")),
+                      child: bottomSheetWidget(asset: "saveicon", text: "Ayraç")),
                   SizedBox(
                     width: 15,
                   ),
@@ -1141,8 +1120,7 @@ int index = (int.tryParse(x)! - 1) % 2;
 
                         String metin = _verses[ayetno].metin!;
                         if (metin.isNotEmpty) {
-                          metin = metin[metin.length - 1] +
-                              metin.substring(0, metin.length - 1);
+                          metin = metin[metin.length - 1] + metin.substring(0, metin.length - 1);
                         }
 
                         await Share.share(
@@ -1240,7 +1218,7 @@ int index = (int.tryParse(x)! - 1) % 2;
       ),
       builder: (BuildContext context) {
         return Container(
-          width: MediaQuery.of(context).size.width ,
+          width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
           decoration: BoxDecoration(
@@ -1395,120 +1373,120 @@ int index = (int.tryParse(x)! - 1) % 2;
 
 String? selectedValue;
 List<String> sureler = [
-  "Fatiha    (7)",
-  "Bakara    (286)",
-  "Al-i İmran    (200)",
-  "Nisa    (176)",
-  "Maide    (120)",
-  "En'am    (165)",
-  "A'raf   (206)",
-  "Enfal    (75)",
-  "Tevbe    (129)",
-  "Yunus    (109)",
-  "Hud    (123)",
-  "Yusuf    (111)",
-  "Rad    (43)",
-  "İbrahim    (52)",
-  "Hicr    (99)",
-  "Nahl    (128)",
-  "İsra    (111)",
-  "Kehf    (110)",
-  "Meryem    (98)",
-  "Taha    (135)",
-  "Enbiya    (112)",
-  "Hac    (78)",
-  "Müminun    (118)",
-  "Nur    (64)",
-  "Furkan    (77)",
-  "Şuara    (227)",
-  "Neml    (93)",
-  "Kasas    (88)",
-  "Ankebut    (69)",
-  "Rum    (60)",
-  "Lokman    (34)",
-  "Secde    (30)",
-  "Ahzab    (73)",
-  "Sebe    (54)",
-  "Fatır    (45)",
-  "Yasin    (83)",
-  "Saffat    (182)",
-  "Sad    (88)",
-  "Zümer    (75)",
-  "Mümin    (85)",
-  "Fussilet    (54)",
-  "Şura    (53)",
-  "Zuhruf    (89)",
-  "Duhan    (59)",
-  "Casiye    (37)",
-  "Ahkaf    (35)",
-  "Muhammed    (38)",
-  "Fetih    (29)",
-  "Hucurat    (18)",
-  "Kaf    (45)",
-  "Zariyat    (60)",
-  "Tur    (49)",
-  "Necm    (62)",
-  "Kamer    (55)",
-  "Rahman    (78)",
-  "Vakia    (96)",
-  "Hadid    (29)",
-  "Mücadele    (22)",
-  "Haşr    (24)",
-  "Mümtehine    (13)",
-  "Saff    (14)",
-  "Cuma    (11)",
-  "Münafikun    (11)",
-  "Tegabun    (18)",
-  "Talak    (12)",
-  "Tahrim    (12)",
-  "Mülk    (30)",
-  "Kalem    (52)",
-  "Hakka    (52)",
-  "Mearic    (44)",
-  "Nuh    (28)",
-  "Cin    (28)",
-  "Müzzemmil    (20)",
-  "Müddessir    (56)",
-  "Kıyamet    (40)",
-  "İnsan    (31)",
-  "Mürselat    (50)",
-  "Nebe    (40)",
-  "Naziat    (46)",
-  "Abese    (42)",
-  "Tekvir    (29)",
-  "İnfitar    (19)",
-  "Mutaffifin    (36)",
-  "İnşikak    (25)",
-  "Buruc    (22)",
-  "Tarık    (17)",
-  "Ala    (19)",
-  "Gaşiye    (26)",
-  "Fecr    (30)",
-  "Beled    (20)",
-  "Şems    (15)",
-  "Leyl    (21)",
-  "Duha    (11)",
-  "İnşirah    (8)",
-  "Tin    (8)",
-  "Alak    (19)",
-  "Kadr    (5)",
-  "Beyyine    (8)",
-  "Zilzal    (8)",
-  "Adiyat    (11)",
-  "Karia    (11)",
-  "Tekasur    (8)",
-  "Asr   (3)",
-  "Hümeze    (9)",
-  "Fil    (5)",
-  "Kureyş    (4)",
-  "Maun    (7)",
-  "Kevser    (3)",
-  "Kafirun    (6)",
-  "Nasr    (3)",
-  "Tebbet    (5)",
-  "İhlas    (4)",
-  "Felak    (5)",
-  "Nas    (6)"
+  "Fâtiha    (7)",
+  "Bakara    (287)",
+  "Âl-i İmrân    (201)",
+  "Nisâ    (177)",
+  "Mâide    (121)",
+  "En'âm    (166)",
+  "A'râf    (207)",
+  "Enfâl    (76)",
+  "Tevbe    (130)",
+  "Yûnus    (110)",
+  "Hûd    (124)",
+  "Yûsuf    (112)",
+  "Ra'd    (44)",
+  "İbrâhim    (53)",
+  "Hicr    (100)",
+  "Nahl    (129)",
+  "İsrâ    (112)",
+  "Kehf    (111)",
+  "Meryem    (99)",
+  "Tâ-Hâ    (136)",
+  "Enbiyâ    (113)",
+  "Hac    (79)",
+  "Mü'minûn    (119)",
+  "Nûr    (65)",
+  "Furkân    (78)",
+  "Şuarâ    (228)",
+  "Neml    (94)",
+  "Kasas    (89)",
+  "Ankebût    (70)",
+  "Rûm    (61)",
+  "Lokmân    (35)",
+  "Secde    (31)",
+  "Ahzâb    (74)",
+  "Sebe    (55)",
+  "Fâtır    (46)",
+  "Yâsîn    (84)",
+  "Sâffât    (183)",
+  "Sâd    (89)",
+  "Zümer    (76)",
+  "Mü'min    (86)",
+  "Fussilet    (55)",
+  "Şûrâ    (54)",
+  "Zuhruf    (90)",
+  "Duhân    (60)",
+  "Câsiye    (38)",
+  "Ahkâf    (36)",
+  "Muhammed    (39)",
+  "Fetih    (30)",
+  "Hucurât    (19)",
+  "Kâf    (46)",
+  "Zâriyât    (61)",
+  "Tûr    (50)",
+  "Necm    (63)",
+  "Kamer    (56)",
+  "Rahmân    (79)",
+  "Vâkıa    (97)",
+  "Hadîd    (30)",
+  "Mücâdele    (23)",
+  "Haşr    (25)",
+  "Mümtehine    (14)",
+  "Saff    (15)",
+  "Cuma    (12)",
+  "Münâfikûn    (12)",
+  "Teğâbün    (19)",
+  "Talâk    (13)",
+  "Tahrîm    (13)",
+  "Mülk    (31)",
+  "Kalem    (53)",
+  "Hâkka    (53)",
+  "Meâric    (45)",
+  "Nûh    (29)",
+  "Cin    (29)",
+  "Müzzemmil    (21)",
+  "Müddessir    (57)",
+  "Kıyâmet    (41)",
+  "İnsân    (32)",
+  "Mürselât    (51)",
+  "Nebe    (41)",
+  "Nâziât    (47)",
+  "Abese    (43)",
+  "Tekvîr    (30)",
+  "İnfitâr    (20)",
+  "Mutaffifîn    (37)",
+  "İnşikâk    (26)",
+  "Bürûc    (23)",
+  "Târık    (18)",
+  "A'lâ    (20)",
+  "Gâşiye    (27)",
+  "Fecr    (31)",
+  "Beled    (21)",
+  "Şems    (16)",
+  "Leyl    (22)",
+  "Duhâ    (12)",
+  "İnşirâh    (9)",
+  "Tîn    (9)",
+  "Alak    (20)",
+  "Kadr    (6)",
+  "Beyyine    (9)",
+  "Zilzâl    (9)",
+  "Âdiyât    (12)",
+  "Kâria    (12)",
+  "Tekâsür    (9)",
+  "Asr    (4)",
+  "Hümeze    (10)",
+  "Fîl    (6)",
+  "Kureyş    (5)",
+  "Mâûn    (8)",
+  "Kevser    (4)",
+  "Kâfirûn    (7)",
+  "Nasr    (4)",
+  "Tebbet    (6)",
+  "İhlâs    (5)",
+  "Felâk    (6)",
+  "Nâs    (7)"
 ];
 
 class bottomSheetWidget extends StatelessWidget {
@@ -1531,12 +1509,7 @@ class bottomSheetWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-              width: 50,
-              height: 50,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(),
-              child: Image.asset("assets/icon/$asset.png")),
+          Container(width: 50, height: 50, clipBehavior: Clip.antiAlias, decoration: BoxDecoration(), child: Image.asset("assets/icon/$asset.png")),
           Text(
             text,
             textAlign: TextAlign.center,
