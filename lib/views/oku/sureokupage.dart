@@ -318,17 +318,16 @@ class _SureOkuPageState extends State<SureOkuPage> {
               print("Metin: $text");
               print("Sayı: $numberStr");
 
-              if (number != null) {
-                if (text == "Hurufu Mukattaa") {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PDFScreen(path: corruptedPathPDF),
-                    ),
-                  );
-                } else {
-                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
-                }
+              if (text == "Hurufu") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PDFScreen(path: corruptedPathPDF),
+                  ),
+                );
+              }else  if (number != null) {
+                if (text == "Hurufu") {
+                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);             
               } else {
                 print("Failed to parse number: $numberStr");
               }
