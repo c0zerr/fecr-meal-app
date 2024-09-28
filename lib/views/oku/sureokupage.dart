@@ -325,9 +325,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     builder: (context) => PDFScreen(path: corruptedPathPDF),
                   ),
                 );
-              }else  if (number != null) {
+              } else if (number != null) {
                 if (text == "Hurufu") {
-                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);             
+                } else {
+                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
+                }
               } else {
                 print("Failed to parse number: $numberStr");
               }
