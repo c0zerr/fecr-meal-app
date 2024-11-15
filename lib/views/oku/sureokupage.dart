@@ -83,21 +83,14 @@ class _SureOkuPageState extends State<SureOkuPage> {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               print('Tapped on ${match.group(0)}');
-              
+
               if (_verses[ayetno].aciklamaPTags!.tags!.length > 1) {
-String x = "${transformedText.replaceAll('[', '').replaceAll(']', '')}";
-int index = (int.tryParse(x)! - 1) % 2;
-                _showBottomSheet(
-  context,
-  "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}",
-  _verses[ayetno].aciklamaPTags!.tags![index].content.toString());
-              }else{
-                  _showBottomSheet(
-                  context,
-                  "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}",
-                  _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
+                String x = "${transformedText.replaceAll('[', '').replaceAll(']', '')}";
+                int index = (int.tryParse(x)! - 1) % 2;
+                _showBottomSheet(context, "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}", _verses[ayetno].aciklamaPTags!.tags![index].content.toString());
+              } else {
+                _showBottomSheet(context, "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}", _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
               }
-              
             },
         ));
         return '';
@@ -332,14 +325,15 @@ int index = (int.tryParse(x)! - 1) % 2;
               print("Metin: $text");
               print("Sayı: $numberStr");
 
-              if (number != null) {
-                if (text == "Hurufu Mukattaa") {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PDFScreen(path: corruptedPathPDF),
-                    ),
-                  );
+              if (text == "Hurufu") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PDFScreen(path: corruptedPathPDF),
+                  ),
+                );
+              } else if (number != null) {
+                if (text == "Hurufu") {
                 } else {
                   Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
                 }
