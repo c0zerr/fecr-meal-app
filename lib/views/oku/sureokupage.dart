@@ -39,7 +39,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   String? dynamicText;
   @override
   void initState() {
-    _makeRequest();
+     _makeRequest();
     fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
       setState(() {
         corruptedPathPDF = f.path;
@@ -373,6 +373,10 @@ int index = (int.tryParse(x)! - 1) % 2;
 
   @override
   Widget build(BuildContext context) {
+    
+    print("object ${_verses[ayetno].oncekiayet}");
+
+
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
@@ -452,7 +456,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                           SizedBox(
                             width: 15.w,
                           ),
-                          ayetno != 1
+                          ayetno != 1 && _verses[ayetno].oncekiayet != 0
                               ? Container(
                                   height: 45,
                                   width: 45,
@@ -628,7 +632,7 @@ int index = (int.tryParse(x)! - 1) % 2;
                             width: 10,
                           ),
                           Visibility(
-                            visible: ayetno != (_verses.length - 1),
+                            visible: (ayetno != (_verses.length - 1)&& _verses[ayetno].sonrakiayet != 0 ),
                             child: Obx(
                               () => Visibility(
                                 visible: sonAyet.value,
@@ -664,10 +668,16 @@ int index = (int.tryParse(x)! - 1) % 2;
                     onHorizontalDragEnd: (details) {
                       if (details.primaryVelocity! < 0) {
                         // Sağa kaydırma işlemi
+                        if ((ayetno != (_verses.length - 1)&& _verses[ayetno].sonrakiayet != 0 )) {
                         _nextVerse();
+
+                        }
                       } else if (details.primaryVelocity! > 0) {
                         // Sola kaydırma işlemi
+                        if (ayetno != 1 && _verses[ayetno].oncekiayet != 0) {
                         _previousVerse();
+                          
+                        }
                       }
                     },
                     child: SingleChildScrollView(
