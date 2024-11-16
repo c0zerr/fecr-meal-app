@@ -17,10 +17,7 @@ class ContactUsPage extends StatelessWidget {
     TextEditingController aciklamalar = TextEditingController();
 
     String? encodeQueryParameters(Map<String, String> params) {
-      return params.entries
-          .map((MapEntry<String, String> e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-          .join('&');
+      return params.entries.map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
     }
 
     Future<void> _launchEmail(String adsoyad, String text) async {
@@ -34,8 +31,7 @@ class ContactUsPage extends StatelessWidget {
         if (await canLaunchUrl(emailLaunchUri)) {
           await launchUrl(emailLaunchUri);
         } else {
-          _showAlertDialog(context, "Email Client Not Found",
-              "Please ensure you have an email app installed to send an email.");
+          _showAlertDialog(context, "Email Client Not Found", "Please ensure you have an email app installed to send an email.");
         }
       } catch (e) {
         _showAlertDialog(context, "Error", "Unable to launch email: $e");
@@ -79,8 +75,7 @@ class ContactUsPage extends StatelessWidget {
             SizedBox(
               height: 15.h,
             ),
-            CustomTextfield(
-                text: "Adınızı ve Soyadınızı Girin", controller: isimsoyisim),
+            CustomTextfield(text: "Adınızı ve Soyadınızı Girin", controller: isimsoyisim),
             SizedBox(
               height: 43,
             ),
@@ -125,36 +120,23 @@ class ContactUsPage extends StatelessWidget {
                 height: 60, // Yükseklik
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Color(0xFFE86014)),
+                    backgroundColor: MaterialStateProperty.all(Color(0xFFE86014)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Yuvarlak köşe
+                        borderRadius: BorderRadius.circular(10), // Yuvarlak köşe
                       ),
                     ),
                   ),
                   onPressed: () {
                     if (isimsoyisim.text == "") {
-                      _showAlertDialog(
-                          context,
-                          "LÜTFEN\nEKSİK YERLERİ DOLDURUN",
-                          "İsim ve Soyisim \nBilginizi girin. ");
+                      _showAlertDialog(context, "LÜTFEN\nEKSİK YERLERİ DOLDURUN", "İsim ve Soyisim \nBilginizi girin. ");
                     } else if (email.text == "") {
-                      _showAlertDialog(
-                          context,
-                          "LÜTFEN\nEKSİK YERLERİ DOLDURUN",
-                          "E-Posta \nAdresinizi girin.");
+                      _showAlertDialog(context, "LÜTFEN\nEKSİK YERLERİ DOLDURUN", "E-Posta \nAdresinizi girin.");
                     } else if (aciklamalar.text == "") {
-                      _showAlertDialog(
-                          context,
-                          "LÜTFEN\nEKSİK YERLERİ DOLDURUN",
-                          "Açıklamanızı girin.");
+                      _showAlertDialog(context, "LÜTFEN\nEKSİK YERLERİ DOLDURUN", "Açıklamanızı girin.");
                     } else {
-                      _launchEmail(
-                          "${aciklamalar.text}", "${isimsoyisim.text}");
-                      _showAlertDialog(context, "TEŞEKKÜR EDERİZ!",
-                          "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
+                      _launchEmail("${aciklamalar.text}", "${isimsoyisim.text}");
+                      _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
                       email.clear();
                       isimsoyisim.clear();
                     }

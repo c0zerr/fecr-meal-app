@@ -39,7 +39,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
   String? dynamicText;
   @override
   void initState() {
-     _makeRequest();
+    _makeRequest();
     fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
       setState(() {
         corruptedPathPDF = f.path;
@@ -367,9 +367,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     print("object ${_verses[ayetno].oncekiayet}");
-
 
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
@@ -626,7 +624,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             width: 10,
                           ),
                           Visibility(
-                            visible: (ayetno != (_verses.length - 1)&& _verses[ayetno].sonrakiayet != 0 ),
+                            visible: (ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0),
                             child: Obx(
                               () => Visibility(
                                 visible: sonAyet.value,
@@ -662,15 +660,13 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     onHorizontalDragEnd: (details) {
                       if (details.primaryVelocity! < 0) {
                         // Sağa kaydırma işlemi
-                        if ((ayetno != (_verses.length - 1)&& _verses[ayetno].sonrakiayet != 0 )) {
-                        _nextVerse();
-
+                        if ((ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0)) {
+                          _nextVerse();
                         }
                       } else if (details.primaryVelocity! > 0) {
                         // Sola kaydırma işlemi
                         if (ayetno != 1 && _verses[ayetno].oncekiayet != 0) {
-                        _previousVerse();
-                          
+                          _previousVerse();
                         }
                       }
                     },
