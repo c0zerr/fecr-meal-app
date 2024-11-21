@@ -82,8 +82,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              print('Tapped on ${match.group(0)}');
-
               if (_verses[ayetno].aciklamaPTags!.tags!.length > 1) {
                 String x = "${transformedText.replaceAll('[', '').replaceAll(']', '')}";
                 int index = (int.tryParse(x)! - 1) % 2;
@@ -139,7 +137,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   Future<File> createFileOfPdfUrl() async {
     Completer<File> completer = Completer();
-    print("Start download file from internet!");
     try {
       // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
       // final url = "https://pdfkit.org/docs/guide.pdf";
@@ -149,8 +146,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();
-      print("Download files");
-      print("${dir.path}/$filename");
       File file = File("${dir.path}/$filename");
 
       await file.writeAsBytes(bytes, flush: true);
@@ -176,12 +171,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
       );
       List<dynamic> dataList = response.data;
       List<SureModel> sureModelList = dataList.map((data) => SureModel.fromJson(data)).toList();
-      print("assdasdsad ${dataList[0]['sureadi']}");
       sureadi = dataList[0]['sureadi'];
       if (sureModelList.isNotEmpty) {
-        print("asaadd");
         String sureAdi = dataList.isNotEmpty ? dataList[0]['sureadi'] : "";
-        print(sureAdi);
         SureAdi = sureAdi;
         setState(() {
           _verses = sureModelList.first.verses!;
@@ -367,8 +359,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("object ${_verses[ayetno].oncekiayet}");
-
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
