@@ -614,31 +614,32 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             width: 10,
                           ),
                           Visibility(
-                            visible: (ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0),
-                            child: Obx(
-                              () => Visibility(
-                                visible: sonAyet.value,
-                                child: Container(
-                                  height: 45,
-                                  width: 45,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Color(0xff2B89A5), width: 2),
-                                  ),
-                                  child: Center(
-                                    child: IconButton(
-                                      onPressed: _nextVerse,
-                                      icon: Icon(
-                                        Icons.arrow_forward_outlined,
-                                        color: ColorConstants.primaryColor3,
-                                        size: 25,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+  visible: (_verses.isNotEmpty && ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0),
+  child: Obx(
+    () => Visibility(
+      visible: sonAyet.value,
+      child: Container(
+        height: 45,
+        width: 45,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Color(0xff2B89A5), width: 2),
+        ),
+        child: Center(
+          child: IconButton(
+            onPressed: _nextVerse,
+            icon: Icon(
+              Icons.arrow_forward_outlined,
+              color: ColorConstants.primaryColor3,
+              size: 25,
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+)
+
                         ],
                       ),
                     ],
