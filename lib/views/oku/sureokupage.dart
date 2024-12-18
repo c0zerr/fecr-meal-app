@@ -914,14 +914,14 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: 5,
                                   ),
                                   Divider(
                                     color: Colors.black,
                                     thickness: 1,
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: 5,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -940,7 +940,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 17.5,
+                                                  fontSize: 17,
                                                   fontFamily: 'Axiforma',
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -996,7 +996,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 18,
+                                          fontSize: 17,
                                           fontFamily: 'Axiforma',
                                           fontWeight: FontWeight.w500,
                                           height: 0,
@@ -1038,7 +1038,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 18,
+                                          fontSize: 17,
                                           fontFamily: 'Axiforma',
                                           fontWeight: FontWeight.w500,
                                           height: 0,
