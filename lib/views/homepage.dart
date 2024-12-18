@@ -306,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                                                     chosenList[index]['name'],
                                                     style: TextStyle(
                                                       color: Color(0xFF464646),
-                                                      fontSize: 28,
+                                                      fontSize: 25, //28
                                                       fontFamily: 'Podkova',
                                                       fontWeight: FontWeight.w700,
                                                       height: 0,
@@ -320,7 +320,7 @@ class _HomePageState extends State<HomePage> {
                                                     chosenList[index]['name'] == "Hurufu Mukattaa" ? "" : "${chosenList[index]['verseCount'] - 1} Ayet",
                                                     style: TextStyle(
                                                       color: Color(0xFF2A89A5),
-                                                      fontSize: 16,
+                                                      fontSize: 15, //16
                                                       fontFamily: 'Podkova',
                                                       fontWeight: FontWeight.w500,
                                                       height: 0,

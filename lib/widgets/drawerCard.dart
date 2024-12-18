@@ -35,7 +35,7 @@ class DrawerCards extends StatelessWidget {
               children: [
                 // SizedBox(width: 10.w),
                 Padding(
-                  padding: EdgeInsets.only(left: 7.w, top: 5.h, bottom: 5.h, right: 10.w),
+                  padding: EdgeInsets.only(left: 5.w, top: 5.h, bottom: 5.h, right: 5.w),
                   child: Image.asset(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -48,7 +48,7 @@ class DrawerCards extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontFamily: "Axiforma",
-                    fontSize: 18,
+                    fontSize: 16, //18
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
