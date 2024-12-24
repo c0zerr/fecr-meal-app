@@ -697,7 +697,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
-                                          width: 15,
+                                          width: 8,
                                         ),
                                         Container(
                                           height: 35,
@@ -709,20 +709,20 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                             color: Colors.white,
                                           ),
                                         ),
-                                        const SizedBox(width: 15),
+                                        const SizedBox(width: 10),
                                         Text(
                                           'Sure Hakkında',
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 24,
+                                            fontSize: 21,
                                             fontFamily: 'Podkova',
                                             fontWeight: FontWeight.w400,
-                                            height: 0.09,
+                                            height: 0.07,
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 15,
+                                          width: 8,
                                         )
                                       ],
                                     ),
