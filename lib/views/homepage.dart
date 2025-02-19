@@ -496,7 +496,6 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            // Kullanıcının girdiği surahName stringindeki baştaki ve sondaki boşlukları sil
                                             final surahName = sureadi.text.trim();
                                             int? verseNumber = int.tryParse(ayetno.text);
                                             if (verseNumber == null) verseNumber = 1;

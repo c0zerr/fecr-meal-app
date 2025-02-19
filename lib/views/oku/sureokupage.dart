@@ -166,7 +166,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
         'http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=',
         data: {
           'sure': sureadi,
-          // 'ayetno':ayetno,
         },
       );
       List<dynamic> dataList = response.data;

@@ -42,7 +42,7 @@ List<Map<String, dynamic>> mushafSirasi = [
   {"name": "Fussilet", "verseCount": 55},
   {"name": "Şûrâ", "verseCount": 54},
   {"name": "Zuhruf", "verseCount": 90},
-  {"name": "Duha", "verseCount": 60},
+  {"name": "Duhan", "verseCount": 60},
   {"name": "Casiye", "verseCount": 38},
   {"name": "Ahkâf", "verseCount": 36},
   {"name": "Muhammed", "verseCount": 39},
@@ -179,7 +179,8 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Fussilet", "verseCount": 55},
   {"name": "Şûrâ", "verseCount": 54},
   {"name": "Zuhruf", "verseCount": 90},
-  {"name": "Duha", "verseCount": 60},
+  {"name": "Duhan", "verseCount": 60},
+
   {"name": "Casiye", "verseCount": 38},
   {"name": "Ahkâf", "verseCount": 36},
   {"name": "Zâriyât", "verseCount": 61},
