@@ -1,7 +1,7 @@
 List<Map<String, dynamic>> mushafSirasi = [
   {"name": "Fatiha", "verseCount": 7},
   {"name": "Bakara", "verseCount": 287},
-  {"name": "Ali İmran", "verseCount": 201},
+  {"name": "Âl-i İmran", "verseCount": 201},
   {"name": "Nisa", "verseCount": 177},
   {"name": "Maide", "verseCount": 121},
   {"name": "En’âm", "verseCount": 166},
@@ -105,7 +105,7 @@ List<Map<String, dynamic>> mushafSirasi = [
   {"name": "Hümeze", "verseCount": 10},
   {"name": "Fil", "verseCount": 6},
   {"name": "Kureyş", "verseCount": 5},
-  {"name": "Maun", "verseCount": 8},
+  {"name": "Mâûn", "verseCount": 8},
   {"name": "Kevser", "verseCount": 4},
   {"name": "Kâfirun", "verseCount": 7},
   {"name": "Nasr", "verseCount": 4},
@@ -132,7 +132,7 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Âdiyât", "verseCount": 12},
   {"name": "Kevser", "verseCount": 4},
   {"name": "Tekasür", "verseCount": 9},
-  {"name": "Maun", "verseCount": 8},
+  {"name": "Mâûn", "verseCount": 8},
   {"name": "Kâfirun", "verseCount": 7},
   {"name": "Fil", "verseCount": 6},
   {"name": "Felak", "verseCount": 6},
@@ -160,6 +160,9 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Furkan", "verseCount": 78},
   {"name": "Fatır", "verseCount": 46},
   {"name": "Meryem", "verseCount": 99},
+
+
+
   {"name": "Tâhâ", "verseCount": 136},
   {"name": "Vâkıa", "verseCount": 97},
   {"name": "Şuarâ", "verseCount": 228},
@@ -170,6 +173,9 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Hûd", "verseCount": 124},
   {"name": "Yusuf", "verseCount": 112},
   {"name": "Hicr", "verseCount": 100},
+
+
+
   {"name": "En’âm", "verseCount": 166},
   {"name": "Saffat", "verseCount": 183},
   {"name": "Lokman", "verseCount": 35},
@@ -177,12 +183,15 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Zümer", "verseCount": 76},
   {"name": "Mümin", "verseCount": 86},
   {"name": "Fussilet", "verseCount": 55},
+
   {"name": "Şûrâ", "verseCount": 54},
+
   {"name": "Zuhruf", "verseCount": 90},
   {"name": "Duhan", "verseCount": 60},
-
   {"name": "Casiye", "verseCount": 38},
+
   {"name": "Ahkâf", "verseCount": 36},
+
   {"name": "Zâriyât", "verseCount": 61},
   {"name": "Gaşiye", "verseCount": 27},
   {"name": "Kehf", "verseCount": 111},
@@ -191,6 +200,7 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "İbrahim", "verseCount": 53},
   {"name": "Enbiya", "verseCount": 113},
   {"name": "Müminun", "verseCount": 119},
+  
   {"name": "Secde", "verseCount": 31},
   {"name": "Tur", "verseCount": 50},
   {"name": "Mülk", "verseCount": 31},
@@ -205,7 +215,7 @@ List<Map<String, dynamic>> nuzulSirasi = [
   {"name": "Mutaffifin", "verseCount": 37},
   {"name": "Bakara", "verseCount": 287},
   {"name": "Enfal", "verseCount": 76},
-  {"name": "Ali İmran", "verseCount": 201},
+  {"name": "Âl-i İmran", "verseCount": 201},
   {"name": "Ahzab", "verseCount": 74},
   {"name": "Mümtehine", "verseCount": 14},
   {"name": "Nisa", "verseCount": 177},

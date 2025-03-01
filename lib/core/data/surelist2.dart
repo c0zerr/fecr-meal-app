@@ -1,7 +1,7 @@
 List<Map<String, dynamic>> surelerr = [
   {"name": "Fatiha", "verseCount": 7},
   {"name": "Bakara", "verseCount": 287},
-  {"name": "Ali İmran", "verseCount": 201},
+  {"name": "Âl-i İmran", "verseCount": 201},
   {"name": "Nisa", "verseCount": 177},
   {"name": "Maide", "verseCount": 121},
   {"name": "En’âm", "verseCount": 166},
@@ -105,7 +105,7 @@ List<Map<String, dynamic>> surelerr = [
   {"name": "Hümeze", "verseCount": 10},
   {"name": "Fil", "verseCount": 6},
   {"name": "Kureyş", "verseCount": 5},
-  {"name": "Maun", "verseCount": 8},
+  {"name": "Mâûn", "verseCount": 8},
   {"name": "Kevser", "verseCount": 4},
   {"name": "Kâfirun", "verseCount": 7},
   {"name": "Nasr", "verseCount": 4},

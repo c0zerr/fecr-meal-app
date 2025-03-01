@@ -162,6 +162,153 @@ class _SureOkuPageState extends State<SureOkuPage> {
   void _makeRequest() async {
     Dio dio = Dio();
     try {
+      sureadi = sureadi.toLowerCase();
+      print("aassdd $sureadi");
+      if (sureadi == "En’âm" || sureadi == "enam" || sureadi == "en'âm") {
+        sureadi = "en'am";
+      }
+      if (sureadi == "ali imran" || sureadi == "âli imran" || sureadi == "al'i imran"|| sureadi == "al-i imran") {
+        sureadi = "Âl-i İmran";
+      }
+
+      if (sureadi == "insirah" || sureadi == "inşirah") {
+        sureadi = "inşirah";
+      }
+      
+      if (sureadi == "a'raf" || sureadi == "araf") {
+        print("aassdd buradami");
+        sureadi = "a'raf";
+      }
+
+
+
+      if (sureadi == "hûd" || sureadi == "hud" ) {
+        sureadi = "Hûd";
+      }
+
+
+
+
+      if (sureadi == "ra'd" || sureadi == "rad") {
+        sureadi = "Ra'd";
+      }
+
+      
+      if (sureadi == "isrâ" || sureadi == "isra") {
+        sureadi = "İsrâ";
+      }
+
+
+
+      if (sureadi == "tâhâ" || sureadi == "tâha" || sureadi == "tahâ") {
+        sureadi = "Tâhâ";
+      }
+
+
+      if (sureadi == "şuara" || sureadi == "suara" || sureadi == "suarâ"|| sureadi == "şuarâ") {
+        sureadi = "Şuarâ";
+      }
+
+
+      if (sureadi == "sad" || sureadi == "sâd") {
+        sureadi = "Sâd";
+      }
+      
+      
+      if (sureadi == "şûrâ" || sureadi == "şura" || sureadi == "şurâ"|| sureadi == "şûra") {
+        sureadi = "Şûrâ";
+      }
+      
+      
+      if (sureadi == "hucurat" || sureadi == "hucurât" ) {
+        sureadi = "Hucurât";
+      }
+      
+      
+      if (sureadi == "kâf" || sureadi == "kaf") {
+        sureadi = "Kâf";
+      }
+      
+      
+      if (sureadi == "zâriyât" || sureadi == "zariyat" || sureadi == "zâriyat"|| sureadi == "zariyât") {
+        sureadi = "Zâriyât";
+      }
+      
+      if (sureadi == "vakıa" || sureadi == "vâkıa" ) {
+        sureadi = "Vâkıa";
+      }
+      
+      
+      
+      if (sureadi == "teğabun" || sureadi == "tegabun") {
+        sureadi = "Teğabun";
+      }
+
+
+      if (sureadi == "hâkka" || sureadi == "hakka") {
+        sureadi = "Hâkka";
+      }
+
+      
+      if (sureadi == "meâric" || sureadi == "mearic") {
+        sureadi = "Meâric";
+      }
+      
+      
+      if (sureadi == "naziat" ||sureadi == "nâziât" || sureadi == "nâziat" || sureadi == "naziât") {
+        sureadi = "Nâziât";
+      }
+      
+
+      if (sureadi == "burûc" || sureadi == "burüc") {
+        sureadi = "Burûc";
+      }
+      
+
+      if (sureadi == "a'la" || sureadi == "ala") {
+        sureadi = "A'la";
+      }
+
+
+      if (sureadi == "duhâ" || sureadi == "duha") {
+        sureadi = "Duhâ";
+      }
+
+
+      if (sureadi == "tîn" || sureadi == "tin" ) {
+        sureadi = "Tîn";
+      }
+
+
+      if (sureadi == "adiyat" || sureadi == "âdiyat" || sureadi == "adiyât"|| sureadi == "âdiyât") {
+        sureadi = "Âdiyât";
+      }
+
+
+      if (sureadi == "kâria" || sureadi == "karia" ) {
+        sureadi = "Kâria";
+      }
+
+
+      if (sureadi == "mâûn" || sureadi == "mâun" || sureadi == "maûn"|| sureadi == "maun") {
+        sureadi = "Mâûn";
+      }
+
+
+      if (sureadi == "kâfirun" || sureadi == "kafirun" ) {
+        sureadi = "Kâfirun";
+      }
+
+
+      if (sureadi == "Ali İmran" || sureadi == "Âli İmran" || sureadi == "Al'i İmran"|| sureadi == "Al-i İmran") {
+        sureadi = "Âl-i İmran";
+      }
+
+
+      print("aassdd cikis $sureadi");
+
+
+
       var response = await dio.post(
         'http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=',
         data: {

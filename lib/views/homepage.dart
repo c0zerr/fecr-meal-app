@@ -31,20 +31,100 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   HomePageController homePageController = Get.put(HomePageController());
 
-  String validateSurahAndVerse(String surahName, int? verseNumber) {
-    // Surenin adı büyük/küçük harf duyarlı olabilir
-    final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == surahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
+  final Map<String, String> surahMap = {
+  "En’âm": "en'am",
+  "enam": "en'am",
+  "en-am": "en'am",
+  "en'âm": "en'am",
+  "ali imran": "Âl-i İmran",
+  "âli imran": "Âl-i İmran",
+  "al'i imran": "Âl-i İmran",
+  "al-i imran": "Âl-i İmran",
+  "a'raf": "a'raf",
+  "araf": "a'raf",
+  "hûd": "Hûd",
+  "hud": "Hûd",
+  "ra'd": "Ra'd",
+  "rad": "Ra'd",
+  "isrâ": "İsrâ",
+  "isra": "İsrâ",
+  "tâhâ": "Tâhâ",
+  "tâha": "Tâhâ",
+  "tahâ": "Tâhâ",
+  "taha": "Tâhâ",
+  "şuara": "Şuarâ",
+  "suara": "Şuarâ",
+  "suarâ": "Şuarâ",
+  "şuarâ": "Şuarâ",
+  "sad": "Sâd",
+  "sâd": "Sâd",
+  "şûrâ": "Şûrâ",
+  "şura": "Şûrâ",
+  "şurâ": "Şûrâ",
+  "şûra": "Şûrâ",
+  "hucurat": "Hucurât",
+  "hucurât": "Hucurât",
+  "kâf": "Kâf",
+  "kaf": "Kâf",
+  "zâriyât": "Zâriyât",
+  "zariyat": "Zâriyât",
+  "zâriyat": "Zâriyât",
+  "zariyât": "Zâriyât",
+  "vakıa": "Vâkıa",
+  "vâkıa": "Vâkıa",
+  "teğabun": "Teğabun",
+  "tegabun": "Teğabun",
+  "hâkka": "Hâkka",
+  "hakka": "Hâkka",
+  "meâric": "Meâric",
+  "mearic": "Meâric",
+  "naziat": "Nâziât",
+  "nâziât": "Nâziât",
+  "nâziat": "Nâziât",
+  "naziât": "Nâziât",
+  "burûc": "Burûc",
+  "burüc": "Burûc",
+  "a'la": "A'la",
+  "ala": "A'la",
+  "duhâ": "Duhâ",
+  "duha": "Duhâ",
+  "tîn": "Tîn",
+  "tin": "Tîn",
+  "adiyat": "Âdiyât",
+  "âdiyat": "Âdiyât",
+  "adiyât": "Âdiyât",
+  "âdiyât": "Âdiyât",
+  "kâria": "Kâria",
+  "karia": "Kâria",
+  "mâûn": "Mâûn",
+  "mâun": "Mâûn",
+  "maûn": "Mâûn",
+  "maun": "Mâûn",
+  "kâfirun": "Kâfirun",
+  "kafirun": "Kâfirun",
+  "ahkaf": "Ahkâf",
+  "ahkâf": "Ahkâf",
+  
+};
 
-    if (surah['name'] == '') {
-      return 'Lütfen Sure Adını Kontrol Ediniz';
-    }
+String validateSurahAndVerse(String surahName, int? verseNumber) {
+  final normalizedSurahName = surahMap[surahName.toLowerCase()] ?? surahName;
+  final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == normalizedSurahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
 
-    if (verseNumber == null || verseNumber < 1 || verseNumber > surah['verseCount']) {
-      return 'Lütfen Ayet Numarasını Kontrol Ediniz';
-    }
 
-    return '';
+  if (surahName == "maun" ||surahName == "mâun" ||surahName == "mâûn" ||surahName == "maûn"|| surahName =="enam" || surahName =="en'am" || surahName =="en-âm"|| surahName =="en-am"|| surahName =="en-âm") {
+  
+  }else{
+     if (surah['name'] == '') {
+    return 'Lütfen Sure Adını Kontrol Ediniz';
   }
+
+  if (verseNumber == null || verseNumber < 1 || verseNumber > surah['verseCount']) {
+    return 'Lütfen Ayet Numarasını Kontrol Ediniz';
+  }
+  }
+  return '';
+}
 
   String pathPDF = "";
   String corruptedPathPDF = "";
