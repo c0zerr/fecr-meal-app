@@ -164,8 +164,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     try {
       sureadi = sureadi.toLowerCase();
       print("aassdd $sureadi");
-      if (sureadi == "en’âm" || sureadi == "enam" || sureadi == "en'âm") {
-        sureadi = "enam";
+      if (sureadi == "en’âm" || sureadi == "enam" || sureadi == "en'âm" ||sureadi ==  "en’am") {
+        sureadi = "en'am";
       }
       if (sureadi == "ali imran" || sureadi == "âli imran" || sureadi == "al'i imran"|| sureadi == "al-i imran") {
         sureadi = "Âl-i İmran";

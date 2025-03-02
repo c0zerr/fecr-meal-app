@@ -32,24 +32,24 @@ class _HomePageState extends State<HomePage> {
   HomePageController homePageController = Get.put(HomePageController());
 
   final Map<String, String> surahMap = {
-  "En’âm": "enam",
-  "enam": "enam",
-  "en'am":"enam",
-  "en’am":"enam",
-  "en-am": "enam",
-  "en'âm": "enam",
-  "en’âm": "enam",
+  "En’âm": "en'am",
+  "enam": "en'am",
+  "en'am":"en'am",
+  "en’am":"en'am",
+  "en-am": "en'am",
+  "en'âm": "en'am",
+  "en’âm": "en'am",
   "ali imran": "Âl-i İmran",
-  "âli imran": "Âl-i İmran",
+  "âli imran": "Âl-i İmran", 
   "al'i imran": "Âl-i İmran",
   "al’i imran": "Âl-i İmran",
   "al-i imran": "Âl-i İmran",
   "a'raf": "a'raf",
   "a’raf": "a'raf",
-  "araf": "a'raf",
-  "hûd": "Hûd",
-  "hud": "Hûd",
-  "ra'd": "Ra'd",
+  "araf": "a'raf", 
+  "hûd": "Hûd",   
+  "hud": "Hûd",   
+  "ra'd": "Ra'd", 
   "rad": "Ra'd",
   "ra’d": "Ra'd",
   "isrâ": "İsrâ",
@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   "zariyât": "Zâriyât",
   "vakıa": "Vâkıa",
   "vâkıa": "Vâkıa",
+  "vâkia": "Vâkıa",
   "teğabun": "Teğabun",
   "tegabun": "Teğabun",
   "hâkka": "Hâkka",
@@ -116,9 +117,6 @@ class _HomePageState extends State<HomePage> {
 };
 
 String validateSurahAndVerse(String surahName, int? verseNumber) {
- // final normalizedSurahName = surahMap[surahName.toLowerCase()] ?? surahName;
- // final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == normalizedSurahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
-
   final normalizedSurahName = surahMap[surahName.toLowerCase()]?.toLowerCase() ?? surahName.toLowerCase();
 final surah = surelerr.firstWhere(
   (surah) => surah['name'].toLowerCase() == normalizedSurahName,
@@ -128,7 +126,7 @@ final surah = surelerr.firstWhere(
 
 
   print("surahname $surahName");
-  if (surahName == "maun" ||surahName == "mâun" ||surahName == "mâûn" ||surahName == "maûn"|| surahName =="en’am" || surahName =="en'am" || surahName =="en-âm"|| surahName =="en-am"|| surahName =="en-âm") {
+  if (surahName == "a'la" ||surahName == "maun" ||surahName == "mâun" ||surahName == "mâûn" ||surahName == "maûn"|| surahName =="enam" || surahName =="en’am" || surahName =="en’âm"|| surahName =="en-am"|| surahName =="en-âm") {
   
   }else{
      if (surah['name'] == '') {
