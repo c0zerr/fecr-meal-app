@@ -32,20 +32,26 @@ class _HomePageState extends State<HomePage> {
   HomePageController homePageController = Get.put(HomePageController());
 
   final Map<String, String> surahMap = {
-  "En’âm": "en'am",
-  "enam": "en'am",
-  "en-am": "en'am",
-  "en'âm": "en'am",
+  "En’âm": "enam",
+  "enam": "enam",
+  "en'am":"enam",
+  "en’am":"enam",
+  "en-am": "enam",
+  "en'âm": "enam",
+  "en’âm": "enam",
   "ali imran": "Âl-i İmran",
   "âli imran": "Âl-i İmran",
   "al'i imran": "Âl-i İmran",
+  "al’i imran": "Âl-i İmran",
   "al-i imran": "Âl-i İmran",
   "a'raf": "a'raf",
+  "a’raf": "a'raf",
   "araf": "a'raf",
   "hûd": "Hûd",
   "hud": "Hûd",
   "ra'd": "Ra'd",
   "rad": "Ra'd",
+  "ra’d": "Ra'd",
   "isrâ": "İsrâ",
   "isra": "İsrâ",
   "tâhâ": "Tâhâ",
@@ -85,6 +91,8 @@ class _HomePageState extends State<HomePage> {
   "burûc": "Burûc",
   "burüc": "Burûc",
   "a'la": "A'la",
+  "a’la": "A'la",
+  "A’la": "A'la",
   "ala": "A'la",
   "duhâ": "Duhâ",
   "duha": "Duhâ",
@@ -108,11 +116,19 @@ class _HomePageState extends State<HomePage> {
 };
 
 String validateSurahAndVerse(String surahName, int? verseNumber) {
-  final normalizedSurahName = surahMap[surahName.toLowerCase()] ?? surahName;
-  final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == normalizedSurahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
+ // final normalizedSurahName = surahMap[surahName.toLowerCase()] ?? surahName;
+ // final surah = surelerr.firstWhere((surah) => surah['name'].toLowerCase() == normalizedSurahName.toLowerCase(), orElse: () => {'name': '', 'verseCount': 1});
+
+  final normalizedSurahName = surahMap[surahName.toLowerCase()]?.toLowerCase() ?? surahName.toLowerCase();
+final surah = surelerr.firstWhere(
+  (surah) => surah['name'].toLowerCase() == normalizedSurahName,
+  orElse: () => {'name': '', 'verseCount': 1},
+);
 
 
-  if (surahName == "maun" ||surahName == "mâun" ||surahName == "mâûn" ||surahName == "maûn"|| surahName =="enam" || surahName =="en'am" || surahName =="en-âm"|| surahName =="en-am"|| surahName =="en-âm") {
+
+  print("surahname $surahName");
+  if (surahName == "maun" ||surahName == "mâun" ||surahName == "mâûn" ||surahName == "maûn"|| surahName =="en’am" || surahName =="en'am" || surahName =="en-âm"|| surahName =="en-am"|| surahName =="en-âm") {
   
   }else{
      if (surah['name'] == '') {

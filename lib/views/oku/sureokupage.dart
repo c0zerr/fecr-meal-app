@@ -164,8 +164,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     try {
       sureadi = sureadi.toLowerCase();
       print("aassdd $sureadi");
-      if (sureadi == "En’âm" || sureadi == "enam" || sureadi == "en'âm") {
-        sureadi = "en'am";
+      if (sureadi == "en’âm" || sureadi == "enam" || sureadi == "en'âm") {
+        sureadi = "enam";
       }
       if (sureadi == "ali imran" || sureadi == "âli imran" || sureadi == "al'i imran"|| sureadi == "al-i imran") {
         sureadi = "Âl-i İmran";
@@ -175,7 +175,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
         sureadi = "inşirah";
       }
       
-      if (sureadi == "a'raf" || sureadi == "araf") {
+      if (sureadi == "a’raf" || sureadi == "araf") {
         print("aassdd buradami");
         sureadi = "a'raf";
       }
@@ -189,7 +189,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
 
 
-      if (sureadi == "ra'd" || sureadi == "rad") {
+      if (sureadi == "ra’d" || sureadi == "rad") {
         sureadi = "Ra'd";
       }
 
@@ -265,7 +265,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       }
       
 
-      if (sureadi == "a'la" || sureadi == "ala") {
+      if (sureadi == "a'la" || sureadi == "a’la" || sureadi == "ala") {
         sureadi = "A'la";
       }
 
@@ -315,6 +315,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
           'sure': sureadi,
         },
       );
+      print("http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=$sureadi");
       List<dynamic> dataList = response.data;
       List<SureModel> sureModelList = dataList.map((data) => SureModel.fromJson(data)).toList();
       sureadi = dataList[0]['sureadi'];
