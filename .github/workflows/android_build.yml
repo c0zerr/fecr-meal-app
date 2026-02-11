@@ -40,7 +40,7 @@ jobs:
           flutter pub upgrade
 
       - name: Build APK & App Bundle
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release --verbose
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
