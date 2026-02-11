@@ -35,7 +35,9 @@ jobs:
           echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          flutter pub upgrade
 
       - name: Build APK & App Bundle
         run: flutter build appbundle --release
