@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_email_sender: ^6.0.4
+  flutter_email_sender: ^6.0.3
   cupertino_icons: ^1.0.8
   flutter_screenutil: ^5.9.3
   get: ^4.6.6
