@@ -8,7 +8,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.tecnobis.fecrMeal # Bundle ID'nizi buraya yazdım, gerekirse güncelleyin
+        bundle_identifier: com.mealfecr.fecrmeal # Bundle ID'nizi buraya yazdım, gerekirse güncelleyin
       flutter: stable
       xcode: latest
       cocoapods: default
