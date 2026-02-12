@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Padding(
         padding: EdgeInsets.only(left: 20.w),
         child: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               size: 35,
               color: Colors.white,
@@ -51,9 +51,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.search,
-            size: 0,
+            size: 35,
             color: ColorConstants.whiteColor,
           ),
           onPressed: onTapSearch,

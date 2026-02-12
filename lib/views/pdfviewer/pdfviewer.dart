@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class PDFScreen extends StatefulWidget {
   final String? path;
 
-  PDFScreen({Key? key, this.path}) : super(key: key);
+  const PDFScreen({Key? key, this.path}) : super(key: key);
 
+  @override
   _PDFScreenState createState() => _PDFScreenState();
 }
 
@@ -23,7 +23,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: <Widget>[],
+        actions: const <Widget>[],
       ),
       body: Stack(
         children: <Widget>[
@@ -37,9 +37,9 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             defaultPage: currentPage!,
             fitPolicy: FitPolicy.BOTH,
             preventLinkNavigation: false, // if set to true the link is handled in flutter
-            onRender: (_pages) {
+            onRender: (pages) {
               setState(() {
-                pages = _pages;
+                pages = pages;
                 isReady = true;
               });
             },
@@ -70,7 +70,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
           ),
           errorMessage.isEmpty
               ? !isReady
-                  ? Center(
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : Container()

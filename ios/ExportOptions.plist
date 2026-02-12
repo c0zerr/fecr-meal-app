@@ -8,7 +8,7 @@
     <string>CSYN2JYZ2N</string> <!-- Team ID'niz project.pbxproj dosyasından alındı -->
     <key>provisioningProfiles</key>
     <dict>
-        <key>com.mealfecr.fecrmeal</key>
+        <key>com.mealfecr.kuranaydinligi</key>
         <string>Fecr Meal App Store Profile</string> <!-- Bu ismi kendi provisioning profile adınızla eşleşecek şekilde GitHub Secret'a ekleyeceğiz veya burayı güncelleyeceğiz -->
     </dict>
     <key>signingStyle</key>

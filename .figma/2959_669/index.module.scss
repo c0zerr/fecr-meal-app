@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame615 {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--2B89A5, #2b89a5);
+  padding-right: 15px;
+  padding-left: 15px;
+  width: 150px;
+  height: 40px;
+  overflow: hidden;
+
+  .bakaraSuresi {
+    flex-shrink: 0;
+    line-height: 13px;
+    letter-spacing: 0;
+    color: #ffffff;
+    font-family: Axiforma, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 18px;
+  }
+}

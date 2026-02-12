@@ -46,7 +46,7 @@ class DrawerCards extends StatelessWidget {
                 // SizedBox(width: 2.w),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: "Axiforma",
                     fontSize: 16, //18
                     color: Colors.white,

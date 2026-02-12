@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fecrmeal/core/constants/color_constants.dart';
 
 class CustomTextfield extends StatelessWidget {
@@ -23,9 +22,9 @@ class CustomTextfield extends StatelessWidget {
             decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              contentPadding: EdgeInsetsDirectional.only(start: 15),
+              contentPadding: const EdgeInsetsDirectional.only(start: 15),
               hintText: text,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: Color(0xFF0E5770),
                 fontSize: 14,
                 fontFamily: 'Axiforma',

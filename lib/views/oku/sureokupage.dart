@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -24,7 +23,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SureOkuPage extends StatefulWidget {
-  SureOkuPage({
+  const SureOkuPage({
     Key? key,
   }) : super(key: key);
 
@@ -34,22 +33,31 @@ class SureOkuPage extends StatefulWidget {
 
 class _SureOkuPageState extends State<SureOkuPage> {
   HomePageController homePageController = Get.find();
-  String sureadi = Get.arguments[0];
-  int ayetno = Get.arguments[1] ?? 0;
+  String sureadi = (Get.arguments != null && Get.arguments.length > 0)
+      ? Get.arguments[0]
+      : "Fâtiha";
+  int ayetno = (Get.arguments != null && Get.arguments.length > 1)
+      ? Get.arguments[1]
+      : 1;
   String? dynamicText;
   @override
   void initState() {
     _makeRequest();
     fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
-      setState(() {
-        corruptedPathPDF = f.path;
-      });
+      if (mounted) {
+        setState(() {
+          corruptedPathPDF = f.path;
+        });
+      }
+    }).catchError((error) {
+      debugPrint("PDF yüklenirken hata oluştu: $error");
     });
     super.initState();
   }
 
   List<TextSpan> _parseText(String text, bool showDipnotlar) {
     List<TextSpan> spans = [];
+
     RegExp exp = RegExp(r"(\[?[da]:\d+(-\d+|,\s*\d+)*\]?)");
 
     text.splitMapJoin(
@@ -67,7 +75,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
           transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
           transformedText = " [$transformedText";
         } else if (matchedText.contains('a:')) {
-          transformedText = matchedText.substring(3, matchedText.length - 1) + '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+          transformedText =
+              '${matchedText.substring(3, matchedText.length - 1)}.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
         } else {
           transformedText = matchedText;
         }
@@ -78,16 +87,29 @@ class _SureOkuPageState extends State<SureOkuPage> {
             fontFamily: 'Podkova',
             fontSize: homePageController.yazipuntosu.value,
             fontWeight: FontWeight.w400,
-            color: !transformedText.contains('[') ? Colors.black : ColorConstants.primaryColor,
+            color: !transformedText.contains('[')
+                ? Colors.black
+                : ColorConstants.primaryColor,
           ),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               if (_verses[ayetno].aciklamaPTags!.tags!.length > 1) {
-                String x = "${transformedText.replaceAll('[', '').replaceAll(']', '')}";
+                String x =
+                    transformedText.replaceAll('[', '').replaceAll(']', '');
                 int index = (int.tryParse(x)! - 1) % 2;
-                _showBottomSheet(context, "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}", _verses[ayetno].aciklamaPTags!.tags![index].content.toString());
+                _showBottomSheet(
+                    context,
+                    "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}",
+                    _verses[ayetno]
+                        .aciklamaPTags!
+                        .tags![index]
+                        .content
+                        .toString());
               } else {
-                _showBottomSheet(context, "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}", _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
+                _showBottomSheet(
+                    context,
+                    "DİPNOT ${transformedText.replaceAll('[', '').replaceAll(']', '')}",
+                    _verses[ayetno].aciklamaPTags!.tags![0].content.toString());
               }
             },
         ));
@@ -110,8 +132,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     return spans;
   }
 
-  TextEditingController _controller1 = TextEditingController();
-  TextEditingController _controller2 = TextEditingController();
+  final TextEditingController _controller1 = TextEditingController();
+  final TextEditingController _controller2 = TextEditingController();
   List<Verses> _verses = [];
 
   String pathPDF = "";
@@ -129,7 +151,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);
     } catch (e) {
-      throw Exception('Error parsing asset file!');
+      debugPrint("Asset yükleme hatası ($asset): $e");
+      // throw Exception('Error parsing asset file!'); // Eski hata fırlatma
+      // Hata olsa bile completer'ı boş veya null ile tamamlayabiliriz veya hatayı yukarı iletebiliriz.
+      // Şimdilik hatayı yukarı fırlatalım ama detaylı mesajla.
+      completer.completeError(Exception('Asset yüklenemedi: $asset. Hata: $e'));
     }
 
     return completer.future;
@@ -140,7 +166,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
     try {
       // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
       // final url = "https://pdfkit.org/docs/guide.pdf";
-      final url = "http://www.pdf995.com/samples/pdf.pdf";
+      const url = "http://www.pdf995.com/samples/pdf.pdf";
       final filename = url.substring(url.lastIndexOf("/") + 1);
       var request = await HttpClient().getUrl(Uri.parse(url));
       var response = await request.close();
@@ -151,7 +177,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);
     } catch (e) {
-      throw Exception('Error parsing asset file!');
+      print("Error parsing asset file: $e");
     }
 
     return completer.future;
@@ -164,150 +190,146 @@ class _SureOkuPageState extends State<SureOkuPage> {
     try {
       sureadi = sureadi.toLowerCase();
       print("aassdd $sureadi");
-      if (sureadi == "en’âm" || sureadi == "enam" || sureadi == "en'âm" ||sureadi ==  "en’am") {
+      if (sureadi == "en’âm" ||
+          sureadi == "enam" ||
+          sureadi == "en'âm" ||
+          sureadi == "en’am") {
         sureadi = "en'am";
       }
-      if (sureadi == "ali imran" || sureadi == "âli imran" || sureadi == "al'i imran"|| sureadi == "al-i imran") {
+      if (sureadi == "ali imran" ||
+          sureadi == "âli imran" ||
+          sureadi == "al'i imran" ||
+          sureadi == "al-i imran") {
         sureadi = "Âl-i İmran";
       }
 
       if (sureadi == "insirah" || sureadi == "inşirah") {
         sureadi = "inşirah";
       }
-      
+
       if (sureadi == "a’raf" || sureadi == "araf") {
         print("aassdd buradami");
         sureadi = "a'raf";
       }
 
-
-
-      if (sureadi == "hûd" || sureadi == "hud" ) {
+      if (sureadi == "hûd" || sureadi == "hud") {
         sureadi = "Hûd";
       }
-
-
-
 
       if (sureadi == "ra’d" || sureadi == "rad") {
         sureadi = "Ra'd";
       }
 
-      
       if (sureadi == "isrâ" || sureadi == "isra") {
         sureadi = "İsrâ";
       }
-
-
 
       if (sureadi == "tâhâ" || sureadi == "tâha" || sureadi == "tahâ") {
         sureadi = "Tâhâ";
       }
 
-
-      if (sureadi == "şuara" || sureadi == "suara" || sureadi == "suarâ"|| sureadi == "şuarâ") {
+      if (sureadi == "şuara" ||
+          sureadi == "suara" ||
+          sureadi == "suarâ" ||
+          sureadi == "şuarâ") {
         sureadi = "Şuarâ";
       }
-
 
       if (sureadi == "sad" || sureadi == "sâd") {
         sureadi = "Sâd";
       }
-      
-      
-      if (sureadi == "şûrâ" || sureadi == "şura" || sureadi == "şurâ"|| sureadi == "şûra") {
+
+      if (sureadi == "şûrâ" ||
+          sureadi == "şura" ||
+          sureadi == "şurâ" ||
+          sureadi == "şûra") {
         sureadi = "Şûrâ";
       }
-      
-      
-      if (sureadi == "hucurat" || sureadi == "hucurât" ) {
+
+      if (sureadi == "hucurat" || sureadi == "hucurât") {
         sureadi = "Hucurât";
       }
-      
-      
+
       if (sureadi == "kâf" || sureadi == "kaf") {
         sureadi = "Kâf";
       }
-      
-      
-      if (sureadi == "zâriyât" || sureadi == "zariyat" || sureadi == "zâriyat"|| sureadi == "zariyât") {
+
+      if (sureadi == "zâriyât" ||
+          sureadi == "zariyat" ||
+          sureadi == "zâriyat" ||
+          sureadi == "zariyât") {
         sureadi = "Zâriyât";
       }
-      
-      if (sureadi == "vakıa" || sureadi == "vâkıa" ) {
+
+      if (sureadi == "vakıa" || sureadi == "vâkıa") {
         sureadi = "Vâkıa";
       }
-      
-      
-      
+
       if (sureadi == "teğabun" || sureadi == "tegabun") {
         sureadi = "Teğabun";
       }
-
 
       if (sureadi == "hâkka" || sureadi == "hakka") {
         sureadi = "Hâkka";
       }
 
-      
       if (sureadi == "meâric" || sureadi == "mearic") {
         sureadi = "Meâric";
       }
-      
-      
-      if (sureadi == "naziat" ||sureadi == "nâziât" || sureadi == "nâziat" || sureadi == "naziât") {
+
+      if (sureadi == "naziat" ||
+          sureadi == "nâziât" ||
+          sureadi == "nâziat" ||
+          sureadi == "naziât") {
         sureadi = "Nâziât";
       }
-      
 
       if (sureadi == "burûc" || sureadi == "burüc") {
         sureadi = "Burûc";
       }
-      
 
       if (sureadi == "a'la" || sureadi == "a’la" || sureadi == "ala") {
         sureadi = "A'la";
       }
 
-
       if (sureadi == "duhâ" || sureadi == "duha") {
         sureadi = "Duhâ";
       }
 
-
-      if (sureadi == "tîn" || sureadi == "tin" ) {
+      if (sureadi == "tîn" || sureadi == "tin") {
         sureadi = "Tîn";
       }
 
-
-      if (sureadi == "adiyat" || sureadi == "âdiyat" || sureadi == "adiyât"|| sureadi == "âdiyât") {
+      if (sureadi == "adiyat" ||
+          sureadi == "âdiyat" ||
+          sureadi == "adiyât" ||
+          sureadi == "âdiyât") {
         sureadi = "Âdiyât";
       }
 
-
-      if (sureadi == "kâria" || sureadi == "karia" ) {
+      if (sureadi == "kâria" || sureadi == "karia") {
         sureadi = "Kâria";
       }
 
-
-      if (sureadi == "mâûn" || sureadi == "mâun" || sureadi == "maûn"|| sureadi == "maun") {
+      if (sureadi == "mâûn" ||
+          sureadi == "mâun" ||
+          sureadi == "maûn" ||
+          sureadi == "maun") {
         sureadi = "Mâûn";
       }
 
-
-      if (sureadi == "kâfirun" || sureadi == "kafirun" ) {
+      if (sureadi == "kâfirun" || sureadi == "kafirun") {
         sureadi = "Kâfirun";
       }
 
-
-      if (sureadi == "Ali İmran" || sureadi == "Âli İmran" || sureadi == "Al'i İmran"|| sureadi == "Al-i İmran") {
+      if (sureadi == "Ali İmran" ||
+          sureadi == "Âli İmran" ||
+          sureadi == "Al'i İmran" ||
+          sureadi == "Al-i İmran") {
         sureadi = "Âl-i İmran";
       }
 
-
       print("aassdd cikis $sureadi");
-
-
 
       var response = await dio.post(
         'http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=',
@@ -317,7 +339,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
       );
       print("http://fecrapi.anilakademi.com/api/post-ayet-adi?sure=$sureadi");
       List<dynamic> dataList = response.data;
-      List<SureModel> sureModelList = dataList.map((data) => SureModel.fromJson(data)).toList();
+      List<SureModel> sureModelList =
+          dataList.map((data) => SureModel.fromJson(data)).toList();
       sureadi = dataList[0]['sureadi'];
       if (sureModelList.isNotEmpty) {
         String sureAdi = dataList.isNotEmpty ? dataList[0]['sureadi'] : "";
@@ -355,7 +378,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       // İlk bölümü kaldırır
       String firstPart = parts.removeAt(0);
       // Kalan bölümleri birleştirir ve başa '﴾' ekler
-      return '﴾' + parts.join('﴾') + firstPart;
+      return '﴾${parts.join('﴾')}$firstPart';
     }
     return text;
   }
@@ -383,7 +406,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     setState(() {
       print("saddfsa ${_verses[ayetno]..toString()}");
       if (ayetno < _verses.length - 1) {
-        if (_verses[ayetno].sonrakiayet == 1 || _verses[ayetno].sonrakiayet == 0) {
+        if (_verses[ayetno].sonrakiayet == 1 ||
+            _verses[ayetno].sonrakiayet == 0) {
           sonAyet.value = false;
         } else {
           ayetno = _verses[ayetno].sonrakiayet ?? 1;
@@ -407,7 +431,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
   bool isContainerVisible = false;
 
   void toggleContainerVisibility() {
-    homePageController.isContainerVisible.value = !homePageController.isContainerVisible.value;
+    homePageController.isContainerVisible.value =
+        !homePageController.isContainerVisible.value;
   }
 
   String extractATag(String text) {
@@ -433,7 +458,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       if (start > lastMatchEnd) {
         spans.add(TextSpan(
           text: text.substring(lastMatchEnd, start),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 26,
             fontFamily: 'Source Serif Pro',
@@ -445,7 +470,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
       spans.add(TextSpan(
         text: citation,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.blue,
           fontSize: 26,
           fontFamily: 'Source Serif Pro',
@@ -474,7 +499,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
               } else if (number != null) {
                 if (text == "Hurufu") {
                 } else {
-                  Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: [text, number]);
+                  Get.offAndToNamed(NavigationConstants.sureOkuPage,
+                      arguments: [text, number]);
                 }
               } else {
                 print("Failed to parse number: $numberStr");
@@ -491,7 +517,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
     if (lastMatchEnd < text.length) {
       spans.add(TextSpan(
         text: text.substring(lastMatchEnd),
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           fontSize: 26,
           fontFamily: 'Source Serif Pro',
@@ -506,16 +532,34 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Veri yüklenene kadar loading göster
+    if (_verses.isEmpty) {
+      return Scaffold(
+        backgroundColor: ColorConstants.primaryColor,
+        appBar: AppBar(
+          backgroundColor: ColorConstants.primaryColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
         toolbarHeight: 70.h,
         leading: Padding(
-          padding: EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 10),
           child: IconButton(
             // onPressed: () => Get.offAllNamed(NavigationConstants.home),
             onPressed: () => Get.back(),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.white,
               size: 35,
@@ -534,30 +578,31 @@ class _SureOkuPageState extends State<SureOkuPage> {
           onTap: () {
             Get.offAllNamed(NavigationConstants.home);
           },
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: 'KUR’AN ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: 'Bw Aleta No 10 Bold',
-                    fontWeight: FontWeight.bold,
-                    height: 0,
+          child: const FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'KUR’AN ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: 'Bw Aleta No 10 Bold',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: 'AYDINLIĞI',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: 'Bw Aleta No 10',
-                    fontWeight: FontWeight.w400,
-                    height: 0,
+                  TextSpan(
+                    text: 'AYDINLIĞI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: 'Bw Aleta No 10',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -570,11 +615,13 @@ class _SureOkuPageState extends State<SureOkuPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 390.w,
-                  height: 81.h,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity, // Tam genişlik (390.w yerine)
+                  // Yüksekliği içeriğe göre esnek bırakıyoruz veya minHeight veriyoruz
+                  constraints: BoxConstraints(minHeight: 81.h),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 5), // Dikey padding ekledik
                   clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(color: Color(0xFF0E5770)),
+                  decoration: const BoxDecoration(color: Color(0xFF0E5770)),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -591,12 +638,14 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                   width: 45,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Color(0xff2B89A5), width: 2),
+                                    border: Border.all(
+                                        color: const Color(0xff2B89A5),
+                                        width: 2),
                                   ),
                                   child: Center(
                                     child: IconButton(
                                       onPressed: _previousVerse,
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.arrow_back,
                                         color: ColorConstants.primaryColor3,
                                         size: 25,
@@ -604,84 +653,71 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     ),
                                   ),
                                 )
-                              : Container(
+                              : const SizedBox(
                                   width: 45,
                                   height: 45,
                                 ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            width: 230.w,
-                            height: 72.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: ColorConstants.primaryColor3,
-                                width: 1,
-                              ),
-                            ),
+                          Expanded(
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: 230.w,
-                                        height: 72.h,
-                                        decoration: BoxDecoration(
-                                            // borderRadius: BorderRadius.circular(10),
-                                            // border: Border.all(
-                                            //   color: ColorConstants.primaryColor3,
-                                            //   width: 1,
-                                            // ),
-                                            ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                              child: DropdownButton2(
+                                customButton: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 10.h),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: ColorConstants.primaryColor3,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 25.w),
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    SureAdi,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Color(0xFF60A6BB),
-                                                      fontSize: SureAdi == "Hurufu Mukattaa" ? 20 : 28,
-                                                      fontFamily: 'Podkova',
-                                                      fontWeight: FontWeight.w700,
-                                                      height: 0,
-                                                    ),
-                                                  ),
-                                                  if (_verses.isNotEmpty)
-                                                    Text(
-                                                      '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 17,
-                                                        //18
-                                                        fontFamily: 'Podkova',
-                                                        fontWeight: FontWeight.w400,
-                                                        height: 0,
-                                                      ),
-                                                    ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  )
-                                                ],
+                                            Text(
+                                              SureAdi,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: const Color(0xFF60A6BB),
+                                                fontSize:
+                                                    SureAdi == "Hurufu Mukattaa"
+                                                        ? 20
+                                                        : 28,
+                                                fontFamily: 'Podkova',
+                                                fontWeight: FontWeight.w700,
+                                                height: 0.9,
                                               ),
                                             ),
+                                            const SizedBox(height: 5),
+                                            if (_verses.isNotEmpty)
+                                              Text(
+                                                '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17,
+                                                  fontFamily: 'Podkova',
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 0.9,
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: ColorConstants.primaryColor3,
+                                        size: 30,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 items: sureler.asMap().entries.map((entry) {
                                   int index = entry.key;
@@ -691,51 +727,45 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               "${index + 1}. $sure",
-                                              style: TextStyle(
-                                                color: ColorConstants.primaryColor,
+                                              style: const TextStyle(
+                                                color:
+                                                    ColorConstants.primaryColor,
                                                 fontSize: 20,
                                                 fontFamily: 'Podkova',
                                                 fontWeight: FontWeight.w700,
-                                                height: 1.2, // Text arası boşluğu ayarladık
+                                                height: 1.2,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
                                         Divider(
-                                          color: ColorConstants.primaryColor3.withOpacity(0.4),
+                                          color: ColorConstants.primaryColor3
+                                              .withOpacity(0.4),
                                           height: 1,
                                         )
                                       ],
                                     ),
                                   );
                                 }).toList(),
-                                value: selectedValue,
                                 onChanged: (String? value) {
                                   setState(() {
-                                    String selectedValue2 = value!.split(' (')[0];
-                                    print("aaabbcc $selectedValue2");
-                                    Get.offAndToNamed(NavigationConstants.sureOkuPage, arguments: ["$selectedValue2", 1]);
+                                    String selectedValue2 =
+                                        value!.split(' (')[0];
+                                    Get.offAndToNamed(
+                                        NavigationConstants.sureOkuPage,
+                                        arguments: [selectedValue2, 1]);
                                   });
                                 },
-                                buttonStyleData: ButtonStyleData(
-                                  padding: const EdgeInsets.only(left: 0, right: 4),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                  ),
-                                  iconSize: 25,
-                                  iconEnabledColor: ColorConstants.primaryColor3,
-                                  iconDisabledColor: Colors.grey,
-                                ),
                                 dropdownStyleData: DropdownStyleData(
                                   maxHeight: 600.h,
                                   width: 270.w,
@@ -746,8 +776,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                   offset: const Offset(-20, 0),
                                   scrollbarTheme: ScrollbarThemeData(
                                     radius: const Radius.circular(40),
-                                    thickness: MaterialStateProperty.all<double>(6),
-                                    thumbVisibility: MaterialStateProperty.all<bool>(true),
+                                    thickness:
+                                        WidgetStateProperty.all<double>(6),
+                                    thumbVisibility:
+                                        WidgetStateProperty.all<bool>(true),
                                   ),
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(
@@ -757,36 +789,39 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Visibility(
-  visible: (_verses.isNotEmpty && ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0),
-  child: Obx(
-    () => Visibility(
-      visible: sonAyet.value,
-      child: Container(
-        height: 45,
-        width: 45,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Color(0xff2B89A5), width: 2),
-        ),
-        child: Center(
-          child: IconButton(
-            onPressed: _nextVerse,
-            icon: Icon(
-              Icons.arrow_forward_outlined,
-              color: ColorConstants.primaryColor3,
-              size: 25,
-            ),
-          ),
-        ),
-      ),
-    ),
-  ),
-)
-
+                            visible: (_verses.isNotEmpty &&
+                                ayetno != (_verses.length - 1) &&
+                                _verses[ayetno].sonrakiayet != 0),
+                            child: Obx(
+                              () => Visibility(
+                                visible: sonAyet.value,
+                                child: Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: const Color(0xff2B89A5),
+                                        width: 2),
+                                  ),
+                                  child: Center(
+                                    child: IconButton(
+                                      onPressed: _nextVerse,
+                                      icon: const Icon(
+                                        Icons.arrow_forward_outlined,
+                                        color: ColorConstants.primaryColor3,
+                                        size: 25,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -798,7 +833,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     onHorizontalDragEnd: (details) {
                       if (details.primaryVelocity! < 0) {
                         // Sağa kaydırma işlemi
-                        if ((ayetno != (_verses.length - 1) && _verses[ayetno].sonrakiayet != 0)) {
+                        if ((ayetno != (_verses.length - 1) &&
+                            _verses[ayetno].sonrakiayet != 0)) {
                           _nextVerse();
                         }
                       } else if (details.primaryVelocity! > 0) {
@@ -815,21 +851,26 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             visible: ayetno == 1,
                             child: GestureDetector(
                               onTap: () {
-                                _showBottomSheet(context, '${SureAdi} Suresi\nHakkında', _verses[0].meal.toString());
+                                _showBottomSheet(
+                                    context,
+                                    '$SureAdi Suresi\nHakkında',
+                                    _verses[0].meal.toString());
                               },
                               child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.only(bottom: 35.h, top: 25),
+                                  padding:
+                                      EdgeInsets.only(bottom: 35.h, top: 25),
                                   child: Container(
                                     width: 260.w,
                                     height: 70.h,
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     decoration: ShapeDecoration(
-                                      color: Color(0xFF2A89A5),
+                                      color: const Color(0xFF2A89A5),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                       ),
-                                      shadows: [
+                                      shadows: const [
                                         BoxShadow(
                                           color: Color(0x3F000000),
                                           blurRadius: 10,
@@ -840,24 +881,26 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 8,
                                         ),
                                         Container(
                                           height: 35,
                                           clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(),
-                                          child: Icon(
+                                          decoration: const BoxDecoration(),
+                                          child: const Icon(
                                             Icons.info_outline_rounded,
                                             size: 30,
                                             color: Colors.white,
                                           ),
                                         ),
                                         const SizedBox(width: 10),
-                                        Text(
+                                        const Text(
                                           'Sure Hakkında',
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
@@ -868,7 +911,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                             height: 0.07,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 8,
                                         )
                                       ],
@@ -885,14 +928,15 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               ),
                               child: Container(
                                   width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 30),
                                   clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30),
                                     ),
-                                    shadows: [
+                                    shadows: const [
                                       BoxShadow(
                                         color: Color(0x26000000),
                                         blurRadius: 10,
@@ -901,67 +945,104 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       )
                                     ],
                                   ),
-                                  child:
-                                      Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                    if (_verses.isNotEmpty)
-                                      Container(
-                                        width: double.infinity,
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () => Visibility(
-                                                visible: homePageController.arapcametin.value,
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    text: _verses[ayetno].metin!,
-                                                    style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontFamily: 'Kuranfont',
-                                                      fontWeight: FontWeight.w400,
-                                                      color: Color(0xFF2A89A5),
-                                                    ),
-                                                    locale: Locale('ar', ''),
-                                                  ),
-                                                  textDirection: TextDirection.rtl,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 30.h,
-                                            ),
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: Obx(
-                                                () => homePageController.dipnotlar.value
-                                                    ? RichText(
-                                                        textAlign: TextAlign.center,
-                                                        text: TextSpan(
-                                                          style: TextStyle(
-                                                            fontFamily: 'Podkova',
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: homePageController.yazipuntosu.value,
-                                                          ),
-                                                          children: _parseText(_verses[ayetno].meal!, homePageController.dipnotlar.value),
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (_verses.isNotEmpty)
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Obx(
+                                                  () => Visibility(
+                                                    visible: homePageController
+                                                        .arapcametin.value,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        text: _verses[ayetno]
+                                                            .metin!,
+                                                        style: const TextStyle(
+                                                          fontSize: 24,
+                                                          fontFamily:
+                                                              'KuranFont',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Color(0xFF2A89A5),
                                                         ),
-                                                      )
-                                                    : RichText(
-                                                        text: TextSpan(
-                                                          style: TextStyle(
-                                                            fontFamily: 'Podkova',
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: homePageController.yazipuntosu.value,
-                                                          ),
-                                                          children: _parseText(_verses[ayetno].meal!, homePageController.dipnotlar.value),
-                                                        ),
+                                                        locale: const Locale(
+                                                            'ar', ''),
                                                       ),
-                                              ),
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 30.h,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: Obx(
+                                                    () => homePageController
+                                                            .dipnotlar.value
+                                                        ? RichText(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            text: TextSpan(
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Podkova',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    homePageController
+                                                                        .yazipuntosu
+                                                                        .value,
+                                                              ),
+                                                              children: _parseText(
+                                                                  _verses[ayetno]
+                                                                      .meal!,
+                                                                  homePageController
+                                                                      .dipnotlar
+                                                                      .value),
+                                                            ),
+                                                          )
+                                                        : RichText(
+                                                            text: TextSpan(
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Podkova',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    homePageController
+                                                                        .yazipuntosu
+                                                                        .value,
+                                                              ),
+                                                              children: _parseText(
+                                                                  _verses[ayetno]
+                                                                      .meal!,
+                                                                  homePageController
+                                                                      .dipnotlar
+                                                                      .value),
+                                                            ),
+                                                          ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                  ]))),
+                                          ),
+                                      ]))),
                           SizedBox(
                             height: 120.h,
                           ),
@@ -973,32 +1054,132 @@ class _SureOkuPageState extends State<SureOkuPage> {
               ],
             ),
             Obx(
-              () => homePageController.isContainerVisible.value
-                  ? Padding(
-                      padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
-                      child: Align(
-                          alignment: Alignment.bottomCenter, child: Fab(context, homePageController.yazipuntosu, homePageController.arapcametin, homePageController.dipnotlar)),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(left: 20, bottom: 15),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                          onTap: toggleContainerVisibility,
-                          child: Container(
-                            width: 50,
-                            height: 97,
-                            child: Icon(
-                              Icons.keyboard_arrow_left,
-                              size: 42,
-                              color: Colors.white,
-                            ),
-                            decoration:
-                                BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)), color: ColorConstants.primaryColor3),
+              () => Padding(
+                padding: EdgeInsets.only(
+                    bottom: 20 + MediaQuery.of(context).padding.bottom,
+                    right: 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Açılır Menü İçeriği (Yatay)
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: homePageController.isContainerVisible.value
+                            ? Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF2A89A5),
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.settings,
+                                      label: "Ayarlar",
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return _buildSettingsModal(context);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.favorite_border,
+                                      label: "Favori",
+                                      onTap: () {
+                                        _showAlertDialog2(
+                                            context,
+                                            "FAVORİ AYETLER",
+                                            "$sureadi Suresi, $ayetno. Ayet \nFavori Ayetlere Eklendi.");
+                                        _saveCurrentAyah();
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.bookmark_border,
+                                      label: "Ayraç",
+                                      onTap: () {
+                                        _ayracCurrentAyah();
+                                        _showAlertDialog2(context, "AYRAÇ",
+                                            "$sureadi Suresi, $ayetno. Ayet \nAyraç eklendi. Okumaya buradan devam edebilirsiniz.");
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.share,
+                                      label: "Paylaş",
+                                      onTap: () async {
+                                        // Meali temizle (Köşeli parantezleri kaldır)
+                                        String meal =
+                                            _verses[ayetno].meal ?? "";
+                                        meal = meal.replaceAll(
+                                            RegExp(r'\[.*?\]'), '');
+
+                                        // Paylaşılacak metni oluştur
+                                        final shareText =
+                                            "$sureadi Suresi, $ayetno. Ayet\n\n$meal\n\nFecr Meal Uygulaması";
+
+                                        await Share.share(shareText,
+                                            subject:
+                                                "$sureadi Suresi, $ayetno. Ayet");
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                      // Ana Buton (Toggle)
+                      GestureDetector(
+                        onTap: toggleContainerVisibility,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2A89A5),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            homePageController.isContainerVisible.value
+                                ? Icons.close
+                                : Icons.menu,
+                            color: Colors.white,
+                            size: 28,
                           ),
                         ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -1006,19 +1187,20 @@ class _SureOkuPageState extends State<SureOkuPage> {
     );
   }
 
-  Padding Fab(BuildContext context, RxDouble yazipuntosu, RxBool arapcametin, RxBool dipnotlar) {
+  Padding Fab(BuildContext context, RxDouble yazipuntosu, RxBool arapcametin,
+      RxBool dipnotlar) {
     return Padding(
-        padding: EdgeInsets.only(left: 0),
+        padding: const EdgeInsets.only(left: 0),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.95,
           height: 97,
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: ShapeDecoration(
-            color: Color(0xFF2A89A5),
+            color: const Color(0xFF2A89A5),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
-            shadows: [
+            shadows: const [
               BoxShadow(
                 color: Color(0x3F000000),
                 blurRadius: 10,
@@ -1041,18 +1223,19 @@ class _SureOkuPageState extends State<SureOkuPage> {
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width * 0.9, // Boyutu arttır
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width *
+                                0.9, // Boyutu arttır
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
+                                  const Text(
                                     "AYARLAR",
                                     style: TextStyle(
                                       color: Colors.black, // Text1 rengi
@@ -1060,26 +1243,27 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       fontSize: 18,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
-                                  Divider(
+                                  const Divider(
                                     color: Colors.black,
                                     thickness: 1,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       // Metin Büyüklüğü ve Artı Eksi iconları
-                                      Container(
+                                      SizedBox(
                                         width: 190.w,
                                         height: 35.h,
                                         child: Stack(
                                           children: [
-                                            Positioned(
+                                            const Positioned(
                                               left: 0,
                                               top: 0,
                                               child: Text(
@@ -1100,7 +1284,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                 () => Text(
                                                   '${(yazipuntosu.value).toInt()} Punto',
                                                   style: TextStyle(
-                                                    color: Colors.black.withOpacity(0.7),
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
                                                     fontSize: 12,
                                                     fontFamily: 'Axiforma',
                                                     fontWeight: FontWeight.w500,
@@ -1116,29 +1301,34 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         children: [
                                           GestureDetector(
                                               onTap: () {
-                                                yazipuntosu.value = yazipuntosu.value - 1;
+                                                yazipuntosu.value =
+                                                    yazipuntosu.value - 1;
                                                 print(yazipuntosu.value);
                                               },
-                                              child: Image.asset("assets/icon/eksi.png")),
-                                          SizedBox(width: 20),
+                                              child: Image.asset(
+                                                  "assets/icon/eksi.png")),
+                                          const SizedBox(width: 20),
                                           GestureDetector(
                                               onTap: () {
-                                                yazipuntosu.value = yazipuntosu.value + 1;
+                                                yazipuntosu.value =
+                                                    yazipuntosu.value + 1;
                                                 print(yazipuntosu.value);
                                               },
-                                              child: Image.asset("assets/icon/arti.png")),
+                                              child: Image.asset(
+                                                  "assets/icon/arti.png")),
                                         ],
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       // Metin Büyüklüğü ve Artı Eksi iconları
-                                      Text(
+                                      const Text(
                                         'Arapça Metin',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -1158,29 +1348,34 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/kapaligoz.svg",
-                                                  color: arapcametin.value ? Colors.grey : Colors.black,
+                                                  color: arapcametin.value
+                                                      ? Colors.grey
+                                                      : Colors.black,
                                                 )),
-                                            SizedBox(width: 20),
+                                            const SizedBox(width: 20),
                                             GestureDetector(
                                                 onTap: () {
                                                   arapcametin.value = true;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/acikgozsiyah.svg",
-                                                  color: arapcametin.value ? Colors.black : Colors.grey,
+                                                  color: arapcametin.value
+                                                      ? Colors.black
+                                                      : Colors.grey,
                                                 )),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Dipnotlar',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -1201,23 +1396,27 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/kapaligoz.svg",
-                                                  color: dipnotlar.value ? Colors.grey : Colors.black,
+                                                  color: dipnotlar.value
+                                                      ? Colors.grey
+                                                      : Colors.black,
                                                 )),
-                                            SizedBox(width: 20),
+                                            const SizedBox(width: 20),
                                             GestureDetector(
                                                 onTap: () {
                                                   dipnotlar.value = true;
                                                 },
                                                 child: SvgPicture.asset(
                                                   "assets/icon/acikgozsiyah.svg",
-                                                  color: dipnotlar.value ? Colors.black : Colors.grey,
+                                                  color: dipnotlar.value
+                                                      ? Colors.black
+                                                      : Colors.grey,
                                                 )),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                 ],
@@ -1227,27 +1426,32 @@ class _SureOkuPageState extends State<SureOkuPage> {
                         },
                       );
                     },
-                    child: bottomSheetWidget(asset: "settings", text: "Ayarlar"),
+                    child:
+                        bottomSheetWidget(asset: "settings", text: "Ayarlar"),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
-                        _showAlertDialog2(context, "FAVORİ AYETLER", "${sureadi} Suresi, ${ayetno}. Ayet \nFavori Ayetlere Eklendi.");
+                        _showAlertDialog2(context, "FAVORİ AYETLER",
+                            "$sureadi Suresi, $ayetno. Ayet \nFavori Ayetlere Eklendi.");
                         _saveCurrentAyah();
                       },
-                      child: bottomSheetWidget(asset: "favorites", text: "Favori")),
-                  SizedBox(
+                      child: bottomSheetWidget(
+                          asset: "favorites", text: "Favori")),
+                  const SizedBox(
                     width: 15,
                   ),
                   GestureDetector(
                       onTap: () {
                         _ayracCurrentAyah();
-                        _showAlertDialog2(context, "AYRAÇ", "${sureadi} Suresi, ${ayetno}. Ayet \nAyraç eklendi. Okumaya  buradan  devam edebilirsiniz.");
+                        _showAlertDialog2(context, "AYRAÇ",
+                            "$sureadi Suresi, $ayetno. Ayet \nAyraç eklendi. Okumaya  buradan  devam edebilirsiniz.");
                       },
-                      child: bottomSheetWidget(asset: "saveicon", text: "Ayraç")),
-                  SizedBox(
+                      child:
+                          bottomSheetWidget(asset: "saveicon", text: "Ayraç")),
+                  const SizedBox(
                     width: 15,
                   ),
                   GestureDetector(
@@ -1258,11 +1462,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
 
                         String metin = _verses[ayetno].metin!;
                         if (metin.isNotEmpty) {
-                          metin = metin[metin.length - 1] + metin.substring(0, metin.length - 1);
+                          metin = metin[metin.length - 1] +
+                              metin.substring(0, metin.length - 1);
                         }
 
                         await Share.share(
-                          "$sureadi Suresi ${metin}  ${_verses[ayetno].meal}",
+                          "$sureadi Suresi $metin  ${_verses[ayetno].meal}",
                         );
                       },
                       child: bottomSheetWidget(asset: "share", text: "Paylaş")),
@@ -1273,7 +1478,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
               ),
               IconButton(
                   onPressed: toggleContainerVisibility,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_forward_ios_sharp,
                     color: Color(0xFF88E3FF),
                     size: 20,
@@ -1351,15 +1556,16 @@ class _SureOkuPageState extends State<SureOkuPage> {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       builder: (BuildContext context) {
         return Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.8,
-          padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
-          decoration: BoxDecoration(
+          padding:
+              const EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
           ),
@@ -1367,10 +1573,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 text1,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontFamily: 'AxiformaBold',
@@ -1378,7 +1584,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   height: 0,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Expanded(
                 child: CustomScrollbar(
                   thickness: 6.0,
@@ -1391,11 +1597,239 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildMenuItem(BuildContext context,
+      {required IconData icon,
+      required String label,
+      required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 24),
+      ),
+    );
+  }
+
+  Widget _buildSettingsModal(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20 + MediaQuery.of(context).padding.bottom,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            "Görünüm Ayarları",
+            style: TextStyle(
+              color: Color(0xFF2A89A5),
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              fontFamily: 'Axiforma',
+            ),
+          ),
+          const SizedBox(height: 25),
+          // Metin Büyüklüğü
+          Row(
+            children: [
+              const Icon(Icons.format_size, color: Color(0xFF2A89A5), size: 28),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Metin Büyüklüğü',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Axiforma',
+                      ),
+                    ),
+                    Obx(
+                      () => Text(
+                        '${homePageController.yazipuntosu.value.toInt()} Punto',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Obx(
+            () => Row(
+              children: [
+                Text(
+                  "A",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Expanded(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: const Color(0xFF2A89A5),
+                      inactiveTrackColor:
+                          const Color(0xFF2A89A5).withOpacity(0.2),
+                      thumbColor: const Color(0xFF2A89A5),
+                      overlayColor: const Color(0xFF2A89A5).withOpacity(0.2),
+                      trackHeight: 4.0,
+                    ),
+                    child: Slider(
+                      value: homePageController.yazipuntosu.value,
+                      min: 14.0,
+                      max: 40.0,
+                      divisions: 26,
+                      onChanged: (value) {
+                        homePageController.yazipuntosu.value = value;
+                      },
+                    ),
+                  ),
+                ),
+                Text(
+                  "A",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Divider(thickness: 1, height: 30),
+          // Arapça Metin Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.language,
+                      color: Color(0xFF2A89A5), size: 28),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Arapça Metin',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                      Text(
+                        'Arapça metni göster/gizle',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Obx(
+                () => Switch(
+                  value: homePageController.arapcametin.value,
+                  onChanged: (value) {
+                    homePageController.arapcametin.value = value;
+                  },
+                  activeThumbColor: const Color(0xFF2A89A5),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          // Dipnotlar Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.notes, color: Color(0xFF2A89A5), size: 28),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Dipnotlar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                      Text(
+                        'Dipnotları göster/gizle',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Obx(
+                () => Switch(
+                  value: homePageController.dipnotlar.value,
+                  onChanged: (value) {
+                    homePageController.dipnotlar.value = value;
+                  },
+                  activeThumbColor: const Color(0xFF2A89A5),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 
@@ -1408,23 +1842,23 @@ class _SureOkuPageState extends State<SureOkuPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          content: Container(
+          content: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   text1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(height: 10),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.3,
@@ -1434,7 +1868,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     children: [
                       Text(
                         text2,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.normal,
                           fontSize: 17,
@@ -1443,7 +1877,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -1462,42 +1896,42 @@ class _SureOkuPageState extends State<SureOkuPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          content: Container(
+          content: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8, // Boyutu arttır
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   text1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Divider(
+                const Divider(
                   color: Colors.black,
                   thickness: 1,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   text2,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
                     fontSize: 17,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ],
@@ -1647,11 +2081,16 @@ class bottomSheetWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(width: 50, height: 50, clipBehavior: Clip.antiAlias, decoration: BoxDecoration(), child: Image.asset("assets/icon/$asset.png")),
+          Container(
+              width: 50,
+              height: 50,
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(),
+              child: Image.asset("assets/icon/$asset.png")),
           Text(
             text,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF88E3FF),
               fontSize: 12,
               fontFamily: 'Work Sans',
@@ -1664,4 +2103,5 @@ class bottomSheetWidget extends StatelessWidget {
     );
   }
 }
+
 //a

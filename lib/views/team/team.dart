@@ -9,17 +9,17 @@ class TeamInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Uri _url1 = Uri.parse('https://www.linkedin.com/company/tecnobis/');
-    Future<void> _launchUrl1() async {
-      if (!await launchUrl(_url1)) {
-        throw Exception('Could not launch $_url1');
+    final Uri url1 = Uri.parse('https://www.linkedin.com/company/tecnobis/');
+    Future<void> launchUrl1() async {
+      if (!await launchUrl(url1)) {
+        throw Exception('Could not launch $url1');
       }
     }
 
-    final Uri _url2 = Uri.parse('https://tecnobis.com/');
-    Future<void> _launchUrl2() async {
-      if (!await launchUrl(_url2)) {
-        throw Exception('Could not launch $_url2');
+    final Uri url2 = Uri.parse('https://tecnobis.com/');
+    Future<void> launchUrl2() async {
+      if (!await launchUrl(url2)) {
+        throw Exception('Could not launch $url2');
       }
     }
 
@@ -27,7 +27,7 @@ class TeamInfoPage extends StatelessWidget {
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Ekip",
           style: TextStyle(
             color: Colors.white,
@@ -43,7 +43,7 @@ class TeamInfoPage extends StatelessWidget {
           padding: const EdgeInsets.all(0.0),
           child: IconButton(
               onPressed: () => Get.back(),
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 size: 30,
                 color: ColorConstants.whiteColor,
@@ -55,7 +55,7 @@ class TeamInfoPage extends StatelessWidget {
           SizedBox(
             height: 150.h,
           ),
-          Center(
+          const Center(
             child: Text(
               "Yazılım",
               style: TextStyle(
@@ -67,7 +67,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               "Tecnobis",
               style: TextStyle(
@@ -80,27 +80,27 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                  onTap: _launchUrl1,
+                  onTap: launchUrl1,
                   child: Image.asset("assets/icon/linkedin.png")),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               GestureDetector(
-                  onTap: _launchUrl2,
+                  onTap: launchUrl2,
                   child: Image.asset("assets/icon/domain.png")),
             ],
           ),
           SizedBox(
             height: 30.h,
           ),
-          Center(
+          const Center(
             child: Text(
               "UI / UX Tasarım",
               style: TextStyle(
@@ -112,7 +112,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               "Coşkun Işıkgül",
               style: TextStyle(
@@ -125,14 +125,14 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/icon/icon1.png"),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Image.asset("assets/icon/icon2.png"),
@@ -141,7 +141,7 @@ class TeamInfoPage extends StatelessWidget {
           SizedBox(
             height: 30.h,
           ),
-          Center(
+          const Center(
             child: Text(
               "Editör",
               style: TextStyle(
@@ -153,7 +153,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               "Muhammed Nazlıaydın",
               style: TextStyle(
@@ -166,7 +166,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Row(
@@ -178,7 +178,7 @@ class TeamInfoPage extends StatelessWidget {
           SizedBox(
             height: 30.h,
           ),
-          Center(
+          const Center(
             child: Text(
               "Yönetmen",
               style: TextStyle(
@@ -190,7 +190,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Text(
               "Hüseyin Nazlıaydın",
               style: TextStyle(
@@ -203,7 +203,7 @@ class TeamInfoPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Row(

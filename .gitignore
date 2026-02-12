@@ -45,3 +45,5 @@ app.*.map.json
 /android/app/release
 android/app/upload-keystore.jks
 android/key.properties
+gradle-dist.zip
+gradle-8.10.2/

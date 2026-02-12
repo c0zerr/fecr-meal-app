@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:fecrmeal/core/constants/color_constants.dart';
 
@@ -10,9 +9,9 @@ class KuranAydinligiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white, size: 30),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
         backgroundColor: ColorConstants.primaryColor,
-        title: Text(
+        title: const Text(
           'Kur’an Aydınlığına Dair',
           style: TextStyle(
             color: Colors.white,
@@ -24,7 +23,7 @@ class KuranAydinligiPage extends StatelessWidget {
         ),
         centerTitle: true,
         leading: IconButton(
-            onPressed: () => Get.back(), icon: Icon(Icons.arrow_back)),
+            onPressed: () => Get.back(), icon: const Icon(Icons.arrow_back)),
       ),
       backgroundColor: ColorConstants.primaryColor,
       body: SingleChildScrollView(
@@ -44,7 +43,7 @@ class KuranAydinligiPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        shadows: [
+                        shadows: const [
                           BoxShadow(
                             color: Color(0x26000000),
                             blurRadius: 10,
@@ -63,7 +62,7 @@ class KuranAydinligiPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
+                              const SizedBox(
                                 width: 290,
                                 height: 38,
                                 child: Stack(
@@ -71,7 +70,7 @@ class KuranAydinligiPage extends StatelessWidget {
                                     Positioned(
                                       left: 0,
                                       top: 0,
-                                      child: Container(width: 290, height: 38),
+                                      child: SizedBox(width: 290, height: 38),
                                     ),
                                     Positioned(
                                       left: 0,
@@ -93,7 +92,7 @@ class KuranAydinligiPage extends StatelessWidget {
                               const SizedBox(height: 15),
                               Container(
                                 width: 290,
-                                decoration: ShapeDecoration(
+                                decoration: const ShapeDecoration(
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
                                       width: 1,
@@ -104,7 +103,7 @@ class KuranAydinligiPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 15),
-                              SizedBox(
+                              const SizedBox(
                                 width: double.infinity,
                                 child: Text.rich(
                                   TextSpan(

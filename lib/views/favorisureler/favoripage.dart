@@ -1,10 +1,8 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:get/get.dart';
 
 class SavedSurePage extends StatefulWidget {
   const SavedSurePage({Key? key}) : super(key: key);
@@ -65,8 +63,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
           transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
           transformedText = "";
         } else if (matchedText.contains('a:')) {
-          transformedText = matchedText.substring(3, matchedText.length - 1) +
-              '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+          transformedText = '${matchedText.substring(3, matchedText.length - 1)}.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
         } else {
           transformedText = matchedText;
         }
@@ -88,7 +85,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
       onNonMatch: (nonMatch) {
         spans.add(TextSpan(
           text: nonMatch,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontFamily: 'Podkova',
             fontWeight: FontWeight.w400,
@@ -115,14 +112,14 @@ class _SavedSurePageState extends State<SavedSurePage> {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.8,
-          padding: EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.only(left: 25, right: 25, bottom: 40, top: 25),
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
           ),
@@ -130,16 +127,16 @@ class _SavedSurePageState extends State<SavedSurePage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(text1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontFamily: 'AxiformaBold',
                     fontWeight: FontWeight.w900,
                     height: 0,
                   )),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * 0.64,
@@ -149,7 +146,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                   children: [
                     Text(
                       text2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 26,
                         fontFamily: 'Source Serif Pro',
@@ -160,7 +157,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           ),
         );
@@ -173,10 +170,10 @@ class _SavedSurePageState extends State<SavedSurePage> {
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white, size: 30),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
         backgroundColor: ColorConstants.primaryColor,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Favori Ayetlerim',
           style: TextStyle(
             color: Colors.white,
@@ -191,14 +188,14 @@ class _SavedSurePageState extends State<SavedSurePage> {
         future: _getSavedAyahs(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           List<Map<String, dynamic>> savedAyahs = snapshot.data!;
 
           if (savedAyahs.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(25.0),
+            return const Padding(
+              padding: EdgeInsets.all(25.0),
               child: Center(
                 child: Text(
                   "Henüz bir favori ayetinizi eklemediniz",
@@ -230,7 +227,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    shadows: [
+                    shadows: const [
                       BoxShadow(
                         color: Color(0x26000000),
                         blurRadius: 10,
@@ -244,8 +241,8 @@ class _SavedSurePageState extends State<SavedSurePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(height: 10),
-                      Container(
+                      const SizedBox(height: 10),
+                      SizedBox(
                         width: 290,
                         height: 38,
                         child: Row(
@@ -253,7 +250,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                           children: [
                             Text(
                               "${sureadi.toUpperCase()} ($ayetno)",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 26,
                                 fontFamily: 'Source Serif Pro',
@@ -280,10 +277,10 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 15,
                                             ),
-                                            Text(
+                                            const Text(
                                               'FAVORİ AYETLER',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -300,7 +297,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                   EdgeInsets.only(right: 25.w),
                                               child: Container(
                                                 width: 271,
-                                                decoration: ShapeDecoration(
+                                                decoration: const ShapeDecoration(
                                                   shape: RoundedRectangleBorder(
                                                     side: BorderSide(
                                                       width: 1,
@@ -322,7 +319,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                     text: TextSpan(
                                                       text:
                                                           "$sureadi Suresi, $ayetno. Ayet",
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontFamily: 'Axiforma',
@@ -331,8 +328,8 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8),
-                                                  Text(
+                                                  const SizedBox(height: 8),
+                                                  const Text(
                                                     "Favorilerden Kaldırılsın mı?",
                                                     style: TextStyle(
                                                       color: Colors.black,
@@ -357,7 +354,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                       Navigator.pop(context);
                                                     },
                                                     child: ConstrainedBox(
-                                                      constraints: BoxConstraints(
+                                                      constraints: const BoxConstraints(
                                                           minWidth:
                                                               100), // Minimum genişlik belirledik
                                                       child: Container(
@@ -371,7 +368,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                         decoration:
                                                             ShapeDecoration(
                                                           color:
-                                                              Color(0xFFE86014),
+                                                              const Color(0xFFE86014),
                                                           shape:
                                                               RoundedRectangleBorder(
                                                             borderRadius:
@@ -380,7 +377,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                                         10),
                                                           ),
                                                         ),
-                                                        child: Row(
+                                                        child: const Row(
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           mainAxisAlignment:
@@ -418,7 +415,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                       Navigator.pop(context);
                                                     },
                                                     child: ConstrainedBox(
-                                                      constraints: BoxConstraints(
+                                                      constraints: const BoxConstraints(
                                                           minWidth:
                                                               100), // Aynı minimum genişlik
                                                       child: Container(
@@ -432,7 +429,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                         decoration:
                                                             ShapeDecoration(
                                                           color:
-                                                              Color(0xFFE86014),
+                                                              const Color(0xFFE86014),
                                                           shape:
                                                               RoundedRectangleBorder(
                                                             borderRadius:
@@ -441,7 +438,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                                                                         10),
                                                           ),
                                                         ),
-                                                        child: Row(
+                                                        child: const Row(
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           mainAxisAlignment:
@@ -490,7 +487,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                       const SizedBox(height: 25),
                       Container(
                         width: 290,
-                        decoration: ShapeDecoration(
+                        decoration: const ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
                               width: 1,
@@ -505,13 +502,13 @@ class _SavedSurePageState extends State<SavedSurePage> {
                         child: RichText(
                           text: TextSpan(
                             text: metin,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 30,
                               fontFamily: 'Kuranfont',
                               fontWeight: FontWeight.w400,
                               color: Color(0xFF2A89A5),
                             ),
-                            locale: Locale('ar', ''),
+                            locale: const Locale('ar', ''),
                           ),
                           textDirection: TextDirection.rtl,
                         ),
@@ -525,7 +522,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                             textAlign: TextAlign.center,
                             text: TextSpan(
                                 children: _parseText(meal, true),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 26,
                                   fontFamily: 'Source Serif Pro',

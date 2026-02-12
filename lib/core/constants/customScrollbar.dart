@@ -6,7 +6,7 @@ class CustomScrollbar extends StatelessWidget {
   final Widget child;
   final double thickness;
 
-  CustomScrollbar({required this.child, this.thickness = 4.0});
+  const CustomScrollbar({super.key, required this.child, this.thickness = 4.0});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +15,8 @@ class CustomScrollbar extends StatelessWidget {
       thickness: 4,
       interactive: true,
       thumbVisibility: true,
-      padding: EdgeInsets.only(left: 5),
-      radius: Radius.circular(8),
+      padding: const EdgeInsets.only(left: 5),
+      radius: const Radius.circular(8),
       child: child,
     );
   }

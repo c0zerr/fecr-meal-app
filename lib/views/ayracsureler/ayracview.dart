@@ -1,8 +1,6 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -77,8 +75,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
           transformedText = matchedText.substring(3); // 'd:' ön ekini kaldır
           transformedText = "";
         } else if (matchedText.contains('a:')) {
-          transformedText = matchedText.substring(3, matchedText.length - 1) +
-              '.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
+          transformedText = '${matchedText.substring(3, matchedText.length - 1)}.'; // 'a:' ön ekini ve köşeli parantezleri kaldır, '.' ekle
         } else {
           transformedText = matchedText;
         }
@@ -100,7 +97,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
       onNonMatch: (nonMatch) {
         spans.add(TextSpan(
           text: nonMatch,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontFamily: 'Podkova',
             fontWeight: FontWeight.w400,
@@ -118,10 +115,10 @@ class _AyracSurePageState extends State<AyracSurePage> {
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white, size: 30),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
         backgroundColor: ColorConstants.primaryColor,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Ayraç',
           style: TextStyle(
             color: Colors.white,
@@ -136,13 +133,13 @@ class _AyracSurePageState extends State<AyracSurePage> {
         future: _getayracAyahs(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           List<Map<String, dynamic>> ayracAyahs = snapshot.data!;
           if (ayracAyahs.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(25.0),
+            return const Padding(
+              padding: EdgeInsets.all(25.0),
               child: Center(
                 child: Text(
                   "Henüz bir ayraç eklemediniz",
@@ -169,7 +166,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                 child: GestureDetector(
                   onTap: () {
                     Get.toNamed(NavigationConstants.sureOkuPage,
-                        arguments: ["$sureadi", ayetno]);
+                        arguments: [sureadi, ayetno]);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(25),
@@ -179,7 +176,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      shadows: [
+                      shadows: const [
                         BoxShadow(
                           color: Color(0x26000000),
                           blurRadius: 10,
@@ -193,10 +190,10 @@ class _AyracSurePageState extends State<AyracSurePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Container(
+                        SizedBox(
                           width: 290,
                           height: 38,
                           child: Row(
@@ -204,7 +201,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                             children: [
                               Text(
                                 "${sureadi.toUpperCase()} ($ayetno) ",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 26,
                                   fontFamily: 'Source Serif Pro',
@@ -231,10 +228,10 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 25,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'AYRAÇ',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
@@ -251,7 +248,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                     right: 25.w),
                                                 child: Container(
                                                   width: 271,
-                                                  decoration: ShapeDecoration(
+                                                  decoration: const ShapeDecoration(
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       side: BorderSide(
@@ -274,7 +271,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                       text: TextSpan(
                                                         text:
                                                             "$sureadi Suresi, ",
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 16,
                                                           fontFamily:
@@ -286,7 +283,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                           TextSpan(
                                                             text:
                                                                 "$ayetno. Ayet",
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700,
@@ -295,8 +292,8 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                         ],
                                                       ),
                                                     ),
-                                                    SizedBox(height: 8),
-                                                    Text(
+                                                    const SizedBox(height: 8),
+                                                    const Text(
                                                       "Ayraç Kaldırılsın mı?",
                                                       style: TextStyle(
                                                         color: Colors.black,
@@ -319,7 +316,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                         Navigator.pop(context);
                                                       },
                                                       child: ConstrainedBox(
-                                                        constraints: BoxConstraints(
+                                                        constraints: const BoxConstraints(
                                                             minWidth:
                                                                 100), // Minimum genişlik belirledik
                                                         child: Container(
@@ -333,7 +330,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                               Clip.antiAlias,
                                                           decoration:
                                                               ShapeDecoration(
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xFFE86014),
                                                             shape:
                                                                 RoundedRectangleBorder(
@@ -343,7 +340,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                                           10),
                                                             ),
                                                           ),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
                                                                     .min,
@@ -380,7 +377,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                         Navigator.pop(context);
                                                       },
                                                       child: ConstrainedBox(
-                                                        constraints: BoxConstraints(
+                                                        constraints: const BoxConstraints(
                                                             minWidth:
                                                                 100), // Aynı minimum genişlik
                                                         child: Container(
@@ -394,7 +391,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                               Clip.antiAlias,
                                                           decoration:
                                                               ShapeDecoration(
-                                                            color: Color(
+                                                            color: const Color(
                                                                 0xFFE86014),
                                                             shape:
                                                                 RoundedRectangleBorder(
@@ -404,7 +401,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                                                           10),
                                                             ),
                                                           ),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
                                                                     .min,
@@ -456,7 +453,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                         const SizedBox(height: 25),
                         Container(
                           width: 290,
-                          decoration: ShapeDecoration(
+                          decoration: const ShapeDecoration(
                             shape: RoundedRectangleBorder(
                               side: BorderSide(
                                 width: 1,
@@ -471,13 +468,13 @@ class _AyracSurePageState extends State<AyracSurePage> {
                           child: RichText(
                             text: TextSpan(
                               text: metin,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 30,
                                 fontFamily: 'Kuranfont',
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xFF2A89A5),
                               ),
-                              locale: Locale('ar', ''),
+                              locale: const Locale('ar', ''),
                             ),
                             textDirection: TextDirection.rtl,
                           ),
@@ -491,7 +488,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                   children: _parseText(meal, true),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 26,
                                     fontFamily: 'Source Serif Pro',

@@ -20,7 +20,7 @@ class ContactUsPage extends StatelessWidget {
       return params.entries.map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
     }
 
-    Future<void> _launchEmail(String adsoyad, String text) async {
+    Future<void> launchEmail(String adsoyad, String text) async {
       final Uri emailLaunchUri = Uri(
         scheme: 'mailto',
         path: 'fcr@fcr.com.tr',
@@ -42,7 +42,7 @@ class ContactUsPage extends StatelessWidget {
       backgroundColor: ColorConstants.primaryColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Görüş ve Önerileriniz',
           style: TextStyle(
             color: Colors.white,
@@ -58,7 +58,7 @@ class ContactUsPage extends StatelessWidget {
           padding: const EdgeInsets.all(0.0),
           child: IconButton(
               onPressed: () => Get.back(),
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 size: 30,
                 color: ColorConstants.whiteColor,
@@ -69,28 +69,28 @@ class ContactUsPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 20),
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            WhiteText(
+            const WhiteText(
               text: "Ad ve Soyad *",
             ),
             SizedBox(
               height: 15.h,
             ),
             CustomTextfield(text: "Adınızı ve Soyadınızı Girin", controller: isimsoyisim),
-            SizedBox(
+            const SizedBox(
               height: 43,
             ),
-            WhiteText(
+            const WhiteText(
               text: "E-Posta * ",
             ),
             SizedBox(
               height: 15.h,
             ),
             CustomTextfield(text: "E-Postanızı Girin", controller: email),
-            SizedBox(
+            const SizedBox(
               height: 43,
             ),
             Container(
-              padding: EdgeInsets.only(right: 15, top: 8),
+              padding: const EdgeInsets.only(right: 15, top: 8),
               decoration: BoxDecoration(
                 color: Colors.white, // Arka plan rengi beyaz
                 borderRadius: BorderRadius.circular(15.0), // Yuvarlak kenarlık
@@ -100,7 +100,7 @@ class ContactUsPage extends StatelessWidget {
                 maxLines: 7, // 7 satırlık metin alanı
                 decoration: InputDecoration(
                   hintText: "Görüş ve Önerilerinizi Girin",
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: ColorConstants.primaryColor3,
                   ),
                   border: OutlineInputBorder(
@@ -115,13 +115,13 @@ class ContactUsPage extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerLeft, // Butonu sola hizalar
-              child: Container(
+              child: SizedBox(
                 // width: 132, // Genişlik
                 height: 60, // Yükseklik
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Color(0xFFE86014)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    backgroundColor: WidgetStateProperty.all(const Color(0xFFE86014)),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Yuvarlak köşe
                       ),
@@ -135,13 +135,13 @@ class ContactUsPage extends StatelessWidget {
                     } else if (aciklamalar.text == "") {
                       _showAlertDialog(context, "LÜTFEN\nEKSİK YERLERİ DOLDURUN", "Açıklamanızı girin.");
                     } else {
-                      _launchEmail("${aciklamalar.text}", "${isimsoyisim.text}");
+                      launchEmail(aciklamalar.text, isimsoyisim.text);
                       _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
                       email.clear();
                       isimsoyisim.clear();
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     "GÖNDER",
                     style: TextStyle(
                       color: Colors.white,
@@ -171,42 +171,42 @@ class ContactUsPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          content: Container(
+          content: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8, // Boyutu arttır
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   text1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black, // Text1 rengi
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Divider(
+                const Divider(
                   color: Colors.black,
                   thickness: 1,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   text2,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black, // Text2 rengi
                     fontWeight: FontWeight.normal,
                     fontSize: 17,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ],
