@@ -26,12 +26,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
   String corruptedPathPDF = "";
   @override
   void initState() {
-    fromAsset('assets/Kahakkinda.pdf', 'Kahakkinda.pdf').then((f) {
-      setState(() {
-        corruptedPathPDF = f.path;
-      });
-    });
     super.initState();
+    if (!kIsWeb) {
+      fromAsset('assets/Kahakkinda.pdf', 'Kahakkinda.pdf').then((f) {
+        setState(() {
+          corruptedPathPDF = f.path;
+        });
+      });
+    }
   }
 
   Future<File> fromAsset(String asset, String filename) async {

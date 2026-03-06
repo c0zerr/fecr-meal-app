@@ -10,8 +10,8 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Using LocalSearchController to avoid conflict with Flutter's SearchController
-    final LocalSearchController controller = Get.put(LocalSearchController());
+    // Get.find ile mevcut controller'ı al (uygulama başlangıcında yüklendi)
+    final LocalSearchController controller = Get.find<LocalSearchController>();
 
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
@@ -29,7 +29,7 @@ class SearchPage extends StatelessWidget {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.maybePop(context),
         ),
       ),
       body: Padding(
@@ -63,6 +63,43 @@ class SearchPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.h),
+
+            // Arama İstatistikleri (X kelimesi Y surede Z kere geçiyor)
+            Obx(() {
+              if (controller.filteredVerses.isNotEmpty && controller.currentQuery.value.isNotEmpty) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 20.h),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Podkova',
+                        fontSize: 16,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '"${controller.currentQuery.value}"',
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        const TextSpan(text: ' kelimesi '),
+                        TextSpan(
+                          text: '${controller.uniqueSurahCount.value}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFFF176)), // Sarı Vurgu
+                        ),
+                        const TextSpan(text: ' surede toplam '),
+                        TextSpan(
+                          text: '${controller.filteredVerses.length}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFFF176)), // Sarı Vurgu
+                        ),
+                        const TextSpan(text: ' kere geçiyor.'),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
 
             // Sure Eşleşme Chip'i (Eğer varsa)
             Obx(() {

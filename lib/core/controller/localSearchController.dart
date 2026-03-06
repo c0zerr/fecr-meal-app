@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,85 @@ class NormalizedResult {
   NormalizedResult(this.text, this.indices);
 }
 
+// Isolate'te kullanılabilmesi için top-level normalize fonksiyonu
+String _normalizeText(String text) {
+  StringBuffer buffer = StringBuffer();
+  for (int i = 0; i < text.length; i++) {
+    String char = text[i];
+    String lowerChar;
+    if (char == 'İ') {
+      lowerChar = 'i';
+    } else if (char == 'I') {
+      lowerChar = 'ı';
+    } else {
+      lowerChar = char.toLowerCase();
+    }
+
+    String simpleChar = lowerChar;
+    switch (lowerChar) {
+      case 'ç': simpleChar = 'c'; break;
+      case 'ğ': simpleChar = 'g'; break;
+      case 'ı': simpleChar = 'i'; break;
+      case 'ö': simpleChar = 'o'; break;
+      case 'ş': simpleChar = 's'; break;
+      case 'ü': simpleChar = 'u'; break;
+      case 'â': simpleChar = 'a'; break;
+      case 'î': simpleChar = 'i'; break;
+      case 'û': simpleChar = 'u'; break;
+      case 'ô': simpleChar = 'o'; break;
+      case 'ê': simpleChar = 'e'; break;
+    }
+
+    if (RegExp(r"['''`ʼ]").hasMatch(simpleChar)) continue;
+    if (RegExp(r"[^a-z0-9]").hasMatch(simpleChar)) simpleChar = ' ';
+    if (simpleChar == ' ') {
+      if (buffer.isEmpty || buffer.toString().endsWith(' ')) continue;
+    }
+    buffer.write(simpleChar);
+  }
+  String result = buffer.toString();
+  if (result.endsWith(' ')) result = result.substring(0, result.length - 1);
+  return result;
+}
+
+// compute() için top-level fonksiyon (isolate'te çalışır)
+List<Map<String, dynamic>> _parseQuranJson(String jsonString) {
+  final data = json.decode(jsonString) as List<dynamic>;
+
+  List<Map<String, dynamic>> verses = [];
+  List<Map<String, dynamic>> surahs = [];
+
+  for (var sure in data) {
+    String sureAdi = sure['sure_adi'] ?? sure['sureadi'];
+    final normName = _normalizeText(sureAdi);
+    surahs.add({
+      'sure_adi': sureAdi,
+      'normalized_name': normName,
+      'strict_name': normName.replaceAll(' ', ''),
+    });
+
+    if (sure['verses'] != null) {
+      for (var verse in sure['verses']) {
+        if (verse['ayetno'] == 0) continue;
+
+        final meal = (verse['meal'] as String)
+            .replaceAll(RegExp(r'\[\w+:\d+.*?\]'), '');
+        verses.add({
+          'sure_adi': verse['sure_adi'] ?? sure['sureadi'],
+          'ayetno': verse['ayetno'],
+          'metin': verse['metin'],
+          'meal': meal,
+          'search_text': _normalizeText(
+              "${verse['sure_adi']} ${verse['metin']} $meal"),
+          '_surahMeta': sureAdi,
+        });
+      }
+    }
+  }
+
+  return [...surahs.map((s) => {...s, '_type': 'surah'}), ...verses];
+}
+
 class LocalSearchController extends GetxController {
   var isLoading = true.obs;
   var allVerses = <Map<String, dynamic>>[].obs;
@@ -15,54 +95,34 @@ class LocalSearchController extends GetxController {
   var currentQuery = "".obs;
   var matchedSurah = Rx<Map<String, dynamic>?>(null);
   var surahList = <Map<String, dynamic>>[].obs;
+  var uniqueSurahCount = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
-    print("LocalSearchController Initialized");
     loadJsonData();
   }
 
   Future<void> loadJsonData() async {
     try {
-      print("Loading JSON data...");
       final String response =
           await rootBundle.loadString('assets/json/quran_full.json');
-      print("JSON loaded, decoding...");
-      final data = await json.decode(response) as List<dynamic>;
-      print("JSON decoded, processing ${data.length} surahs...");
 
-      List<Map<String, dynamic>> verses = [];
-      List<Map<String, dynamic>> surahs = [];
+      // compute() ile JSON parsing'i ayrı isolate'e taşı
+      final result = await compute(_parseQuranJson, response);
 
-      for (var sure in data) {
-        String sureAdi = sure['sure_adi'] ?? sure['sureadi'];
-        surahs.add({
-          'sure_adi': sureAdi,
-          'normalized_name': normalize(sureAdi),
-          'strict_name': strictNormalize(sureAdi),
-          // İlk ayetin numarası genellikle 1'dir ama sure okumaya giderken sure adı yeterli
-        });
+      final surahs = result.where((e) => e['_type'] == 'surah').map((e) {
+        final copy = Map<String, dynamic>.from(e);
+        copy.remove('_type');
+        return copy;
+      }).toList();
 
-        if (sure['verses'] != null) {
-          for (var verse in sure['verses']) {
-            // 0. ayetler (sure açıklamaları) arama sonuçlarına dahil edilmesin
-            if (verse['ayetno'] == 0) continue;
+      final verses = result.where((e) => e['_type'] == null).map((e) {
+        final copy = Map<String, dynamic>.from(e);
+        copy.remove('_surahMeta');
+        return copy;
+      }).toList();
 
-            verses.add({
-              'sure_adi': verse['sure_adi'] ?? sure['sureadi'],
-              'ayetno': verse['ayetno'],
-              'metin': verse['metin'],
-              'meal': (verse['meal'] as String)
-                  .replaceAll(RegExp(r'\[\w+:\d+.*?\]'), ''),
-              'search_text': normalize(
-                  "${verse['sure_adi']} ${verse['metin']} ${verse['meal']}"),
-            });
-          }
-        }
-      }
-
-      print("Processed ${verses.length} total verses.");
       allVerses.assignAll(verses);
       surahList.assignAll(surahs);
       isLoading.value = false;
@@ -71,6 +131,7 @@ class LocalSearchController extends GetxController {
       isLoading.value = false;
     }
   }
+
 
   void search(String query) {
     print("Searching for: $query");
@@ -136,16 +197,44 @@ class LocalSearchController extends GetxController {
       // Şimdilik sadece tam eşleşme veya çok yakın eşleşme mantıklı
     }
 
-    // 3. KURAL: Normal Arama (Mevcut Mantık)
-    // Kelime sınırı kuralı: \bquery\b
-    RegExp regExp = RegExp(r'\b' + RegExp.escape(normalizedQuery) + r'\b');
-
-    var results = allVerses.where((verse) {
-      return regExp.hasMatch(verse['search_text']);
+    // 3. KURAL: Gelişmiş Arama (Tam Eşleşme + Kelime Bazlı Arama)
+    // Önce Tam Öbek Eşleşmesi (Exact Phrase)
+    RegExp exactPhraseRegex = RegExp(r'\b' + RegExp.escape(normalizedQuery) + r'\b');
+    
+    var exactMatches = allVerses.where((verse) {
+      return exactPhraseRegex.hasMatch(verse['search_text']);
     }).toList();
 
-    print("Found ${results.length} results.");
-    filteredVerses.assignAll(results);
+    // Sonra Kelime Kelime Arama (Tüm kelimeler var mı?)
+    // Eğer sorgu birden fazla kelime içeriyorsa
+    List<String> queryWords = normalizedQuery.split(' ').where((s) => s.isNotEmpty).toList();
+    List<Map<String, dynamic>> multiWordMatches = [];
+
+    if (queryWords.length > 1) {
+      multiWordMatches = allVerses.where((verse) {
+        // Zaten tam eşleşmede varsa tekrar ekleme
+        if (exactPhraseRegex.hasMatch(verse['search_text'])) return false;
+
+        // Tüm kelimeler geçiyor mu? (Her kelime için kelime sınırı \b kontrolü)
+        return queryWords.every((word) {
+           return RegExp(r'\b' + RegExp.escape(word) + r'\b').hasMatch(verse['search_text']);
+        });
+      }).toList();
+    }
+
+    // Sonuçları birleştir (Önce tam eşleşmeler, sonra kelime bazlı eşleşmeler)
+    List<Map<String, dynamic>> combinedResults = [...exactMatches, ...multiWordMatches];
+
+    print("Found ${combinedResults.length} results.");
+    filteredVerses.assignAll(combinedResults);
+
+    // İstatistikleri Hesapla
+    if (combinedResults.isNotEmpty) {
+      Set<String> uniqueSurahs = combinedResults.map((verse) => verse['sure_adi'].toString()).toSet();
+      uniqueSurahCount.value = uniqueSurahs.length;
+    } else {
+      uniqueSurahCount.value = 0;
+    }
   }
 
   /// Metni normalize eder (Arama kurallarına göre)

@@ -9,17 +9,35 @@ class TeamInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Uri url1 = Uri.parse('https://www.linkedin.com/company/tecnobis/');
-    Future<void> launchUrl1() async {
-      if (!await launchUrl(url1)) {
-        throw Exception('Could not launch $url1');
+    // Web Sitesi Linki
+    final Uri urlWebsite = Uri.parse('https://kuranmeal.tr');
+    Future<void> launchWebsite() async {
+      if (!await launchUrl(urlWebsite)) {
+        throw Exception('Could not launch $urlWebsite');
       }
     }
 
-    final Uri url2 = Uri.parse('https://tecnobis.com/');
-    Future<void> launchUrl2() async {
-      if (!await launchUrl(url2)) {
-        throw Exception('Could not launch $url2');
+    // Mail Linki (Coşkun Işıkgül)
+    final Uri urlMailCoskun = Uri.parse('mailto:coskunmail@gmail.com');
+    Future<void> launchMailCoskun() async {
+      if (!await launchUrl(urlMailCoskun)) {
+        throw Exception('Could not launch $urlMailCoskun');
+      }
+    }
+
+    // Mail Linki (Muhammed Nazlıaydın)
+    final Uri urlMailMuhammed = Uri.parse('mailto:mnzlydn@gmail.com');
+    Future<void> launchMailMuhammed() async {
+      if (!await launchUrl(urlMailMuhammed)) {
+        throw Exception('Could not launch $urlMailMuhammed');
+      }
+    }
+
+    // Mail Linki (Hüseyin Nazlıaydın)
+    final Uri urlMailHuseyin = Uri.parse('mailto:hnazliaydin@hotmail.com');
+    Future<void> launchMailHuseyin() async {
+      if (!await launchUrl(urlMailHuseyin)) {
+        throw Exception('Could not launch $urlMailHuseyin');
       }
     }
 
@@ -55,54 +73,11 @@ class TeamInfoPage extends StatelessWidget {
           SizedBox(
             height: 150.h,
           ),
+          // Yazılım/Tecnobis Bölümü Kaldırıldı
+          
           const Center(
             child: Text(
-              "Yazılım",
-              style: TextStyle(
-                color: Color(0xFF60A6BB),
-                fontSize: 16,
-                fontFamily: 'Axiforma',
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
-          ),
-          const Center(
-            child: Text(
-              "Tecnobis",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 19,
-                fontFamily: 'Axiforma',
-                fontWeight: FontWeight.w500,
-                height: 0,
-                letterSpacing: 3,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                  onTap: launchUrl1,
-                  child: Image.asset("assets/icon/linkedin.png")),
-              const SizedBox(
-                width: 5,
-              ),
-              GestureDetector(
-                  onTap: launchUrl2,
-                  child: Image.asset("assets/icon/domain.png")),
-            ],
-          ),
-          SizedBox(
-            height: 30.h,
-          ),
-          const Center(
-            child: Text(
-              "UI / UX Tasarım",
+              "Tasarımcısı ve Geliştiricisi",
               style: TextStyle(
                 color: Color(0xFF60A6BB),
                 fontSize: 16,
@@ -131,11 +106,41 @@ class TeamInfoPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/icon/icon1.png"),
-              const SizedBox(
-                width: 5,
+              // Modern Web Sitesi Butonu
+              IconButton(
+                onPressed: launchWebsite,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                  child: const Icon(
+                    Icons.language, // Web Sitesi ikonu
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
               ),
-              Image.asset("assets/icon/icon2.png"),
+              const SizedBox(
+                width: 10,
+              ),
+              // Modern Mail Butonu
+              IconButton(
+                onPressed: launchMailCoskun,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                  child: const Icon(
+                    Icons.mail_outline,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(
@@ -143,7 +148,7 @@ class TeamInfoPage extends StatelessWidget {
           ),
           const Center(
             child: Text(
-              "Editör",
+              "Meal API Editörü",
               style: TextStyle(
                 color: Color(0xFF60A6BB),
                 fontSize: 16,
@@ -172,7 +177,22 @@ class TeamInfoPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/icon/icon2.png"),
+               // Modern Mail Butonu
+              IconButton(
+                onPressed: launchMailMuhammed,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                  child: const Icon(
+                    Icons.mail_outline,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(
@@ -180,7 +200,7 @@ class TeamInfoPage extends StatelessWidget {
           ),
           const Center(
             child: Text(
-              "Yönetmen",
+              "Editör",
               style: TextStyle(
                 color: Color(0xFF60A6BB),
                 fontSize: 16,
@@ -209,7 +229,22 @@ class TeamInfoPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/icon/icon2.png"),
+               // Modern Mail Butonu
+              IconButton(
+                onPressed: launchMailHuseyin,
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                  child: const Icon(
+                    Icons.mail_outline,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
