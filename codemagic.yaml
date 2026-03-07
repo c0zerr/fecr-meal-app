@@ -21,11 +21,13 @@ workflows:
       - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
           keychain initialize
-      - name: Fetch signing files
+      - name: Fetch profiles and certificates
         script: |
           app-store-connect fetch-signing-files "com.mealfecr.kuranaydinligi.app" \
             --type IOS_APP_STORE \
             --create
+          # VEYA yukarıdaki komut hata veriyorsa, Codemagic artık şu komutu varsayılan alır:
+          # keychain add-certificates (Zaten alt adımda yapılıyor)
       - name: Add certificates to keychain
         script: |
           keychain add-certificates
