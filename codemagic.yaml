@@ -3,13 +3,17 @@ workflows:
     name: iOS Release
     instance_type: mac_mini_m2
     environment:
-      groups:
-        - ios_credentials
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mealfecr.kuranaydinligi.app
+      vars:
+        CERTIFICATE_NAME: "Codemagic Distribution Cert"
+        PROFILE_NAME: "Codemagic App Store Profile"
       flutter: stable
       xcode: latest
       cocoapods: default
     integrations:
-      app_store_connect: Codemagic Key # Adım 2'de Apple portalında verdiğiniz API Key'in Codemagic'teki adını buraya yazabilirsiniz, şimdilik böyle kalabilir
+      app_store_connect: Codemagic Key
     triggering:
       events:
         - push
@@ -25,9 +29,8 @@ workflows:
         script: |
           app-store-connect fetch-signing-files "com.mealfecr.kuranaydinligi.app" \
             --type IOS_APP_STORE \
-            --create
-          # VEYA yukarıdaki komut hata veriyorsa, Codemagic artık şu komutu varsayılan alır:
-          # keychain add-certificates (Zaten alt adımda yapılıyor)
+            --create || true
+          keychain add-certificates
       - name: Add certificates to keychain
         script: |
           keychain add-certificates
