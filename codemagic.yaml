@@ -4,10 +4,12 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       groups:
-        - ios_credentials # Codemagic arayüzünden bu isimle bir variable group oluşturacağız
+        - ios_credentials
       flutter: stable
       xcode: latest
       cocoapods: default
+    integrations:
+      app_store_connect: Codemagic Key # Adım 2'de Apple portalında verdiğiniz API Key'in Codemagic'teki adını buraya yazabilirsiniz, şimdilik böyle kalabilir
     triggering:
       events:
         - push
