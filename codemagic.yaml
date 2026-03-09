@@ -9,8 +9,6 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-    integrations:
-      app_store_connect: Codemagic Key
     triggering:
       events:
         - push
@@ -22,11 +20,8 @@ workflows:
       - name: Set up keychain
         script: |
           keychain initialize
-      - name: Fetch signing files
+      - name: Add certificates to keychain
         script: |
-          app-store-connect fetch-signing-files "com.mealfecr.kuranaydinligi.app" \
-            --type IOS_APP_STORE \
-            --create
           keychain add-certificates
       - name: Set up code signing settings on Xcode project
         script: |
@@ -41,11 +36,9 @@ workflows:
         script: |
           flutter build ipa --release \
             --build-name=1.0.0 \
-            --build-number=$BUILD_NUMBER \
-            --export-options-plist=/Users/builder/export_options.plist
+            --build-number=$BUILD_NUMBER
     artifacts:
       - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
         auth: integration
