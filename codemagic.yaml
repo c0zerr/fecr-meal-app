@@ -6,9 +6,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.mealfecr.kuranaydinligi.app
-      vars:
-        CERTIFICATE_NAME: "Codemagic Distribution Cert"
-        PROFILE_NAME: "Codemagic App Store Profile"
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -49,10 +46,7 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        beta_groups: # TestFlight'taki grubunuzun adını buraya yazın (opsiyonel)
-          - Internal Testers
