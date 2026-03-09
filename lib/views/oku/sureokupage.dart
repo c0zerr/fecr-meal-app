@@ -43,15 +43,17 @@ class _SureOkuPageState extends State<SureOkuPage> {
   @override
   void initState() {
     _makeRequest();
-    fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
-      if (mounted) {
-        setState(() {
-          corruptedPathPDF = f.path;
-        });
-      }
-    }).catchError((error) {
-      debugPrint("PDF yüklenirken hata oluştu: $error");
-    });
+    if (!kIsWeb) {
+      fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
+        if (mounted) {
+          setState(() {
+            corruptedPathPDF = f.path;
+          });
+        }
+      }).catchError((error) {
+        debugPrint("PDF yüklenirken hata oluştu: $error");
+      });
+    }
     super.initState();
   }
 
@@ -139,7 +141,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
   String pathPDF = "";
   String corruptedPathPDF = "";
   @override
-  Future<File> fromAsset(String asset, String filename) async {
+  Future<dynamic> fromAsset(String asset, String filename) async {
+    if (kIsWeb) return null;
     // To open from assets, you can copy them to the app storage folder, and the access them "locally"
     Completer<File> completer = Completer();
 
@@ -161,7 +164,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
     return completer.future;
   }
 
-  Future<File> createFileOfPdfUrl() async {
+  Future<dynamic> createFileOfPdfUrl() async {
+    if (kIsWeb) return null;
     Completer<File> completer = Completer();
     try {
       // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";

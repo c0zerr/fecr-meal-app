@@ -77,8 +77,7 @@ List<Map<String, dynamic>> _parseQuranJson(String jsonString) {
           'ayetno': verse['ayetno'],
           'metin': verse['metin'],
           'meal': meal,
-          'search_text': _normalizeText(
-              "${verse['sure_adi']} ${verse['metin']} $meal"),
+          'search_text': _normalizeText(meal),
           '_surahMeta': sureAdi,
         });
       }
@@ -188,10 +187,9 @@ class LocalSearchController extends GetxController {
 
     if (exactSurah != null) {
       matchedSurah.value = exactSurah;
-      filteredVerses
-          .clear(); // Kullanıcı sadece sureye gitmek istiyor olabilir, listeyi temizle
-      return; // Aramayı burada bitir
-    } else {
+      // Listenin kelime aramasıyla dolmaya devam etmesi için artık temizlemiyoruz ve return etmiyoruz.
+    }
+ else {
       // Kısmi eşleşme (kullanıcı yazmaya devam ediyor olabilir)
       // Ama chip sadece anlamlı bir eşleşme varsa çıksın
       // Şimdilik sadece tam eşleşme veya çok yakın eşleşme mantıklı
