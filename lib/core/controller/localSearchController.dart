@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:fecrmeal/core/services/quran_data_manager.dart';
 
 class NormalizedResult {
   final String text;
@@ -104,8 +105,7 @@ class LocalSearchController extends GetxController {
 
   Future<void> loadJsonData() async {
     try {
-      final String response =
-          await rootBundle.loadString('assets/json/quran_full.json');
+      final String response = await QuranDataManager.getQuranJsonString();
 
       // compute() ile JSON parsing'i ayrı isolate'e taşı
       final result = await compute(_parseQuranJson, response);

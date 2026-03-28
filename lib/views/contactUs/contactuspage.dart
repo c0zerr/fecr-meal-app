@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/views/contactUs/widgets/textfield.dart';
 import 'package:fecrmeal/widgets/whitetext.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:dio/dio.dart' as dio_pkg;
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({super.key});
@@ -16,25 +16,47 @@ class ContactUsPage extends StatelessWidget {
     TextEditingController email = TextEditingController();
     TextEditingController aciklamalar = TextEditingController();
 
-    String? encodeQueryParameters(Map<String, String> params) {
-      return params.entries.map((MapEntry<String, String> e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
-    }
-
-    Future<void> launchEmail(String adsoyad, String text) async {
-      final Uri emailLaunchUri = Uri(
-        scheme: 'mailto',
-        path: 'fcr@fcr.com.tr',
-        queryParameters: {'subject': 'FecrMeal', 'body': '$adsoyad/n$text'},
+    Future<void> sendEmailJS(String adsoyad, String eposta, String mesaj) async {
+      // Show loading
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Colors.white)),
+        barrierDismissible: false,
       );
 
+      final dio = dio_pkg.Dio();
+      const String serviceId = 'service_8w2okte';
+      const String templateId = 'template_gminyi9';
+      const String publicKey = 'snei93tuGLkGcVKfr';
+
       try {
-        if (await canLaunchUrl(emailLaunchUri)) {
-          await launchUrl(emailLaunchUri);
+        final response = await dio.post(
+          'https://api.emailjs.com/api/v1.0/email/send',
+          data: {
+            'service_id': serviceId,
+            'template_id': templateId,
+            'user_id': publicKey,
+            'template_params': {
+              'title': 'FecrMeal Görüş ve Öneriler',
+              'name': adsoyad,
+              'time': DateTime.now().toLocal().toString().substring(0, 16),
+              'message': 'E-Posta: $eposta\n\nMesaj:\n$mesaj',
+            },
+          },
+        );
+
+        Get.back(); // Close loading
+
+        if (response.statusCode == 200) {
+          _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz.");
+          email.clear();
+          isimsoyisim.clear();
+          aciklamalar.clear();
         } else {
-          _showAlertDialog(context, "Email Client Not Found", "Please ensure you have an email app installed to send an email.");
+          _showAlertDialog(context, "Hata", "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin. (Kod: ${response.statusCode})");
         }
       } catch (e) {
-        _showAlertDialog(context, "Error", "Unable to launch email: $e");
+        Get.back(); // Close loading
+        _showAlertDialog(context, "Hata", "Bir sorun oluştu: $e");
       }
     }
 
@@ -135,10 +157,7 @@ class ContactUsPage extends StatelessWidget {
                     } else if (aciklamalar.text == "") {
                       _showAlertDialog(context, "LÜTFEN\nEKSİK YERLERİ DOLDURUN", "Açıklamanızı girin.");
                     } else {
-                      launchEmail(aciklamalar.text, isimsoyisim.text);
-                      _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz. ");
-                      email.clear();
-                      isimsoyisim.clear();
+                      sendEmailJS(isimsoyisim.text, email.text, aciklamalar.text);
                     }
                   },
                   child: const Text(

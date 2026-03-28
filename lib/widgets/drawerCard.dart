@@ -3,13 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DrawerCards extends StatelessWidget {
   final String title;
-  final String imageUrl;
+  final String? imageUrl;
+  final IconData? iconData;
   final void Function()? ontap;
 
   const DrawerCards({
     Key? key,
     required this.title,
-    required this.imageUrl,
+    this.imageUrl,
+    this.iconData,
     required this.ontap,
   }) : super(key: key);
 
@@ -33,22 +35,28 @@ class DrawerCards extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // SizedBox(width: 10.w),
+                SizedBox(width: 5.w),
                 Padding(
                   padding: EdgeInsets.only(left: 5.w, top: 5.h, bottom: 5.h, right: 5.w),
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    // width: 50.w,
-                    // height: 50.h,
+                  child: SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: iconData != null
+                        ? Icon(iconData, color: Colors.white, size: 20.w)
+                        : (imageUrl != null
+                            ? Image.asset(
+                                imageUrl!,
+                                fit: BoxFit.contain,
+                              )
+                            : const SizedBox.shrink()),
                   ),
                 ),
-                // SizedBox(width: 2.w),
+                SizedBox(width: 5.w),
                 Text(
                   title,
                   style: const TextStyle(
                     fontFamily: "Axiforma",
-                    fontSize: 16, //18
+                    fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),

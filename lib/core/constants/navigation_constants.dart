@@ -9,4 +9,5 @@ class NavigationConstants {
   static const ayracSurePage = "/ayracSurePage";
   static const pdf = "/pdf";
   static const searchPage = "/searchPage";
+  static const settingsPage = "/settingsPage";
 }

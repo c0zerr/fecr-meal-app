@@ -8,7 +8,8 @@ import 'package:fecrmeal/views/kuranAydinligi/kuranAydinligi.dart';
 import 'package:fecrmeal/views/oku/sureokupage.dart';
 import 'package:fecrmeal/views/team/team.dart';
 import 'package:fecrmeal/views/search/searchPage.dart';
-import 'package:fecrmeal/views/tuncerNaml%C4%B1/tuncerNamli.dart';
+import 'package:fecrmeal/views/tuncerNamlı/tuncerNamli.dart';
+import 'package:fecrmeal/views/settings/settings_page.dart';
 
 class NavigationService {
   static List<GetPage> routes = [
@@ -51,6 +52,10 @@ class NavigationService {
     GetPage(
       name: NavigationConstants.searchPage,
       page: () => const SearchPage(),
+    ),
+    GetPage(
+      name: NavigationConstants.settingsPage,
+      page: () => const SettingsPage(),
     ),
   ];
 }

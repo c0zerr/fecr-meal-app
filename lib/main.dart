@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
+import 'package:fecrmeal/core/services/quran_data_manager.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  QuranDataManager.checkAndUpdateData(); // Arka planda json versiyonunu kontrol eder
   runApp(const MyApp());
 }
 
