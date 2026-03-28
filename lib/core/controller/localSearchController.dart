@@ -61,8 +61,10 @@ List<Map<String, dynamic>> _parseQuranJson(String jsonString) {
   for (var sure in data) {
     String sureAdi = sure['sure_adi'] ?? sure['sureadi'];
     final normName = _normalizeText(sureAdi);
+    int idsureler = sure['idsureler'] ?? 0;
     surahs.add({
       'sure_adi': sureAdi,
+      'idsureler': idsureler,
       'normalized_name': normName,
       'strict_name': normName.replaceAll(' ', ''),
     });
@@ -79,6 +81,7 @@ List<Map<String, dynamic>> _parseQuranJson(String jsonString) {
           'metin': verse['metin'],
           'meal': meal,
           'search_text': _normalizeText(meal),
+          'idsureler': idsureler,
           '_surahMeta': sureAdi,
         });
       }

@@ -111,7 +111,8 @@ class SearchPage extends StatelessWidget {
                       // Sureye git
                       Get.toNamed(NavigationConstants.sureOkuPage, arguments: [
                         controller.matchedSurah.value!['sure_adi'],
-                        1
+                        1,
+                        controller.matchedSurah.value!['idsureler']
                       ] // 1. ayetten başla
                           );
                     },
@@ -182,7 +183,7 @@ class SearchPage extends StatelessWidget {
                       onTap: () {
                         // Ayet detayına gitmek için
                         Get.toNamed(NavigationConstants.sureOkuPage,
-                            arguments: [verse['sure_adi'], verse['ayetno']]);
+                            arguments: [verse['sure_adi'], verse['ayetno'], verse['idsureler']]);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),

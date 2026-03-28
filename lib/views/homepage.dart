@@ -242,13 +242,17 @@ class _HomePageState extends State<HomePage> {
 
     final results = <Map<String, dynamic>>[];
 
-    // Filter surahs
-    final matchedSurahs = mushafSirasi.where((surah) {
-      final surahNameNormalized = _normalize(surah['name'].toString());
+    // Filter surahs with ID support
+    final matchedSurahEntries = mushafSirasi.asMap().entries.where((entry) {
+      final surahNameNormalized = _normalize(entry.value['name'].toString());
       return surahNameNormalized.contains(surahPart);
     }).toList();
 
-    for (var surah in matchedSurahs) {
+    for (var entry in matchedSurahEntries) {
+      var index = entry.key;
+      var surah = entry.value;
+      int surahId = index + 1;
+
       if (versePart != null) {
         // Check verse count
         final verseNum = int.parse(versePart);
@@ -256,6 +260,7 @@ class _HomePageState extends State<HomePage> {
           results.add({
             'name': surah['name'],
             'verse': verseNum,
+            'id': surahId,
             'type': 'verse', // Specific verse
             'label': '${surah['name']} $verseNum. Ayet'
           });
@@ -265,6 +270,7 @@ class _HomePageState extends State<HomePage> {
         results.add({
           'name': surah['name'],
           'verse': 1,
+          'id': surahId,
           'type': 'surah',
           'label': '${surah['name']} Suresi'
         });
@@ -360,7 +366,11 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pop(context); // Close modal
                             Get.toNamed(
                               NavigationConstants.sureOkuPage,
-                              arguments: [result['name'], result['verse']],
+                              arguments: [
+                                result['name'],
+                                result['verse'],
+                                result['id']
+                              ],
                             );
                           },
                           child: Container(
@@ -598,11 +608,16 @@ class _HomePageState extends State<HomePage> {
                                           );
                                         }
                                       } else {
+                                        int surahId = mushafSirasi.indexWhere((s) =>
+                                                s['name'] ==
+                                                chosenList[index]['name']) +
+                                            1;
                                         Get.toNamed(
                                             NavigationConstants.sureOkuPage,
                                             arguments: [
                                               "${chosenList[index]['name']}",
-                                              1
+                                              1,
+                                              surahId
                                             ]);
                                       }
                                       // SureOkuPage(ayetno: "1",sureadi: "${chosenList[index]['title2']}",);

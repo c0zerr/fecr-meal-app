@@ -33,7 +33,8 @@ class SureOkuPage extends StatefulWidget {
 }
 
 class _SureOkuPageState extends State<SureOkuPage> {
-  HomePageController homePageController = Get.find();
+  int? surahId;
+
   String sureadi = (Get.arguments != null && Get.arguments.length > 0)
       ? Get.arguments[0]
       : "Fâtiha";
@@ -43,6 +44,13 @@ class _SureOkuPageState extends State<SureOkuPage> {
   String? dynamicText;
   @override
   void initState() {
+    // Argüman kontrolü
+    if (Get.arguments != null && Get.arguments is List) {
+      if (Get.arguments.length > 0) sureadi = Get.arguments[0];
+      if (Get.arguments.length > 1) ayetno = Get.arguments[1];
+      if (Get.arguments.length > 2) surahId = Get.arguments[2];
+    }
+
     _makeRequest();
     if (!kIsWeb) {
       fromAsset('assets/Hmukatta.pdf', 'Hmukatta.pdf').then((f) {
@@ -56,6 +64,24 @@ class _SureOkuPageState extends State<SureOkuPage> {
       });
     }
     super.initState();
+  // Karakter normalizasyonu
+  String _normalize(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll('ı', 'i')
+        .replaceAll('İ', 'i')
+        .replaceAll('ğ', 'g')
+        .replaceAll('ü', 'u')
+        .replaceAll('ş', 's')
+        .replaceAll('ö', 'o')
+        .replaceAll('ç', 'c')
+        .replaceAll('â', 'a')
+        .replaceAll('î', 'i')
+        .replaceAll('û', 'u')
+        .replaceAll('-', '')
+        .replaceAll('\'', '')
+        .replaceAll('’', '')
+        .trim();
   }
 
   List<TextSpan> _parseText(String text, bool showDipnotlar) {
@@ -343,9 +369,31 @@ class _SureOkuPageState extends State<SureOkuPage> {
       List<dynamic> dataList = jsonDecode(jsonString);
 
       var surahData = dataList.firstWhere((element) {
-        String name = (element['sure_adi'] ?? element['sureadi']).toString().toLowerCase();
-        return name == sureadi.toLowerCase();
+        // 1. Surah ID ile eşleştir (En güvenilir yöntem)
+        if (surahId != null && element['idsureler'] == surahId) {
+          return true;
+        }
+
+        // 2. İsim ile eşleştir (Fallback)
+        String jsonSurahName =
+            (element['sure_adi'] ?? element['sureadi'] ?? "").toString();
+        return _normalize(jsonSurahName) == _normalize(sureadi);
       }, orElse: () => null);
+
+      if (surahData == null) {
+        print("Sure bulunamadı: $sureadi (ID: $surahId)");
+        // Alternatif olarak ID yoksa name üzerinden ID bulmaya çalış
+        if (surahId == null) {
+          int index = sureler.indexWhere(
+              (s) => _normalize(s.split('(')[0]) == _normalize(sureadi));
+          if (index != -1) {
+            int targetId = index + 1;
+            surahData = dataList.firstWhere(
+                (element) => element['idsureler'] == targetId,
+                orElse: () => null);
+          }
+        }
+      }
 
       if (surahData != null) {
         SureModel sureModel = SureModel.fromJson(surahData);
@@ -767,11 +815,15 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                 }).toList(),
                                 onChanged: (String? value) {
                                   setState(() {
-                                    String selectedValue2 =
-                                        value!.split('(')[0].trim();
+                                    int selectedIndex = sureler.indexOf(value!);
+                                    String name = value.split('(')[0].trim();
                                     Get.offAndToNamed(
                                         NavigationConstants.sureOkuPage,
-                                        arguments: [selectedValue2, 1]);
+                                        arguments: [
+                                          name,
+                                          1,
+                                          selectedIndex + 1
+                                        ]);
                                   });
                                 },
                                 dropdownStyleData: DropdownStyleData(
