@@ -1064,10 +1064,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
             Obx(
               () => Padding(
                 padding: EdgeInsets.only(
-                    bottom: (defaultTargetPlatform == TargetPlatform.iOS
-                            ? (MediaQuery.of(context).padding.bottom > 0 ? 0 : 30)
-                            : 20) +
-                        MediaQuery.of(context).padding.bottom,
+                    bottom: (defaultTargetPlatform == TargetPlatform.iOS ? 0 : 20),
                     right: 20),
                 child: Align(
                   alignment: Alignment.bottomRight,
