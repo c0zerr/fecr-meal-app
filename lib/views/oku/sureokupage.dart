@@ -812,7 +812,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                 },
                                 dropdownStyleData: DropdownStyleData(
                                   maxHeight: 600.h,
-                                  width: 270.w,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
                                     color: Colors.white.withOpacity(0.9),
