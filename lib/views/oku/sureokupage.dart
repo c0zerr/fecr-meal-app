@@ -867,7 +867,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               child: Center(
                                 child: Padding(
                                   padding:
-                                      EdgeInsets.only(bottom: 35.h, top: 25),
+                                      EdgeInsets.only(bottom: 15.h, top: 25),
                                   child: Container(
                                     width: 260.w,
                                     height: 70.h,
@@ -930,9 +930,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             ),
                           ),
                           Padding(
-                              padding: const EdgeInsets.only(
+                              padding: EdgeInsets.only(
                                 left: 25.0,
                                 right: 25,
+                                top: 25.h,
                               ),
                               child: Container(
                                   width: MediaQuery.of(context).size.width,
