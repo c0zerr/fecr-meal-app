@@ -768,7 +768,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                 onChanged: (String? value) {
                                   setState(() {
                                     String selectedValue2 =
-                                        value!.split(' (')[0];
+                                        value!.split('(')[0].trim();
                                     Get.offAndToNamed(
                                         NavigationConstants.sureOkuPage,
                                         arguments: [selectedValue2, 1]);
