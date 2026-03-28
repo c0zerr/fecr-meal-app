@@ -693,21 +693,19 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           ),
                           ayetno != 1 && _verses[ayetno].oncekiayet != 0
                               ? Container(
-                                  height: 45,
-                                  width: 45,
+                                  height: 48,
+                                  width: 48,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: const Color(0xff2B89A5),
-                                        width: 2),
+                                    color: Colors.white.withOpacity(0.08),
                                   ),
                                   child: Center(
                                     child: IconButton(
                                       onPressed: _previousVerse,
                                       icon: const Icon(
-                                        Icons.arrow_back,
-                                        color: ColorConstants.primaryColor3,
-                                        size: 25,
+                                        Icons.chevron_left_rounded,
+                                        color: Colors.white,
+                                        size: 32,
                                       ),
                                     ),
                                   ),
@@ -724,11 +722,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               child: DropdownButton2(
                                 customButton: Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w, vertical: 10.h),
+                                      horizontal: 16.w, vertical: 8.h),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white.withOpacity(0.08),
                                     border: Border.all(
-                                      color: ColorConstants.primaryColor3,
+                                      color: Colors.white.withOpacity(0.12),
                                       width: 1,
                                     ),
                                   ),
@@ -744,36 +743,37 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                               SureAdi,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                color: const Color(0xFF60A6BB),
+                                                color: Colors.white,
                                                 fontSize:
                                                     SureAdi == "Hurufu Mukattaa"
-                                                        ? 20
-                                                        : 28,
-                                                fontFamily: 'Podkova',
-                                                fontWeight: FontWeight.w700,
-                                                height: 0.9,
+                                                        ? 18
+                                                        : 22,
+                                                fontFamily: 'Axiforma',
+                                                fontWeight: FontWeight.w800,
+                                                height: 1.1,
                                               ),
                                             ),
-                                            const SizedBox(height: 5),
+                                            const SizedBox(height: 2),
                                             if (_verses.isNotEmpty)
                                               Text(
                                                 '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
                                                 textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 17,
-                                                  fontFamily: 'Podkova',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0.9,
+                                                style: TextStyle(
+                                                  color: Colors.white
+                                                      .withOpacity(0.7),
+                                                  fontSize: 14,
+                                                  fontFamily: 'Axiforma',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 1.1,
                                                 ),
                                               ),
                                           ],
                                         ),
                                       ),
-                                      const Icon(
+                                      Icon(
                                         Icons.keyboard_arrow_down_rounded,
-                                        color: ColorConstants.primaryColor3,
-                                        size: 30,
+                                        color: Colors.white.withOpacity(0.7),
+                                        size: 25,
                                       ),
                                     ],
                                   ),
@@ -863,21 +863,19 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               () => Visibility(
                                 visible: sonAyet.value,
                                 child: Container(
-                                  height: 45,
-                                  width: 45,
+                                  height: 48,
+                                  width: 48,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: const Color(0xff2B89A5),
-                                        width: 2),
+                                    color: Colors.white.withOpacity(0.08),
                                   ),
                                   child: Center(
                                     child: IconButton(
                                       onPressed: _nextVerse,
                                       icon: const Icon(
-                                        Icons.arrow_forward_outlined,
-                                        color: ColorConstants.primaryColor3,
-                                        size: 25,
+                                        Icons.chevron_right_rounded,
+                                        color: Colors.white,
+                                        size: 32,
                                       ),
                                     ),
                                   ),
