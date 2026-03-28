@@ -783,40 +783,21 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                   String sure = entry.value;
                                   return DropdownMenuItem<String>(
                                     value: sure,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "${index + 1}. $sure",
-                                              style: const TextStyle(
-                                                color:
-                                                    ColorConstants.primaryColor,
-                                                fontSize: 20,
-                                                fontFamily: 'Podkova',
-                                                fontWeight: FontWeight.w700,
-                                                height: 1.2,
-                                              ),
-                                            ),
-                                          ],
+                                    child: Center(
+                                      child: Text(
+                                        "${index + 1}. $sure",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: ColorConstants.primaryColor,
+                                          fontSize: 18,
+                                          fontFamily: 'Axiforma',
+                                          fontWeight: FontWeight.w700,
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Divider(
-                                          color: ColorConstants.primaryColor3
-                                              .withOpacity(0.4),
-                                          height: 1,
-                                        )
-                                      ],
+                                      ),
                                     ),
                                   );
                                 }).toList(),
-                                onChanged: (String? value) {
+                                 onChanged: (String? value) {
                                   setState(() {
                                     int selectedIndex = sureler.indexOf(value!);
                                     String name = value.split('(')[0].trim();
@@ -836,7 +817,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     borderRadius: BorderRadius.circular(14),
                                     color: Colors.white.withOpacity(0.9),
                                   ),
-                                  offset: const Offset(-20, 0),
+                                  offset: const Offset(0, 8),
                                   scrollbarTheme: ScrollbarThemeData(
                                     radius: const Radius.circular(40),
                                     thickness:
@@ -846,8 +827,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                   ),
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(
-                                  height: 50,
-                                  padding: EdgeInsets.only(left: 14, right: 14),
+                                  height: 48,
+                                  padding: EdgeInsets.symmetric(horizontal: 14),
                                 ),
                               ),
                             ),
