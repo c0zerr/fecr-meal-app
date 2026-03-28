@@ -1707,94 +1707,95 @@ class _SureOkuPageState extends State<SureOkuPage> {
           topRight: Radius.circular(25),
         ),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Görünüm Ayarları",
-              style: TextStyle(
-                color: Color(0xFF2A89A5),
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Axiforma',
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            "Görünüm Ayarları",
+            style: TextStyle(
+              color: Color(0xFF2A89A5),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              fontFamily: 'Axiforma',
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Meal Metin Büyüklüğü
+          _buildSettingsSlider(
+            title: 'Meal Metin',
+            value: homePageController.yazipuntosu,
+            min: 12.0,
+            max: 40.0,
+            divisions: 28,
+          ),
+          const SizedBox(height: 5),
+          // Arapça Metin Büyüklüğü
+          _buildSettingsSlider(
+            title: 'Arapça Metin',
+            value: homePageController.arapcaPuntosu,
+            min: 14.0,
+            max: 50.0,
+            divisions: 36,
+          ),
+          const SizedBox(height: 5),
+          // Dipnot Metin Büyüklüğü
+          _buildSettingsSlider(
+            title: 'Dipnot Metin',
+            value: homePageController.dipnotPuntosu,
+            min: 10.0,
+            max: 30.0,
+            divisions: 20,
+          ),
+          const SizedBox(height: 10),
+          const Divider(thickness: 1, height: 20),
+          // Arapça Metin Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.language,
+                      color: Color(0xFF2A89A5), size: 24),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Arapça Metin',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                      Text(
+                        'Arapça metni göster/gizle',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                          fontFamily: 'Axiforma',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 15),
-            // Meal Metin Büyüklüğü
-            _buildSettingsSlider(
-              title: 'Meal Metin',
-              value: homePageController.yazipuntosu,
-              min: 12.0,
-              max: 40.0,
-              divisions: 28,
-            ),
-            const SizedBox(height: 15),
-            // Arapça Metin Büyüklüğü
-            _buildSettingsSlider(
-              title: 'Arapça Metin',
-              value: homePageController.arapcaPuntosu,
-              min: 14.0,
-              max: 50.0,
-              divisions: 36,
-            ),
-            const SizedBox(height: 15),
-            // Dipnot Metin Büyüklüğü
-            _buildSettingsSlider(
-              title: 'Dipnot Metin',
-              value: homePageController.dipnotPuntosu,
-              min: 10.0,
-              max: 30.0,
-              divisions: 20,
-            ),
-            const SizedBox(height: 20),
-            const Divider(thickness: 1, height: 30),
-            // Arapça Metin Toggle
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.language,
-                        color: Color(0xFF2A89A5), size: 28),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.crossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Arapça Metin',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Axiforma',
-                          ),
-                        ),
-                        Text(
-                          'Arapça metni göster/gizle',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                            fontFamily: 'Axiforma',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Obx(
-                  () => Switch(
+              Obx(
+                () => SizedBox(
+                  height: 35,
+                  child: Switch(
                     value: homePageController.arapcametin.value,
                     onChanged: (value) {
                       homePageController.arapcametin.value = value;
@@ -1802,42 +1803,45 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     activeThumbColor: const Color(0xFF2A89A5),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            // Dipnotlar Toggle
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.notes, color: Color(0xFF2A89A5), size: 28),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Dipnotlar',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Axiforma',
-                          ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          // Dipnotlar Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.notes, color: Color(0xFF2A89A5), size: 24),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Dipnotlar',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Axiforma',
                         ),
-                        Text(
-                          'Dipnotları göster/gizle',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                            fontFamily: 'Axiforma',
-                          ),
+                      ),
+                      Text(
+                        'Dipnotları göster/gizle',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                          fontFamily: 'Axiforma',
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-                Obx(
-                  () => Switch(
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Obx(
+                () => SizedBox(
+                  height: 35,
+                  child: Switch(
                     value: homePageController.dipnotlar.value,
                     onChanged: (value) {
                       homePageController.dipnotlar.value = value;
@@ -1845,11 +1849,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     activeThumbColor: const Color(0xFF2A89A5),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+        ],
       ),
     );
   }
@@ -1865,7 +1869,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
       children: [
         Row(
           children: [
-            const Icon(Icons.format_size, color: Color(0xFF2A89A5), size: 28),
+            const Icon(Icons.format_size, color: Color(0xFF2A89A5), size: 24),
             const SizedBox(width: 15),
             Expanded(
               child: Column(
@@ -1874,7 +1878,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Axiforma',
                     ),
@@ -1883,7 +1887,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                     () => Text(
                       '${value.value.toInt()} Punto',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         color: Colors.grey[600],
                         fontFamily: 'Axiforma',
                       ),
