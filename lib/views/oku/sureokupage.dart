@@ -718,118 +718,128 @@ class _SureOkuPageState extends State<SureOkuPage> {
                             width: 10,
                           ),
                           Expanded(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton2(
-                                customButton: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w, vertical: 8.h),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white.withOpacity(0.08),
-                                    border: Border.all(
-                                      color: Colors.white.withOpacity(0.12),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              SureAdi,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize:
-                                                    SureAdi == "Hurufu Mukattaa"
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    customButton: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w, vertical: 8.h),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.white.withOpacity(0.08),
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.12),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  SureAdi,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: SureAdi ==
+                                                            "Hurufu Mukattaa"
                                                         ? 18
                                                         : 22,
-                                                fontFamily: 'Axiforma',
-                                                fontWeight: FontWeight.w800,
-                                                height: 1.1,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            if (_verses.isNotEmpty)
-                                              Text(
-                                                '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.white
-                                                      .withOpacity(0.7),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Axiforma',
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.1,
+                                                    fontFamily: 'Axiforma',
+                                                    fontWeight: FontWeight.w800,
+                                                    height: 1.1,
+                                                  ),
                                                 ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: Colors.white.withOpacity(0.7),
-                                        size: 25,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                items: sureler.asMap().entries.map((entry) {
-                                  int index = entry.key;
-                                  String sure = entry.value;
-                                  return DropdownMenuItem<String>(
-                                    value: sure,
-                                    child: Center(
-                                      child: Text(
-                                        "${index + 1}. $sure",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: ColorConstants.primaryColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Axiforma',
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                                const SizedBox(height: 2),
+                                                if (_verses.isNotEmpty)
+                                                  Text(
+                                                    '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.white
+                                                          .withOpacity(0.7),
+                                                      fontSize: 14,
+                                                      fontFamily: 'Axiforma',
+                                                      fontWeight: FontWeight.w500,
+                                                      height: 1.1,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color:
+                                                Colors.white.withOpacity(0.7),
+                                            size: 25,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                }).toList(),
-                                 onChanged: (String? value) {
-                                  setState(() {
-                                    int selectedIndex = sureler.indexOf(value!);
-                                    String name = value.split('(')[0].trim();
-                                    Get.offAndToNamed(
-                                        NavigationConstants.sureOkuPage,
-                                        arguments: [
-                                          name,
-                                          1,
-                                          selectedIndex + 1
-                                        ]);
-                                  });
-                                },
-                                dropdownStyleData: DropdownStyleData(
-                                  maxHeight: 600.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    color: Colors.white.withOpacity(0.9),
+                                    items: sureler.asMap().entries.map((entry) {
+                                      int index = entry.key;
+                                      String sure = entry.value;
+                                      return DropdownMenuItem<String>(
+                                        value: sure,
+                                        child: Center(
+                                          child: Text(
+                                            "${index + 1}. $sure",
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color:
+                                                  ColorConstants.primaryColor,
+                                              fontSize: 18,
+                                              fontFamily: 'Axiforma',
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        int selectedIndex =
+                                            sureler.indexOf(value!);
+                                        String name =
+                                            value.split('(')[0].trim();
+                                        Get.offAndToNamed(
+                                            NavigationConstants.sureOkuPage,
+                                            arguments: [
+                                              name,
+                                              1,
+                                              selectedIndex + 1
+                                            ]);
+                                      });
+                                    },
+                                    dropdownStyleData: DropdownStyleData(
+                                      maxHeight: 600.h,
+                                      width: constraints.maxWidth,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: Colors.white.withOpacity(0.9),
+                                      ),
+                                      offset: const Offset(0, 8),
+                                      scrollbarTheme: ScrollbarThemeData(
+                                        radius: const Radius.circular(40),
+                                        thickness:
+                                            WidgetStateProperty.all<double>(6),
+                                        thumbVisibility:
+                                            WidgetStateProperty.all<bool>(true),
+                                      ),
+                                    ),
+                                    menuItemStyleData: const MenuItemStyleData(
+                                      height: 48,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 14),
+                                    ),
                                   ),
-                                  offset: const Offset(0, 8),
-                                  scrollbarTheme: ScrollbarThemeData(
-                                    radius: const Radius.circular(40),
-                                    thickness:
-                                        WidgetStateProperty.all<double>(6),
-                                    thumbVisibility:
-                                        WidgetStateProperty.all<bool>(true),
-                                  ),
-                                ),
-                                menuItemStyleData: const MenuItemStyleData(
-                                  height: 48,
-                                  padding: EdgeInsets.symmetric(horizontal: 14),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                           ),
                           const SizedBox(
