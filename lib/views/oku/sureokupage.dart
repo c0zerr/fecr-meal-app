@@ -33,6 +33,7 @@ class SureOkuPage extends StatefulWidget {
 }
 
 class _SureOkuPageState extends State<SureOkuPage> {
+  HomePageController homePageController = Get.find();
   int? surahId;
 
   String sureadi = (Get.arguments != null && Get.arguments.length > 0)
@@ -64,6 +65,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
       });
     }
     super.initState();
+  }
+
   // Karakter normalizasyonu
   String _normalize(String text) {
     return text
