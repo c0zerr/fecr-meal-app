@@ -2158,7 +2158,7 @@ List<String> sureler = [
   "Kevser    (3)",
   "Kâfirûn    (6)",
   "Nasr    (3)",
-  "Tebbet    (5)",
+  "Mesed    (5)",
   "İhlâs    (4)",
   "Felâk    (5)",
   "Nâs    (6)"
