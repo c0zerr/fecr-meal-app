@@ -11,6 +11,8 @@ from pathlib import Path
 TANZIL_DOWNLOAD_URL = "https://tanzil.net/pub/download/v1.0/download.php"
 BASMALA_SIMPLE = "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
 
+DEFAULT_DIYANET_JSON = "assets/json/quran_full_ydk_31mart26.json"
+
 
 ARABIC_INDIC_DIGITS = str.maketrans(
     {
@@ -57,6 +59,32 @@ def parse_a_tag(meal: str) -> list[int] | None:
                 return None
             out.append(int(p))
     return out or None
+
+
+def load_diyanet_id_map_from_json(diyanet_data) -> dict[int, str]:
+    out: dict[int, str] = {}
+    if not isinstance(diyanet_data, list):
+        return out
+    for sura_obj in diyanet_data:
+        if not isinstance(sura_obj, dict):
+            continue
+        verses = sura_obj.get("verses", [])
+        if not isinstance(verses, list):
+            continue
+        for v in verses:
+            if not isinstance(v, dict):
+                continue
+            ayetno = int(v.get("ayetno") or 0)
+            if ayetno == 0:
+                continue
+            vid = v.get("id")
+            if not isinstance(vid, int):
+                continue
+            metin = v.get("metin")
+            if metin is None:
+                continue
+            out[vid] = str(metin)
+    return out
 
 
 def download_tanzil_txt2(
@@ -149,6 +177,17 @@ def main() -> int:
         help="Path to quran_full.json",
     )
     ap.add_argument(
+        "--source",
+        default="diyanet-json",
+        choices=["diyanet-json", "tanzil"],
+        help="Arabic text source",
+    )
+    ap.add_argument(
+        "--diyanet-json",
+        default=DEFAULT_DIYANET_JSON,
+        help="Path to Diyanet/YDK quran JSON (source for metin)",
+    )
+    ap.add_argument(
         "--tanzil-type",
         default="simple",
         help="Tanzil quranType (simple, uthmani, etc.)",
@@ -170,41 +209,85 @@ def main() -> int:
         print(f"File not found: {quran_json_path}", file=sys.stderr)
         return 2
 
-    if args.source_txt2:
-        raw = Path(args.source_txt2).read_text(encoding="utf-8", errors="replace")
-    else:
-        raw = download_tanzil_txt2(
-            quran_type=args.tanzil_type,
-            marks=not args.no_marks,
-            sajdah=not args.no_sajdah,
-            rub=not args.no_rub,
-            alef=not args.no_alef,
-        )
-
-    tanzil_map = load_tanzil_map_from_txt2(raw)
-    if (1, 1) not in tanzil_map or (2, 1) not in tanzil_map:
-        print("Tanzil mapping looks incomplete; aborting.", file=sys.stderr)
-        return 3
-
     data = json.loads(quran_json_path.read_text(encoding="utf-8"))
     changed = 0
     total = 0
 
-    for sura_obj in data:
-        verses = sura_obj.get("verses", [])
-        for v in verses:
-            if not isinstance(v, dict):
-                continue
-            total += 1
-            sura = int(v.get("idsure") or sura_obj.get("idsureler") or 0)
-            ayetno = int(v.get("ayetno") or 0)
-            if ayetno == 0:
-                continue
-            ayahs = parse_a_tag(v.get("meal", "")) or [ayetno]
-            new_metin = build_metin(sura=sura, ayah_numbers=ayahs, tanzil_map=tanzil_map)
-            if v.get("metin") != new_metin:
-                v["metin"] = new_metin
-                changed += 1
+    if args.source == "diyanet-json":
+        diyanet_path = Path(args.diyanet_json).resolve()
+        if not diyanet_path.exists():
+            print(f"File not found: {diyanet_path}", file=sys.stderr)
+            return 2
+        diyanet_data = json.loads(diyanet_path.read_text(encoding="utf-8"))
+        diyanet_id_map = load_diyanet_id_map_from_json(diyanet_data)
+        if len(diyanet_id_map) < 6000:
+            print("Diyanet/YDK mapping looks incomplete; aborting.", file=sys.stderr)
+            return 3
+
+        missing_ids: list[int] = []
+
+        for sura_obj in data:
+            verses = sura_obj.get("verses", [])
+            for v in verses:
+                if not isinstance(v, dict):
+                    continue
+                total += 1
+                ayetno = int(v.get("ayetno") or 0)
+                if ayetno == 0:
+                    continue
+                vid = v.get("id")
+                if not isinstance(vid, int):
+                    continue
+                new_metin = diyanet_id_map.get(vid)
+                if new_metin is None:
+                    missing_ids.append(vid)
+                    continue
+                if v.get("metin") != new_metin:
+                    v["metin"] = new_metin
+                    changed += 1
+
+        if missing_ids:
+            missing_ids.sort()
+            sample = ", ".join(str(x) for x in missing_ids[:10])
+            print(
+                f"Missing {len(missing_ids)} verse ids in Diyanet/YDK source. Sample: {sample}",
+                file=sys.stderr,
+            )
+            return 4
+    else:
+        if args.source_txt2:
+            raw = Path(args.source_txt2).read_text(encoding="utf-8", errors="replace")
+        else:
+            raw = download_tanzil_txt2(
+                quran_type=args.tanzil_type,
+                marks=not args.no_marks,
+                sajdah=not args.no_sajdah,
+                rub=not args.no_rub,
+                alef=not args.no_alef,
+            )
+
+        tanzil_map = load_tanzil_map_from_txt2(raw)
+        if (1, 1) not in tanzil_map or (2, 1) not in tanzil_map:
+            print("Tanzil mapping looks incomplete; aborting.", file=sys.stderr)
+            return 3
+
+        for sura_obj in data:
+            verses = sura_obj.get("verses", [])
+            for v in verses:
+                if not isinstance(v, dict):
+                    continue
+                total += 1
+                sura = int(v.get("idsure") or sura_obj.get("idsureler") or 0)
+                ayetno = int(v.get("ayetno") or 0)
+                if ayetno == 0:
+                    continue
+                ayahs = parse_a_tag(v.get("meal", "")) or [ayetno]
+                new_metin = build_metin(
+                    sura=sura, ayah_numbers=ayahs, tanzil_map=tanzil_map
+                )
+                if v.get("metin") != new_metin:
+                    v["metin"] = new_metin
+                    changed += 1
 
     if args.dry_run:
         print(f"Would update {changed} / {total} verse records.")
@@ -219,4 +302,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
