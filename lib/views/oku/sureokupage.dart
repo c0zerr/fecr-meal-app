@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:fecrmeal/core/constants/color_constants.dart';
-import 'package:fecrmeal/core/constants/customScrollbar.dart';
+import 'package:fecrmeal/core/data/sureList.dart';
+import 'package:fecrmeal/core/data/surelist2.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:fecrmeal/core/controller/homepageController.dart';
 import 'package:fecrmeal/core/model/suremodel.dart';
@@ -22,6 +21,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fecrmeal/core/services/quran_data_manager.dart';
+import 'package:fecrmeal/core/constants/color_constants.dart';
+import 'package:fecrmeal/core/constants/customScrollbar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class SureOkuPage extends StatefulWidget {
   const SureOkuPage({
@@ -402,6 +404,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
         SureModel sureModel = SureModel.fromJson(surahData);
         String sureAdiStr = surahData['sure_adi'] ?? surahData['sureadi'] ?? "";
         SureAdi = sureAdiStr;
+        surahId = surahData['idsureler'] ?? surahId;
         setState(() {
           _verses = sureModel.verses!;
         });
@@ -485,6 +488,197 @@ class _SureOkuPageState extends State<SureOkuPage> {
         print("ayetno: $ayetno");
       }
     });
+  }
+
+  RxList<Map<String, dynamic>> searchResults = <Map<String, dynamic>>[].obs;
+
+  void _onSearchChanged(String query) {
+    if (query.isEmpty) {
+      searchResults.clear();
+      return;
+    }
+
+    final normalizedQuery = _normalize(query);
+    final parts = normalizedQuery.split(' ');
+    final surahPart = parts[0];
+    String? versePart;
+    if (parts.length > 1 && int.tryParse(parts.last) != null) {
+      versePart = parts.last;
+    }
+
+    final results = <Map<String, dynamic>>[];
+
+    // Filter surahs with ID support
+    final matchedSurahEntries = mushafSirasi.asMap().entries.where((entry) {
+      final surahNameNormalized = _normalize(entry.value['name'].toString());
+      return surahNameNormalized.contains(surahPart);
+    }).toList();
+
+    for (var entry in matchedSurahEntries) {
+      var index = entry.key;
+      var surah = entry.value;
+      int surahId = index + 1;
+
+      if (versePart != null) {
+        // Check verse count
+        final verseNum = int.parse(versePart);
+        if (verseNum > 0 && verseNum <= surah['verseCount']) {
+          results.add({
+            'name': surah['name'],
+            'verse': verseNum,
+            'id': surahId,
+            'type': 'verse', // Specific verse
+            'label': '${surah['name']} $verseNum. Ayet'
+          });
+        }
+      } else {
+        // Suggest Surah itself (goes to verse 1)
+        results.add({
+          'name': surah['name'],
+          'verse': 1,
+          'id': surahId,
+          'type': 'surah',
+          'label': '${surah['name']} Suresi'
+        });
+      }
+    }
+
+    searchResults.value = results;
+  }
+
+  void _showAyeteGitModal(BuildContext context) {
+    searchResults.clear(); // Reset search results
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.75,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 10.h),
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            SizedBox(height: 20.h),
+            const Text(
+              "Ayete Git",
+              style: TextStyle(
+                color: ColorConstants.primaryColor,
+                fontSize: 20,
+                fontFamily: 'Axiforma',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: TextField(
+                onChanged: _onSearchChanged,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: 'Sure / Ayet Ara (örnek: Bakara, Enbiya 34)',
+                  labelStyle: const TextStyle(
+                    color: ColorConstants.primaryColor,
+                    fontFamily: 'Axiforma',
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(
+                      color: ColorConstants.primaryColor.withOpacity(0.5),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                      color: ColorConstants.primaryColor,
+                      width: 2,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: ColorConstants.primaryColor.withOpacity(0.05),
+                ),
+              ),
+            ),
+            SizedBox(height: 15.h),
+            Expanded(
+              child: Obx(() {
+                if (searchResults.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      alignment: WrapAlignment.start,
+                      children: searchResults.map((result) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context); // Close modal
+                            Get.offAndToNamed(
+                              NavigationConstants.sureOkuPage,
+                              arguments: [
+                                result['name'],
+                                result['verse'],
+                                result['id']
+                              ],
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 12.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2A89A5),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  result['label'],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Axiforma',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 14,
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              }),
+            ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
   }
 
   bool isContainerVisible = false;
@@ -625,12 +819,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
             ),
           ),
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: toggleContainerVisibility,
-        //     icon: Icon(Icons.search, color: Colors.white, size: 35),
-        //   )
-        // ],
+        actions: [
+          IconButton(
+            onPressed: () => _showAyeteGitModal(context),
+            icon: const Icon(Icons.exit_to_app_rounded, color: Colors.white, size: 30),
+          )
+        ],
         centerTitle: true,
         backgroundColor: ColorConstants.primaryColor,
         title: GestureDetector(
@@ -741,18 +935,32 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Text(
-                                                  SureAdi,
+                                                RichText(
                                                   textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: SureAdi ==
-                                                            "Hurufu Mukattaa"
-                                                        ? 18
-                                                        : 22,
-                                                    fontFamily: 'Axiforma',
-                                                    fontWeight: FontWeight.w800,
-                                                    height: 1.1,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      if (surahId != null && SureAdi != "Hurufu Mukattaa")
+                                                        TextSpan(
+                                                          text: "$surahId. ",
+                                                          style: TextStyle(
+                                                            color: Colors.white.withOpacity(0.7),
+                                                            fontSize: 22,
+                                                            fontFamily: 'Axiforma',
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.1,
+                                                          ),
+                                                        ),
+                                                      TextSpan(
+                                                        text: SureAdi,
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: SureAdi == "Hurufu Mukattaa" ? 18 : 22,
+                                                          fontFamily: 'Axiforma',
+                                                          fontWeight: FontWeight.w800,
+                                                          height: 1.1,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                                 const SizedBox(height: 2),
