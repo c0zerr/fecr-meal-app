@@ -452,11 +452,12 @@ class _HomePageState extends State<HomePage> {
                             height: 55.h,
                             width: double.infinity,
                             decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.08),
                               border: Border.all(
                                 width: 1,
-                                color: const Color(0xff60A6BB),
+                                color: Colors.white.withOpacity(0.12),
                               ),
-                              borderRadius: BorderRadius.circular(10.h),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                             child: ElevatedButton(
                               onPressed: () {
@@ -478,7 +479,7 @@ class _HomePageState extends State<HomePage> {
                                   const Text(
                                     "Ayete Git",
                                     style: TextStyle(
-                                      color: Color(0xFF60A6BB),
+                                      color: Colors.white,
                                       fontSize: 18,
                                       fontFamily: 'Axiforma',
                                       fontWeight: FontWeight.w600,
@@ -486,9 +487,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                   SizedBox(width: 10.w),
-                                  const Icon(
+                                  Icon(
                                     Icons.arrow_forward_ios_rounded,
-                                    color: Color(0xff60A6BB),
+                                    color: Colors.white.withOpacity(0.7),
                                     size: 20,
                                   ),
                                 ],
@@ -506,7 +507,7 @@ class _HomePageState extends State<HomePage> {
                               const Text(
                                 "Sure Listesi :",
                                 style: TextStyle(
-                                  color: Color(0xFF60A6BB),
+                                  color: Colors.white,
                                   fontSize: 18,
                                   fontFamily: 'Axiforma',
                                   fontWeight: FontWeight.w600,
@@ -524,11 +525,12 @@ class _HomePageState extends State<HomePage> {
                                     constraints: BoxConstraints(
                                         minWidth: 160.w, minHeight: 46.h),
                                     decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.08),
                                       border: Border.all(
                                         width: 1,
-                                        color: const Color(0xff60a6bb),
+                                        color: Colors.white.withOpacity(0.12),
                                       ),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: IntrinsicWidth(
                                       child: TextButton(
@@ -552,17 +554,18 @@ class _HomePageState extends State<HomePage> {
                                                   ? "Mushaf Sırası"
                                                   : "Nüzul Sırası",
                                               style: const TextStyle(
-                                                color: Color(0xFF60A6BB),
+                                                color: Colors.white,
                                                 fontSize: 16,
                                                 fontFamily: 'Axiforma',
-                                                fontWeight: FontWeight.w400,
+                                                fontWeight: FontWeight.w500,
                                                 height: 0,
                                               ),
                                             ),
                                             SizedBox(width: 5.w),
-                                            Image.asset(
-                                              "assets/icon/updown.png",
-                                              height: 20.h,
+                                            Icon(
+                                              Icons.swap_vert_rounded,
+                                              color: Colors.white.withOpacity(0.7),
+                                              size: 22,
                                             ),
                                           ],
                                         ),

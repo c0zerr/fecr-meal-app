@@ -31,6 +31,12 @@ class ContactUsPage extends StatelessWidget {
       try {
         final response = await dio.post(
           'https://api.emailjs.com/api/v1.0/email/send',
+          options: dio_pkg.Options(
+            headers: {
+              'origin': 'http://localhost',
+              'Content-Type': 'application/json',
+            },
+          ),
           data: {
             'service_id': serviceId,
             'template_id': templateId,

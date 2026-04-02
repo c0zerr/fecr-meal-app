@@ -47,3 +47,10 @@ android/app/upload-keystore.jks
 android/key.properties
 gradle-dist.zip
 gradle-8.10.2/
+
+# Secrets
+*.p8
+assets/AuthKey.p8
+
+# Local update artifacts
+assets/json/quran_full.backup_*.json

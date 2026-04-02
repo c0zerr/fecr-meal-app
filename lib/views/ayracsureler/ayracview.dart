@@ -1,7 +1,6 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/core/constants/navigation_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
@@ -214,229 +213,128 @@ class _AyracSurePageState extends State<AyracSurePage> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
+                                      String formatSureAdiForDisplay(String value) {
+                                        final v = value.trim();
+                                        if (v.isEmpty) return value;
+                                        final first = v[0];
+                                        final String upperFirst;
+                                        if (first == 'i') {
+                                          upperFirst = 'İ';
+                                        } else if (first == 'ı') {
+                                          upperFirst = 'I';
+                                        } else {
+                                          upperFirst = first.toUpperCase();
+                                        }
+                                        return upperFirst + v.substring(1);
+                                      }
+
+                                      const primaryColor = Color(0xFF2A89A5);
+                                      const dangerColor = Color(0xFFE86014);
                                       return AlertDialog(
-                                          surfaceTintColor: Colors.white,
-                                          // backgroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
+                                        surfaceTintColor: Colors.white,
+                                        backgroundColor: const Color(0xFFF3F3F5),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+                                        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                                        contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                                        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                                        title: const Text(
+                                          'AYRAÇ',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
                                           ),
-                                          content: Column(
+                                        ),
+                                        content: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.9,
+                                          child: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              const SizedBox(
-                                                height: 25,
+                                              const Divider(
+                                                color: Colors.black26,
+                                                thickness: 1,
+                                                height: 1,
                                               ),
+                                              const SizedBox(height: 18),
+                                              Text(
+                                                "${formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet",
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 18,
+                                                  height: 1.25,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
                                               const Text(
-                                                'AYRAÇ',
-                                                textAlign: TextAlign.center,
+                                                "Ayraç Kaldırılsın mı?",
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Axiforma',
-                                                  fontWeight: FontWeight.w700,
-                                                  height: 0,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 18,
+                                                  height: 1.25,
                                                 ),
                                               ),
-                                              const SizedBox(height: 15),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 25.w),
-                                                child: Container(
-                                                  width: 271,
-                                                  decoration: const ShapeDecoration(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: BorderSide(
-                                                        width: 1,
-                                                        strokeAlign: BorderSide
-                                                            .strokeAlignCenter,
+                                              const SizedBox(height: 18),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: OutlinedButton(
+                                                    onPressed: () => Navigator.pop(context),
+                                                    style: OutlinedButton.styleFrom(
+                                                      foregroundColor: primaryColor,
+                                                      side: const BorderSide(color: primaryColor, width: 1.5),
+                                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                                      textStyle: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(14),
                                                       ),
                                                     ),
+                                                    child: const Text("HAYIR"),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 25),
-                                              SizedBox(
-                                                width: 271,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    RichText(
-                                                      text: TextSpan(
-                                                        text:
-                                                            "$sureadi Suresi, ",
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                              'Axiforma',
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
-                                                        children: [
-                                                          TextSpan(
-                                                            text:
-                                                                "$ayetno. Ayet",
-                                                            style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    const Text(
-                                                      "Ayraç Kaldırılsın mı?",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: FilledButton(
+                                                    onPressed: () {
+                                                      _deleteSavedAyah(index);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: FilledButton.styleFrom(
+                                                      backgroundColor: dangerColor,
+                                                      foregroundColor: Colors.white,
+                                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                                      textStyle: const TextStyle(
                                                         fontSize: 16,
-                                                        fontFamily: 'Axiforma',
+                                                        fontWeight: FontWeight.w800,
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(14),
                                                       ),
                                                     ),
-                                                  ],
+                                                    child: const Text("EVET"),
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 25),
-                                              Container(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        _deleteSavedAyah(index);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: ConstrainedBox(
-                                                        constraints: const BoxConstraints(
-                                                            minWidth:
-                                                                100), // Minimum genişlik belirledik
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      25,
-                                                                  vertical: 20),
-                                                          clipBehavior:
-                                                              Clip.antiAlias,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: const Color(
-                                                                0xFFE86014),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                          ),
-                                                          child: const Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                'EVET',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  height: 0,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 30),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: ConstrainedBox(
-                                                        constraints: const BoxConstraints(
-                                                            minWidth:
-                                                                100), // Aynı minimum genişlik
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      25,
-                                                                  vertical: 20),
-                                                          clipBehavior:
-                                                              Clip.antiAlias,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: const Color(
-                                                                0xFFE86014),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                          ),
-                                                          child: const Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                'HAYIR',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontFamily:
-                                                                      'Axiforma',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  height: 0,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ));
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     },
                                   );
                                   // _deleteSavedAyah(index);
@@ -470,7 +368,7 @@ class _AyracSurePageState extends State<AyracSurePage> {
                               text: metin,
                               style: const TextStyle(
                                 fontSize: 30,
-                                fontFamily: 'Kuranfont',
+                                fontFamily: 'KuranFont',
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xFF2A89A5),
                               ),

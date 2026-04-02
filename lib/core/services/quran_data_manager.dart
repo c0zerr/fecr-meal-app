@@ -27,10 +27,12 @@ class QuranDataManager {
 
       // 2. Cihazda kayıtlı versiyonu al
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int localVersion = prefs.getInt('quran_version') ?? 0;
+      int localVersion = await getLocalVersion();
 
       // 3. Sunucudaki versiyon daha yeniyse, yeni veriyi indir
       if (serverVersion > localVersion) {
+        // Web'de 10MB+ veriyi LocalStorage'a (SharedPreferences) yazmak QuotaExceededError verir.
+        // Bu yüzden Web'de sadece indirip kontrol ediyoruz, kaydı tarayıcı cache'ine bırakıyoruz.
         var responseJson = await dio.get(
           "$baseUrl$quranFileName",
           onReceiveProgress: (received, total) {
@@ -39,17 +41,17 @@ class QuranDataManager {
             }
           },
         );
-        String jsonContent =
-            responseJson.data is String ? responseJson.data : jsonEncode(responseJson.data);
 
-        if (kIsWeb) {
-          await prefs.setString(webJsonCacheKey, jsonContent);
-        } else {
+        if (!kIsWeb) {
+          // Mobil: Dosya sistemine kaydet
+          String jsonContent =
+              responseJson.data is String ? responseJson.data : jsonEncode(responseJson.data);
           var dir = await getApplicationDocumentsDirectory();
           File file = File("${dir.path}/$quranFileName");
           await file.writeAsString(jsonContent);
         }
 
+        // Versiyonu her durumda kaydet
         await prefs.setInt('quran_version', serverVersion);
         print("Kuran verisi güncellendi! Eski: $localVersion, Yeni: $serverVersion");
         return "updated";
@@ -58,7 +60,7 @@ class QuranDataManager {
         return "uptodate";
       }
     } catch (e) {
-      print("Kuran verileri güncellenirken hata oluştu (CORS, İnternet yok veya yanlış URL): $e");
+      print("Kuran verileri güncellenirken hata oluştu: $e");
       return "error";
     }
   }
@@ -69,12 +71,15 @@ class QuranDataManager {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       if (kIsWeb) {
-        String? cachedJson = prefs.getString(webJsonCacheKey);
-        if (cachedJson != null) {
-          print("Web: Kuran verisi önbellekten (LocalStorage) okunuyor.");
-          return cachedJson;
+        // Web: Eğer güncel versiyon varsa, dosyayı URL'den çekiyoruz.
+        // Tarayıcı bunu otomatik olarak kendi cache'inden getirecektir.
+        if (prefs.containsKey('quran_version')) {
+          print("Web: Kuran verisi URL'den çekiliyor (Tarayıcı önbelleği kullanılır).");
+          var response = await Dio().get("$baseUrl$quranFileName");
+          return response.data is String ? response.data : jsonEncode(response.data);
         }
       } else {
+        // Mobil: Dosya sisteminden oku
         var dir = await getApplicationDocumentsDirectory();
         File file = File("${dir.path}/$quranFileName");
 
@@ -84,7 +89,7 @@ class QuranDataManager {
         }
       }
     } catch (e) {
-      print("Önbellek okunamadı: $e");
+      print("Önbellek okunamadı veya ağ hatası: $e");
     }
 
     print("Kuran verisi gömülü asset'ten okunuyor.");
@@ -92,14 +97,13 @@ class QuranDataManager {
   }
 
   /// Cihazda kayıtlı yerel versiyon numarasını döner.
-  /// SharedPreferences'ta kayıt yoksa assets/json/version.json'dan okur.
   static Future<int> getLocalVersion() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? saved = prefs.getInt('quran_version');
-    if (saved != null) return saved;
-
-    // Assets'teki version.json'dan oku (fabrika değeri)
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? saved = prefs.getInt('quran_version');
+      if (saved != null) return saved;
+
+      // Assets'teki version.json'dan oku (fabrika değeri)
       String raw = await rootBundle.loadString('assets/json/version.json');
       var decoded = jsonDecode(raw);
       return decoded['version'] ?? 0;
@@ -123,9 +127,10 @@ class QuranDataManager {
   /// İndirilmiş veri var mı kontrol eder.
   static Future<bool> isDataDownloaded() async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       if (kIsWeb) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        return prefs.containsKey(webJsonCacheKey);
+        // Web'de sadece versiyon kaydı var mı diye bakıyoruz
+        return prefs.containsKey('quran_version');
       } else {
         var dir = await getApplicationDocumentsDirectory();
         File file = File("${dir.path}/$quranFileName");

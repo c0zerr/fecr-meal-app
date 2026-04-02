@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 // dart:io ve path_provider yalnızca mobil/desktop'ta çalışır.
 // Web yapısında bu importlar derleme hatasına neden olur,

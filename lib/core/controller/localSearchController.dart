@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:fecrmeal/core/services/quran_data_manager.dart';
 

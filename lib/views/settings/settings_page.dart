@@ -69,35 +69,6 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<void> _deleteData() async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: ColorConstants.primaryColor,
-        title: const Text("Veriyi Sil", style: TextStyle(color: Colors.white)),
-        content: const Text(
-          "İndirilmiş Meal verisi silinecek. Emin misiniz?",
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text("İptal", style: TextStyle(color: Colors.white70)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text("Sil", style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true) return;
-    await QuranDataManager.deleteLocalData();
-    await _loadVersionInfo();
-    if (!mounted) return;
-    _showSnack("Yerel Meal verisi silindi.", Colors.orange);
-  }
-
   void _showSnack(String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -270,21 +241,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     Expanded(
                       child: _buildDownloadButton(),
                     ),
-                    const SizedBox(width: 10),
-                    // Sil butonu (sadece mobil + indirilmişse)
-                    if (!kIsWeb && _isDownloaded)
-                      OutlinedButton.icon(
-                        onPressed: _isDownloading ? null : _deleteData,
-                        icon: const Icon(Icons.delete_outline, size: 18),
-                        label: const Text("Sil"),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.redAccent,
-                          side: const BorderSide(color: Colors.redAccent),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        ),
-                      ),
                   ],
                 ),
               ],
@@ -483,7 +439,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: const Color(0xff60A6BB),
+          activeThumbColor: const Color(0xff60A6BB),
         ),
       ],
     );
