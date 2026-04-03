@@ -755,11 +755,11 @@ class _SureOkuPageState extends State<SureOkuPage> {
     return '1';
   }
 
-  List<TextSpan> _buildTextSpans(String text) {
+  List<InlineSpan> _buildTextSpans(String text) {
     final regex = RegExp(r'\[([^\]]+)\]');
     final matches = regex.allMatches(text);
 
-    List<TextSpan> spans = [];
+    List<InlineSpan> spans = [];
     int lastMatchEnd = 0;
 
     for (var match in matches) {
@@ -779,17 +779,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
         ));
       }
 
-      spans.add(TextSpan(
-        text: citation,
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: homePageController.dipnotPuntosu.value,
-          fontFamily: 'Source Serif Pro',
-          fontWeight: FontWeight.w700,
-          height: 0,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
+      spans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          onTap: () {
             final parts = citation.split(' ');
             if (parts.length >= 2) {
               final text = parts.sublist(0, parts.length - 1).join(' ');
@@ -820,6 +813,24 @@ class _SureOkuPageState extends State<SureOkuPage> {
               print("Unexpected format: $citation");
             }
           },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+            decoration: BoxDecoration(
+              color: ColorConstants.primaryColor.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: Text(
+              citation,
+              style: TextStyle(
+                color: ColorConstants.primaryColor,
+                fontSize: homePageController.dipnotPuntosu.value,
+                fontFamily: 'Source Serif Pro',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
       ));
 
       lastMatchEnd = end;
@@ -878,9 +889,17 @@ class _SureOkuPageState extends State<SureOkuPage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () => _showAyeteGitModal(context),
-            icon: const Icon(Icons.menu_book_outlined, color: Colors.white, size: 30),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () => _showAyeteGitModal(context),
+              icon: SvgPicture.asset(
+                "assets/icon/ayet_icon.svg",
+                color: Colors.white,
+                width: 30,
+                height: 30,
+              ),
+            ),
           )
         ],
         centerTitle: true,
@@ -1473,19 +1492,20 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       icon: Icons.share,
                                       label: "Paylaş",
                                       onTap: () async {
-                                        // Meali temizle (Köşeli parantezleri kaldır)
-                                        String meal =
-                                            _verses[ayetno].meal ?? "";
-                                        meal = meal.replaceAll(
-                                            RegExp(r'\[.*?\]'), '');
+                                        if (kIsWeb) return;
 
-                                        // Paylaşılacak metni oluştur
-                                        final shareText =
-                                            "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$meal\n\nFecr Meal Uygulaması";
+                                        String meal = _verses[ayetno].meal ?? "";
+                                        meal = meal.replaceAll(RegExp(r'\[.*?\]'), '');
+
+                                        String metin = _verses[ayetno].metin ?? "";
+                                        if (metin.isNotEmpty) {
+                                          metin = moveSeparatorToFront(metin);
+                                        }
+
+                                        final shareText = "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
 
                                         await Share.share(shareText,
-                                            subject:
-                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet");
+                                            subject: "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet");
                                       },
                                     ),
                                   ],
@@ -1809,19 +1829,20 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   ),
                   GestureDetector(
                       onTap: () async {
-                        String meal = _verses[ayetno].meal!;
-                        meal = meal.replaceAll(RegExp(r'\[.*?\]'), '');
-                        _verses[ayetno].meal = meal;
+                        if (kIsWeb) return;
 
-                        String metin = _verses[ayetno].metin!;
+                        String meal = _verses[ayetno].meal ?? "";
+                        meal = meal.replaceAll(RegExp(r'\[.*?\]'), '');
+
+                        String metin = _verses[ayetno].metin ?? "";
                         if (metin.isNotEmpty) {
-                          metin = metin[metin.length - 1] +
-                              metin.substring(0, metin.length - 1);
+                          metin = moveSeparatorToFront(metin);
                         }
 
-                        await Share.share(
-                          "${_formatSureAdiForDisplay(sureadi)} Suresi $metin  ${_verses[ayetno].meal}",
-                        );
+                        final shareText = "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
+
+                        await Share.share(shareText,
+                            subject: "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet");
                       },
                       child: bottomSheetWidget(asset: "share", text: "Paylaş")),
                   SizedBox(

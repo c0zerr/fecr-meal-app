@@ -1,7 +1,6 @@
 import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:fecrmeal/core/controller/homepageController.dart';
 import 'package:fecrmeal/core/services/quran_data_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -61,9 +60,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (!mounted) return;
     if (result == "updated") {
-      _showSnack("Meal başarıyla güncellendi.", Colors.green);
+      _showSnack("Meal başarı ile güncellendi.", Colors.green);
     } else if (result == "uptodate") {
-      _showSnack("Meal zaten güncel.", Colors.blue);
+      _showSnack("Meal başarı ile güncellendi.", Colors.green);
     } else {
       _showSnack("Güncelleme başarısız. İnternet bağlantınızı kontrol edin.", Colors.red);
     }
@@ -257,38 +256,55 @@ class _SettingsPageState extends State<SettingsPage> {
     final bool serverKnown = _serverVersion >= 0;
     final bool isUpToDate = serverKnown && _serverVersion <= _localVersion;
 
-    return Row(
+    Widget statusWidget;
+    if (!serverKnown) {
+      statusWidget = const SizedBox(
+        width: 14,
+        height: 14,
+        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white38),
+      );
+    } else if (isUpToDate) {
+      statusWidget = const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle, color: Colors.greenAccent, size: 16),
+          SizedBox(width: 4),
+          Text("Güncel", style: TextStyle(color: Colors.greenAccent, fontSize: 12)),
+        ],
+      );
+    } else {
+      statusWidget = const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.update, color: Colors.orangeAccent, size: 16),
+          SizedBox(width: 4),
+          Text("Güncelleme var", style: TextStyle(color: Colors.orangeAccent, fontSize: 12)),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.info_outline, color: Colors.white38, size: 16),
-        const SizedBox(width: 6),
-        Text(
-          "Sürüm  Yerel: $_localVersion  |  Sunucu: ${serverKnown ? _serverVersion : '...'}",
-          style: const TextStyle(color: Colors.white54, fontSize: 13),
+        Row(
+          children: [
+            const Icon(Icons.info_outline, color: Colors.white38, size: 16),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                "Sürüm  Yerel: $_localVersion  |  Sunucu: ${serverKnown ? _serverVersion : '...'}",
+                style: const TextStyle(color: Colors.white54, fontSize: 13),
+              ),
+            ),
+          ],
         ),
-        const Spacer(),
-        if (!serverKnown)
-          const SizedBox(
-            width: 14,
-            height: 14,
-            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white38),
-          )
-        else if (isUpToDate)
-          const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.greenAccent, size: 16),
-              SizedBox(width: 4),
-              Text("Güncel", style: TextStyle(color: Colors.greenAccent, fontSize: 12)),
-            ],
-          )
-        else
-          const Row(
-            children: [
-              Icon(Icons.update, color: Colors.orangeAccent, size: 16),
-              SizedBox(width: 4),
-              Text("Güncelleme var",
-                  style: TextStyle(color: Colors.orangeAccent, fontSize: 12)),
-            ],
-          ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            const SizedBox(width: 22),
+            statusWidget,
+          ],
+        ),
       ],
     );
   }
