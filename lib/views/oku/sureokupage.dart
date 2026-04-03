@@ -824,7 +824,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
               citation,
               style: TextStyle(
                 color: ColorConstants.primaryColor,
-                fontSize: homePageController.dipnotPuntosu.value,
+                fontSize: homePageController.dipnotPuntosu.value * 0.85,
                 fontFamily: 'Source Serif Pro',
                 fontWeight: FontWeight.bold,
               ),
@@ -893,12 +893,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () => _showAyeteGitModal(context),
-              icon: SvgPicture.asset(
-                "assets/icon/ayet_icon.svg",
-                color: Colors.white,
-                width: 30,
-                height: 30,
-              ),
+              icon: const Icon(Icons.open_in_new, color: Colors.white, size: 30),
             ),
           )
         ],
@@ -995,6 +990,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                 return DropdownButtonHideUnderline(
                                   child: DropdownButton2(
                                     customButton: Container(
+                                      width: constraints.maxWidth,
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 16.w, vertical: 14.h),
                                       decoration: BoxDecoration(
@@ -1005,14 +1001,13 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                           width: 1,
                                         ),
                                       ),
-                                      child: Row(
+                                      child: Stack(
+                                        alignment: Alignment.center,
                                         children: [
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
                                                 RichText(
                                                   textAlign: TextAlign.center,
                                                   text: TextSpan(
@@ -1064,12 +1059,15 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                                   ),
                                               ],
                                             ),
-                                          ),
-                                          Icon(
-                                            Icons.keyboard_arrow_down_rounded,
-                                            color:
-                                                Colors.white.withOpacity(0.7),
-                                            size: 25,
+                                          Positioned(
+                                            right: 0,
+                                            top: 0,
+                                            bottom: 0,
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down_rounded,
+                                              color: Colors.white.withOpacity(0.7),
+                                              size: 25,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1205,23 +1203,15 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                   padding:
                                       EdgeInsets.only(bottom: 15.h, top: 25),
                                   child: Container(
-                                    width: 260.w,
-                                    height: 70.h,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    decoration: ShapeDecoration(
-                                      color: const Color(0xFF2A89A5),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 24.w, vertical: 14.h),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.12),
+                                        width: 1,
                                       ),
-                                      shadows: const [
-                                        BoxShadow(
-                                          color: Color(0x3F000000),
-                                          blurRadius: 10,
-                                          offset: Offset(0, 8),
-                                          spreadRadius: 0,
-                                        )
-                                      ],
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -1230,34 +1220,22 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        const SizedBox(
-                                          width: 8,
-                                        ),
-                                        Container(
-                                          height: 35,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: const BoxDecoration(),
-                                          child: const Icon(
-                                            Icons.info_outline_rounded,
-                                            size: 30,
-                                            color: Colors.white,
-                                          ),
+                                        const Icon(
+                                          Icons.info_outline_rounded,
+                                          size: 24,
+                                          color: Colors.white,
                                         ),
                                         const SizedBox(width: 10),
                                         const Text(
                                           'Sure Hakkında',
-                                          textAlign: TextAlign.right,
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 21,
-                                            fontFamily: 'Podkova',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0.07,
+                                            fontSize: 16,
+                                            fontFamily: 'Axiforma',
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
-                                        const SizedBox(
-                                          width: 8,
-                                        )
                                       ],
                                     ),
                                   ),
@@ -1267,14 +1245,14 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           ),
                           Padding(
                               padding: EdgeInsets.only(
-                                left: 25.0,
-                                right: 25,
+                                left: 20.0,
+                                right: 20.0,
                                 top: 25.h,
                               ),
                               child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 30),
+                                      horizontal: 8, vertical: 30),
                                   clipBehavior: Clip.antiAlias,
                                   decoration: ShapeDecoration(
                                     color: Colors.white,
@@ -1283,10 +1261,10 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                     ),
                                     shadows: const [
                                       BoxShadow(
-                                        color: Color(0x26000000),
-                                        blurRadius: 10,
-                                        offset: Offset(4, 4),
-                                        spreadRadius: 0,
+                                        color: Color(0x15000000),
+                                        blurRadius: 30,
+                                        offset: Offset(0, 10),
+                                        spreadRadius: -2,
                                       )
                                     ],
                                   ),
@@ -1300,7 +1278,7 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         if (_verses.isNotEmpty)
                                           Container(
                                             width: double.infinity,
-                                            padding: const EdgeInsets.all(16.0),
+                                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -1423,15 +1401,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF2A89A5),
+                                  color: Colors.white.withOpacity(0.08),
                                   borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5),
-                                    ),
-                                  ],
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.12),
+                                    width: 1,
+                                  ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1520,15 +1495,12 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2A89A5),
+                            color: Colors.white.withOpacity(0.08),
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.12),
+                              width: 1,
+                            ),
                           ),
                           child: Icon(
                             homePageController.isContainerVisible.value
