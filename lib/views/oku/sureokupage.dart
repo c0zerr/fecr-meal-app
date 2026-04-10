@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -936,159 +937,6 @@ class _SureOkuPageState extends State<SureOkuPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Obx(
-              () => Padding(
-                padding: EdgeInsets.only(
-                    bottom:
-                        (defaultTargetPlatform == TargetPlatform.iOS ? 0 : 20),
-                    right: 20),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // Açılır Menü İçeriği (Yatay)
-                      AnimatedSize(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        child: homePageController.isContainerVisible.value
-                            ? Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.08),
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.12),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    _buildMenuItem(
-                                      context,
-                                      icon: Icons.settings,
-                                      label: "Ayarlar",
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return _buildSettingsModal(context);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Obx(() => _buildMenuItem(
-                                          context,
-                                          icon: isCurrentFavorite.value
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          label: "Favori",
-                                          onTap: () {
-                                            _showAlertDialog2(
-                                                context,
-                                                "FAVORİ AYETLER",
-                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet \nFavori Ayetlere Eklendi.",
-                                                confirmText: "Favorilere Git",
-                                                onConfirm: () => Get.toNamed(
-                                                    NavigationConstants
-                                                        .sureSavedPage));
-                                            _saveCurrentAyah();
-                                          },
-                                        )),
-                                    const SizedBox(width: 5),
-                                    Obx(() => _buildMenuItem(
-                                          context,
-                                          icon: isCurrentBookmarked.value
-                                              ? Icons.bookmark
-                                              : Icons.bookmark_border,
-                                          label: "Ayraç",
-                                          onTap: () {
-                                            _ayracCurrentAyah();
-                                            _showAlertDialog2(context, "AYRAÇ",
-                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet \nAyraç eklendi. Okumaya buradan devam edebilirsiniz.",
-                                                confirmText: "Ayraçlara Git",
-                                                onConfirm: () => Get.toNamed(
-                                                    NavigationConstants
-                                                        .ayracSurePage));
-                                          },
-                                        )),
-                                    const SizedBox(width: 5),
-                                    _buildMenuItem(
-                                      context,
-                                      icon: Icons.share,
-                                      label: "Paylaş",
-                                      onTap: () async {
-                                        if (kIsWeb) return;
-
-                                        String meal =
-                                            _verses[ayetno].meal ?? "";
-                                        meal = meal.replaceAll(
-                                            RegExp(r'\[.*?\]'), '');
-
-                                        String metin =
-                                            _verses[ayetno].metin ?? "";
-                                        if (metin.isNotEmpty) {
-                                          metin = moveSeparatorToFront(metin);
-                                        }
-
-                                        final shareText =
-                                            "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)\n\n"
-                                            "İndirmek için tıklayın:\n"
-                                            "Android: https://play.google.com/store/apps/details?id=com.mealfecr.kuranaydinligi\n"
-                                            "iOS: https://apps.apple.com/tr/app/kuran-ayd%C4%B1nl%C4%B1%C4%9F%C4%B1/id6642658948?l=tr";
-
-                                        final box = context.findRenderObject()
-                                            as RenderBox?;
-                                        final origin = box != null
-                                            ? box.localToGlobal(Offset.zero) &
-                                                box.size
-                                            : null;
-
-                                        await Share.share(shareText,
-                                            subject:
-                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet",
-                                            sharePositionOrigin: origin);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ),
-                      // Ana Buton (Toggle)
-                      GestureDetector(
-                        onTap: toggleContainerVisibility,
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.08),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.12),
-                              width: 1,
-                            ),
-                          ),
-                          child: Icon(
-                            homePageController.isContainerVisible.value
-                                ? Icons.close
-                                : Icons.menu,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1538,6 +1386,173 @@ class _SureOkuPageState extends State<SureOkuPage> {
                   ),
                 ),
               ],
+            ),
+            Obx(
+              () => Padding(
+                padding: EdgeInsets.only(
+                    bottom:
+                        (defaultTargetPlatform == TargetPlatform.iOS ? 0 : 20),
+                    right: 20),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Açılır Menü İçeriği (Yatay)
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: homePageController.isContainerVisible.value
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.08),
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.12),
+                                          width: 1,
+                                        ),
+                                      ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.settings,
+                                      label: "Ayarlar",
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return _buildSettingsModal(context);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Obx(() => _buildMenuItem(
+                                          context,
+                                          icon: isCurrentFavorite.value
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          label: "Favori",
+                                          onTap: () {
+                                            _showAlertDialog2(
+                                                context,
+                                                "FAVORİ AYETLER",
+                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet \nFavori Ayetlere Eklendi.",
+                                                confirmText: "Favorilere Git",
+                                                onConfirm: () => Get.toNamed(
+                                                    NavigationConstants
+                                                        .sureSavedPage));
+                                            _saveCurrentAyah();
+                                          },
+                                        )),
+                                    const SizedBox(width: 5),
+                                    Obx(() => _buildMenuItem(
+                                          context,
+                                          icon: isCurrentBookmarked.value
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_border,
+                                          label: "Ayraç",
+                                          onTap: () {
+                                            _ayracCurrentAyah();
+                                            _showAlertDialog2(context, "AYRAÇ",
+                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet \nAyraç eklendi. Okumaya buradan devam edebilirsiniz.",
+                                                confirmText: "Ayraçlara Git",
+                                                onConfirm: () => Get.toNamed(
+                                                    NavigationConstants
+                                                        .ayracSurePage));
+                                          },
+                                        )),
+                                    const SizedBox(width: 5),
+                                    _buildMenuItem(
+                                      context,
+                                      icon: Icons.share,
+                                      label: "Paylaş",
+                                      onTap: () async {
+                                        if (kIsWeb) return;
+
+                                        String meal =
+                                            _verses[ayetno].meal ?? "";
+                                        meal = meal.replaceAll(
+                                            RegExp(r'\[.*?\]'), '');
+
+                                        String metin =
+                                            _verses[ayetno].metin ?? "";
+                                        if (metin.isNotEmpty) {
+                                          metin = moveSeparatorToFront(metin);
+                                        }
+
+                                        final shareText =
+                                            "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)\n\n"
+                                            "İndirmek için tıklayın:\n"
+                                            "Android: https://play.google.com/store/apps/details?id=com.mealfecr.kuranaydinligi\n"
+                                            "iOS: https://apps.apple.com/tr/app/kuran-ayd%C4%B1nl%C4%B1%C4%9F%C4%B1/id6642658948?l=tr";
+
+                                        final box = context.findRenderObject()
+                                            as RenderBox?;
+                                        final origin = box != null
+                                            ? box.localToGlobal(Offset.zero) &
+                                                box.size
+                                            : null;
+
+                                        await Share.share(shareText,
+                                            subject:
+                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet",
+                                            sharePositionOrigin: origin);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                        : const SizedBox.shrink(),
+                      ),
+                      // Ana Buton (Toggle)
+                      GestureDetector(
+                        onTap: toggleContainerVisibility,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                            child: Container(
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.08),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.12),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Icon(
+                                homePageController.isContainerVisible.value
+                                    ? Icons.close
+                                    : Icons.menu,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
