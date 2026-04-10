@@ -105,7 +105,13 @@ def fetch_surah_verses_map(surah_id: int):
             continue
         verse_text = v.get("verse") or ""
         if verse_text:
-            out[vn] = verse_text
+            if surah_id == 1:
+                # Fatiha'da 1. ayet (Besmele) atlanacak, 2-7. ayetler 1-6. ayetlere kaydırılacak
+                if vn == 1:
+                    continue
+                out[vn - 1] = verse_text
+            else:
+                out[vn] = verse_text
     return out
 
 

@@ -1,0 +1,10 @@
+<IfModule mod_headers.c>
+  # Tüm domainlerden (origin) gelen isteklere izin veriyoruz
+  Header set Access-Control-Allow-Origin "*"
+  
+  # İzin verilen HTTP metodları
+  Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+  
+  # İzin verilen HTTP başlıkları
+  Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+</IfModule>

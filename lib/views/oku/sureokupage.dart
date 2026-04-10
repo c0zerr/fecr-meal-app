@@ -893,7 +893,8 @@ class _SureOkuPageState extends State<SureOkuPage> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () => _showAyeteGitModal(context),
-              icon: const Icon(Icons.open_in_new, color: Colors.white, size: 30),
+              icon:
+                  const Icon(Icons.open_in_new, color: Colors.white, size: 30),
             ),
           )
         ],
@@ -1006,66 +1007,70 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         children: [
                                           Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                                RichText(
-                                                  textAlign: TextAlign.center,
-                                                  text: TextSpan(
-                                                    children: [
-                                                      if (surahId != null &&
-                                                          SureAdi !=
-                                                              "Hurufu Mukattaa")
-                                                        TextSpan(
-                                                          text: "$surahId. ",
-                                                          style: TextStyle(
-                                                            color: Colors.white
-                                                                .withOpacity(0.7),
-                                                            fontSize: 22,
-                                                            fontFamily: 'Axiforma',
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.1,
-                                                          ),
-                                                        ),
+                                              RichText(
+                                                textAlign: TextAlign.center,
+                                                text: TextSpan(
+                                                  children: [
+                                                    if (surahId != null &&
+                                                        SureAdi !=
+                                                            "Hurufu Mukattaa")
                                                       TextSpan(
-                                                        text: SureAdi,
+                                                        text: "$surahId. ",
                                                         style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: SureAdi ==
-                                                                  "Hurufu Mukattaa"
-                                                              ? 18
-                                                              : 22,
-                                                          fontFamily: 'Axiforma',
-                                                          fontWeight: FontWeight.w800,
+                                                          color: Colors.white
+                                                              .withOpacity(0.7),
+                                                          fontSize: 22,
+                                                          fontFamily:
+                                                              'Axiforma',
+                                                          fontWeight:
+                                                              FontWeight.w400,
                                                           height: 1.1,
                                                         ),
                                                       ),
-                                                    ],
+                                                    TextSpan(
+                                                      text: SureAdi,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: SureAdi ==
+                                                                "Hurufu Mukattaa"
+                                                            ? 18
+                                                            : 22,
+                                                        fontFamily: 'Axiforma',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        height: 1.1,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              if (_verses.isNotEmpty)
+                                                Text(
+                                                  '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.7),
+                                                    fontSize: 14,
+                                                    fontFamily: 'Axiforma',
+                                                    fontWeight: FontWeight.w500,
+                                                    height: 1.1,
                                                   ),
                                                 ),
-                                                const SizedBox(height: 5),
-                                                if (_verses.isNotEmpty)
-                                                  Text(
-                                                    '${extractATag(_verses[ayetno].meal.toString())}. Ayet',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                          .withOpacity(0.7),
-                                                      fontSize: 14,
-                                                      fontFamily: 'Axiforma',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      height: 1.1,
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
+                                            ],
+                                          ),
                                           Positioned(
                                             right: 0,
                                             top: 0,
                                             bottom: 0,
                                             child: Icon(
                                               Icons.keyboard_arrow_down_rounded,
-                                              color: Colors.white.withOpacity(0.7),
+                                              color:
+                                                  Colors.white.withOpacity(0.7),
                                               size: 25,
                                             ),
                                           ),
@@ -1278,7 +1283,9 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                         if (_verses.isNotEmpty)
                                           Container(
                                             width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical: 16.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -1469,18 +1476,31 @@ class _SureOkuPageState extends State<SureOkuPage> {
                                       onTap: () async {
                                         if (kIsWeb) return;
 
-                                        String meal = _verses[ayetno].meal ?? "";
-                                        meal = meal.replaceAll(RegExp(r'\[.*?\]'), '');
+                                        String meal =
+                                            _verses[ayetno].meal ?? "";
+                                        meal = meal.replaceAll(
+                                            RegExp(r'\[.*?\]'), '');
 
-                                        String metin = _verses[ayetno].metin ?? "";
+                                        String metin =
+                                            _verses[ayetno].metin ?? "";
                                         if (metin.isNotEmpty) {
                                           metin = moveSeparatorToFront(metin);
                                         }
 
-                                        final shareText = "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
+                                        final shareText =
+                                            "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
+
+                                        final box = context.findRenderObject()
+                                            as RenderBox?;
+                                        final origin = box != null
+                                            ? box.localToGlobal(Offset.zero) &
+                                                box.size
+                                            : null;
 
                                         await Share.share(shareText,
-                                            subject: "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet");
+                                            subject:
+                                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet",
+                                            sharePositionOrigin: origin);
                                       },
                                     ),
                                   ],
@@ -1811,10 +1831,18 @@ class _SureOkuPageState extends State<SureOkuPage> {
                           metin = moveSeparatorToFront(metin);
                         }
 
-                        final shareText = "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
+                        final shareText =
+                            "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet\n\n$metin\n\n$meal\n\n— Kur'an Aydınlığı Meal (Fecr)";
+
+                        final box = context.findRenderObject() as RenderBox?;
+                        final origin = box != null
+                            ? box.localToGlobal(Offset.zero) & box.size
+                            : null;
 
                         await Share.share(shareText,
-                            subject: "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet");
+                            subject:
+                                "${_formatSureAdiForDisplay(sureadi)} Suresi, $ayetno. Ayet",
+                            sharePositionOrigin: origin);
                       },
                       child: bottomSheetWidget(asset: "share", text: "Paylaş")),
                   SizedBox(
