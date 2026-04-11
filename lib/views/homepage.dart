@@ -17,6 +17,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -148,6 +150,8 @@ class _HomePageState extends State<HomePage> {
 
   String pathPDF = "";
   String corruptedPathPDF = "";
+  static bool hasShownBookmarkDialog = false;
+
   @override
   void initState() {
     if (!kIsWeb) {
@@ -159,6 +163,10 @@ class _HomePageState extends State<HomePage> {
     } else {
       corruptedPathPDF = 'assets/Hmukatta.pdf';
     }
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowBookmarkDialog(context);
+    });
     super.initState();
   }
 
@@ -224,6 +232,281 @@ class _HomePageState extends State<HomePage> {
         .replaceAll('-', '')
         .replaceAll('\'', '')
         .replaceAll('’', '');
+  }
+
+  String _formatSureAdiForDisplay(String value) {
+    final v = value.trim();
+    if (v.isEmpty) return value;
+    final first = v[0];
+    final String upperFirst;
+    if (first == 'i') {
+      upperFirst = 'İ';
+    } else if (first == 'ı') {
+      upperFirst = 'I';
+    } else {
+      upperFirst = first.toUpperCase();
+    }
+    return upperFirst + v.substring(1).toLowerCase();
+  }
+
+  int _getSureId(String sureName) {
+    final normalizedName = _normalize(sureName);
+    int idx = mushafSirasi.indexWhere((element) {
+      final sName = _normalize(element['name'].toString());
+      return sName == normalizedName;
+    });
+    return idx != -1 ? idx + 1 : 0;
+  }
+
+  Future<void> _checkAndShowBookmarkDialog(BuildContext context) async {
+    if (hasShownBookmarkDialog) return;
+    
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? ayracStrings = prefs.getStringList('ayracAyahs');
+    if (ayracStrings == null || ayracStrings.isEmpty) {
+      hasShownBookmarkDialog = true;
+      return;
+    }
+
+    Map<String, Map<String, dynamic>> uniqueAyahs = {};
+    for (String item in ayracStrings) {
+      Map<String, dynamic> data = jsonDecode(item);
+      String key = "${data['sureadi']}_${data['ayetno']}";
+      uniqueAyahs[key] = {
+        'sureadi': data['sureadi'],
+        'ayetno': data['ayetno'] is int
+            ? data['ayetno']
+            : int.tryParse(data['ayetno'].toString()) ?? 0,
+      };
+    }
+
+    List<Map<String, dynamic>> ayahsList = uniqueAyahs.values.toList();
+    if (ayahsList.isEmpty) return;
+
+    // Reverse to get the latest bookmarks
+    ayahsList = ayahsList.reversed.toList();
+
+    final mainAyah = ayahsList.first;
+    final otherAyahs = ayahsList.skip(1).take(4).toList();
+
+    hasShownBookmarkDialog = true;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return _buildBookmarkBottomSheet(context, mainAyah, otherAyahs);
+      },
+    );
+  }
+
+  Widget _buildBookmarkBottomSheet(BuildContext context, Map<String, dynamic> mainAyah, List<Map<String, dynamic>> others) {
+    String mainSureName = mainAyah['sureadi'];
+    int mainAyetNo = mainAyah['ayetno'];
+    int mainSureId = _getSureId(mainSureName);
+    String idStr = mainSureId > 0 ? "$mainSureId- " : "";
+    String mainTitle = "$idStr${_formatSureAdiForDisplay(mainSureName)} ($mainAyetNo)";
+
+    return Container(
+      padding: EdgeInsets.only(left: 25.w, right: 25.w, bottom: 40.h, top: 15.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40.w,
+            height: 5.h,
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          SizedBox(height: 25.h),
+          const Text(
+            "Ayraçtaki Ayet",
+            style: TextStyle(
+              color: ColorConstants.primaryColor,
+              fontSize: 22,
+              fontFamily: 'Axiforma',
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          const Text(
+            "Kaldığınız yerden okumaya devam edin:",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 16,
+              fontFamily: 'Axiforma',
+            ),
+          ),
+          SizedBox(height: 25.h),
+          
+          // MAIN BUTTON
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2A89A5), // primary color
+                padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 10.w),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 3,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                int sId = _getSureId(mainSureName);
+                Get.toNamed(NavigationConstants.sureOkuPage, arguments: [mainSureName, mainAyetNo, sId]);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.bookmark, color: Colors.white, size: 28),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      mainTitle,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Axiforma',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          if (others.isNotEmpty) ...[
+            SizedBox(height: 25.h),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Diğer ayraçlar:",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 14,
+                  fontFamily: 'Axiforma',
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              alignment: WrapAlignment.start,
+              children: others.map((ayah) {
+                String sName = ayah['sureadi'];
+                int aNo = ayah['ayetno'];
+                int sId = _getSureId(sName);
+                String iStr = sId > 0 ? "$sId- " : "";
+                String title = "$iStr${_formatSureAdiForDisplay(sName)} ($aNo)";
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Get.toNamed(NavigationConstants.sureOkuPage, arguments: [sName, aNo, sId]);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                    ),
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontFamily: 'Axiforma',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+
+          SizedBox(height: 25.h),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Get.toNamed(NavigationConstants.ayracSurePage);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: ColorConstants.primaryColor,
+                    side: const BorderSide(color: ColorConstants.primaryColor, width: 1.5),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.bookmarks_outlined, size: 20),
+                      SizedBox(width: 6),
+                      Text(
+                        "Ayraçlara Git",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Axiforma',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 15.w),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.withOpacity(0.15),
+                    foregroundColor: Colors.black87,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const Text(
+                    "İptal",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Axiforma',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   void _onSearchChanged(String query) {

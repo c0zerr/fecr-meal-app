@@ -1406,23 +1406,34 @@ class _SureOkuPageState extends State<SureOkuPage> {
                         child: homePageController.isContainerVisible.value
                             ? Padding(
                                 padding: const EdgeInsets.only(right: 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.08),
-                                        borderRadius: BorderRadius.circular(30),
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.12),
-                                          width: 1,
-                                        ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
                                       ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: ColorConstants.primaryColor.withOpacity(0.9),
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(
+                                            color: Colors.white.withOpacity(0.2),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
                                   children: [
                                     _buildMenuItem(
                                       context,
@@ -1517,33 +1528,45 @@ class _SureOkuPageState extends State<SureOkuPage> {
                               ),
                             ),
                           ),
-                        )
-                        : const SizedBox.shrink(),
-                      ),
+                        ),
+                      ) : const SizedBox.shrink(),
+                    ),
                       // Ana Buton (Toggle)
                       GestureDetector(
                         onTap: toggleContainerVisibility,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(28),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                            child: Container(
-                              width: 56,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.08),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.12),
-                                  width: 1,
-                                ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
-                              child: Icon(
-                                homePageController.isContainerVisible.value
-                                    ? Icons.close
-                                    : Icons.menu,
-                                color: Colors.white,
-                                size: 28,
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(28),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                              child: Container(
+                                width: 56,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: ColorConstants.primaryColor.withOpacity(0.9),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Icon(
+                                  homePageController.isContainerVisible.value
+                                      ? Icons.close
+                                      : Icons.menu,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
                               ),
                             ),
                           ),

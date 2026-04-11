@@ -2,6 +2,7 @@ import 'package:fecrmeal/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:fecrmeal/core/data/sureList.dart';
 
 class SavedSurePage extends StatefulWidget {
   const SavedSurePage({Key? key}) : super(key: key);
@@ -216,6 +217,34 @@ class _SavedSurePageState extends State<SavedSurePage> {
               int ayetno = savedAyahs[index]['ayetno'];
               String metin = savedAyahs[index]['metin'];
               String meal = savedAyahs[index]['meal'];
+
+              String formatSureAdiForDisplay(String value) {
+                final v = value.trim();
+                if (v.isEmpty) return value;
+                final first = v[0];
+                final String upperFirst;
+                if (first == 'i') {
+                  upperFirst = 'İ';
+                } else if (first == 'ı') {
+                  upperFirst = 'I';
+                } else {
+                  upperFirst = first.toUpperCase();
+                }
+                return upperFirst + v.substring(1).toLowerCase();
+              }
+
+              int getSureId(String name) {
+                final normalizedName = name.trim().toLowerCase().replaceAll('ı', 'i').replaceAll('i̇', 'i').replaceAll('ğ', 'g').replaceAll('ü', 'u').replaceAll('ş', 's').replaceAll('ö', 'o').replaceAll('ç', 'c').replaceAll('â', 'a').replaceAll('î', 'i').replaceAll('û', 'u').replaceAll('-', '').replaceAll('\'', '').replaceAll('’', '');
+                int idx = mushafSirasi.indexWhere((element) {
+                  final sName = element['name'].toString().trim().toLowerCase().replaceAll('ı', 'i').replaceAll('i̇', 'i').replaceAll('ğ', 'g').replaceAll('ü', 'u').replaceAll('ş', 's').replaceAll('ö', 'o').replaceAll('ç', 'c').replaceAll('â', 'a').replaceAll('î', 'i').replaceAll('û', 'u').replaceAll('-', '').replaceAll('\'', '').replaceAll('’', '');
+                  return sName == normalizedName;
+                });
+                return idx != -1 ? idx + 1 : 0;
+              }
+              
+              int sureId = getSureId(sureadi);
+              String idPrefix = sureId > 0 ? "$sureId- " : "";
+
               return Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Container(
@@ -248,7 +277,7 @@ class _SavedSurePageState extends State<SavedSurePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${sureadi.toUpperCase()} ($ayetno)",
+                              "$idPrefix${formatSureAdiForDisplay(sureadi)} ($ayetno)",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 26,

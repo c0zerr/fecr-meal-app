@@ -53,7 +53,7 @@ class ContactUsPage extends StatelessWidget {
         Get.back(); // Close loading
 
         if (response.statusCode == 200) {
-          _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Değerli görüş ve önerilerinizi bizimle paylaştığınız için teşekkür ederiz.");
+          _showAlertDialog(context, "TEŞEKKÜR EDERİZ!", "Mesajınız bize başarı ile ulaşmıştır. Değerli görüş, öneri ve  ilginiz için teşekkür ederiz.");
           email.clear();
           isimsoyisim.clear();
           aciklamalar.clear();
