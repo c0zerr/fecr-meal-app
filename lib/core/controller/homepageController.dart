@@ -7,9 +7,9 @@ class HomePageController extends GetxController {
   RxBool changeQueue = false.obs;
   
   // Metin Boyutları
-  RxDouble yazipuntosu = 16.0.obs;    // Meal Metin
-  RxDouble arapcaPuntosu = 24.0.obs;  // Arapça Metin
-  RxDouble dipnotPuntosu = 14.0.obs;  // Dipnot Metin
+  RxDouble yazipuntosu = 26.0.obs;    // Meal Metin
+  RxDouble arapcaPuntosu = 30.0.obs;  // Arapça Metin
+  RxDouble dipnotPuntosu = 20.0.obs;  // Dipnot Metin
   
   RxBool isContainerVisible = true.obs;
   RxBool arapcametin = true.obs;
@@ -31,9 +31,9 @@ class HomePageController extends GetxController {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    yazipuntosu.value = (prefs.getDouble('font_size') ?? 16.0).clamp(12.0, 40.0);
-    arapcaPuntosu.value = (prefs.getDouble('arapca_font_size') ?? 24.0).clamp(14.0, 50.0);
-    dipnotPuntosu.value = (prefs.getDouble('dipnot_font_size') ?? 14.0).clamp(10.0, 30.0);
+    yazipuntosu.value = (prefs.getDouble('font_size') ?? 26.0).clamp(12.0, 40.0);
+    arapcaPuntosu.value = (prefs.getDouble('arapca_font_size') ?? 30.0).clamp(14.0, 50.0);
+    dipnotPuntosu.value = (prefs.getDouble('dipnot_font_size') ?? 20.0).clamp(10.0, 30.0);
     
     arapcametin.value = prefs.getBool('show_arabic') ?? true;
     dipnotlar.value = prefs.getBool('show_footnote') ?? true;
